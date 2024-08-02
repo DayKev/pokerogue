@@ -29,7 +29,131 @@ import { type ModifierOverride, type ModifierTypeKeys } from "./modifier/modifie
  * }
  * ```
  */
-const overrides = {} satisfies Partial<InstanceType<typeof DefaultOverrides>>;
+const overrides = {
+  STARTER_OVERRIDE: [
+    {
+      species: Species.VIVILLON,
+      form: {[Species.VIVILLON]: 0},
+      ability: Abilities.ADAPTABILITY,
+      passiveAbility: Abilities.GALE_WINGS,
+      status: StatusEffect.BURN,
+      gender: Gender.FEMALE,
+      moveset: [Moves.ABSORB, Moves.ACCELEROCK, Moves.ACID, Moves.ACID_ARMOR],
+      shiny: false,
+      shinyVariant: 0,
+    },
+    {
+      species: Species.VIVILLON,
+      form: {[Species.VIVILLON]: 1},
+      ability: Abilities.BAD_DREAMS,
+      passiveAbility: Abilities.HADRON_ENGINE,
+      status: StatusEffect.FAINT,
+      gender: Gender.FEMALE,
+      moveset: [Moves.BABY_DOLL_EYES, Moves.BELLY_DRUM, Moves.BLIZZARD, Moves.BODY_SLAM],
+      shiny: false,
+      shinyVariant: 0,
+    },
+    {
+      species: Species.VIVILLON,
+      form: {[Species.VIVILLON]: 2},
+      ability: Abilities.CHEEK_POUCH,
+      passiveAbility: Abilities.ICE_BODY,
+      status: StatusEffect.FREEZE,
+      gender: Gender.GENDERLESS,
+      moveset: [Moves.CALM_MIND, Moves.CAMOUFLAGE, Moves.CAPTIVATE, Moves.CONFUSION],
+      shiny: false,
+      shinyVariant: 0,
+    },
+    {
+      species: Species.VIVILLON,
+      form: {[Species.VIVILLON]: 3},
+      ability: Abilities.DAMP,
+      passiveAbility: Abilities.JUSTIFIED,
+      status: StatusEffect.NONE,
+      gender: Gender.GENDERLESS,
+      moveset: [Moves.DARKEST_LARIAT, Moves.DARK_PULSE, Moves.DARK_VOID, Moves.DREAM_EATER],
+      shiny: true,
+      shinyVariant: 0,
+    },
+    {
+      species: Species.SHAYMIN,
+      form: {[Species.SHAYMIN]: 0},
+      ability: Abilities.EARLY_BIRD,
+      passiveAbility: Abilities.KEEN_EYE,
+      status: StatusEffect.PARALYSIS,
+      gender: Gender.MALE,
+      moveset: [Moves.EARTHQUAKE, Moves.EARTH_POWER, Moves.ENERGY_BALL, Moves.ECHOED_VOICE],
+      shiny: true,
+      shinyVariant: 0,
+    },
+    {
+      species: Species.SHAYMIN,
+      form: {[Species.SHAYMIN]: 1},
+      ability: Abilities.FAIRY_AURA,
+      passiveAbility: Abilities.LEAF_GUARD,
+      status: StatusEffect.POISON,
+      gender: Gender.MALE,
+      moveset: [Moves.FACADE, Moves.FAIRY_LOCK, Moves.FAIRY_WIND, Moves.FAKE_TEARS],
+      shiny: true,
+      shinyVariant: 0,
+    }
+  ]
+} satisfies Partial<InstanceType<typeof DefaultOverrides>>;
+
+interface StarterOverride {
+    /**
+   * SPECIES OVERRIDE
+   * will apply to each starter in your party
+   * default is 0 to not override
+   * @example STARTER_OVERRIDE.species = Species.Bulbasaur;
+   */
+
+  /** override species of the starter
+  * @example Species.Bulbasaur
+  */
+  species?: Species | integer;
+  /**
+ * Set the form index of any starter in the party whose `speciesId` is inside this override
+ * @see {@link allSpecies} in `src/data/pokemon-species.ts` for form indexes
+ * @example
+ * ```
+ * {
+ *   [Species.DARMANITAN]: 1
+ * }
+ * ```
+ */
+  form?: Partial<Record<Species, number>>;
+  /** override ability of the starter
+  * @example Abilities.ADAPTABILITY
+  */
+  ability?: Abilities;
+  /** override passive ability of the starter
+  * @example Abilities.AERILATE
+  */
+  passiveAbility?: Abilities;
+  /** override status of the starter
+  * @example StatusEffect.BURN
+  */
+  status?: StatusEffect;
+  /** override gender of the starter
+  * @example Gender.FEMALE
+  */
+  gender?: Gender;
+  /** override moveset of the starter
+  * @example [Moves.ABSORB, Moves.BABY_DOLL_EYES]
+  */
+  moveset?: Moves[];
+  /** override shiny of the starter
+  * @example true
+  */
+  shiny?: boolean;
+  /** override shiny variant of the starter
+  * @example 0 - standard shiny
+  * @example 1 - rare shiny
+  * @example 2 - epic shiny
+  */
+  shinyVariant?: Variant;
+}
 
 /**
  * If you need to add Overrides values for local testing do that inside {@linkcode overrides}
@@ -72,6 +196,25 @@ class DefaultOverrides {
   // ----------------
   // PLAYER OVERRIDES
   // ----------------
+  readonly starterOverrideDefault = {
+    species: 0,
+    form: {},
+    ability: Abilities.NONE,
+    passiveAbility: Abilities.NONE,
+    status: StatusEffect.NONE,
+    gender: null,
+    moveset: [],
+    shiny: false,
+    shinyVariant: 0 as Variant,
+  };
+  readonly STARTER_OVERRIDE: StarterOverride[] = [
+    this.starterOverrideDefault,
+    this.starterOverrideDefault,
+    this.starterOverrideDefault,
+    this.starterOverrideDefault,
+    this.starterOverrideDefault,
+    this.starterOverrideDefault
+  ];
   /**
    * Set the form index of any starter in the party whose `speciesId` is inside this override
    * @see {@link allSpecies} in `src/data/pokemon-species.ts` for form indexes
@@ -82,7 +225,7 @@ class DefaultOverrides {
    * }
    * ```
    */
-  readonly STARTER_FORM_OVERRIDES: Partial<Record<Species, number>> = {};
+  //readonly STARTER_FORM_OVERRIDES: Partial<Record<Species, number>> = {};
 
   /** default 5 or 20 for Daily */
   readonly STARTING_LEVEL_OVERRIDE: integer = 0;
@@ -92,14 +235,14 @@ class DefaultOverrides {
    * default is 0 to not override
    * @example SPECIES_OVERRIDE = Species.Bulbasaur;
    */
-  readonly STARTER_SPECIES_OVERRIDE: Species | integer = 0;
+  /* readonly STARTER_SPECIES_OVERRIDE: Species | integer = 0;
   readonly ABILITY_OVERRIDE: Abilities = Abilities.NONE;
   readonly PASSIVE_ABILITY_OVERRIDE: Abilities = Abilities.NONE;
   readonly STATUS_OVERRIDE: StatusEffect = StatusEffect.NONE;
   readonly GENDER_OVERRIDE: Gender = null;
   readonly MOVESET_OVERRIDE: Array<Moves> = [];
   readonly SHINY_OVERRIDE: boolean = false;
-  readonly VARIANT_OVERRIDE: Variant = 0;
+  readonly VARIANT_OVERRIDE: Variant = 0; */
 
   // --------------------------
   // OPPONENT / ENEMY OVERRIDES
