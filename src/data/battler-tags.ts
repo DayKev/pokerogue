@@ -35,13 +35,15 @@ export class BattlerTag {
   public turnCount: number;
   public sourceMove: Moves;
   public sourceId?: number;
+  public isTransferrable: boolean;
 
-  constructor(tagType: BattlerTagType, lapseType: BattlerTagLapseType | BattlerTagLapseType[], turnCount: number, sourceMove: Moves, sourceId?: number) {
+  constructor(tagType: BattlerTagType, lapseType: BattlerTagLapseType | BattlerTagLapseType[], turnCount: number, sourceMove: Moves, sourceId?: number, isTransferrable: boolean = true) {
     this.tagType = tagType;
     this.lapseTypes = Array.isArray(lapseType) ? lapseType : [ lapseType ];
     this.turnCount = turnCount;
     this.sourceMove = sourceMove;
     this.sourceId = sourceId;
+    this.isTransferrable = isTransferrable;
   }
 
   canAdd(pokemon: Pokemon): boolean {
@@ -326,7 +328,7 @@ export class DestinyBondTag extends BattlerTag {
 
 export class InfatuatedTag extends BattlerTag {
   constructor(sourceMove: number, sourceId: number) {
-    super(BattlerTagType.INFATUATED, BattlerTagLapseType.MOVE, 1, sourceMove, sourceId);
+    super(BattlerTagType.INFATUATED, BattlerTagLapseType.MOVE, 1, sourceMove, sourceId, false);
   }
 
   canAdd(pokemon: Pokemon): boolean {
@@ -693,7 +695,7 @@ export class AquaRingTag extends BattlerTag {
 /** Tag used to allow moves that interact with {@link Moves.MINIMIZE} to function */
 export class MinimizeTag extends BattlerTag {
   constructor() {
-    super(BattlerTagType.MINIMIZED, BattlerTagLapseType.TURN_END, 1, Moves.MINIMIZE, undefined);
+    super(BattlerTagType.MINIMIZED, BattlerTagLapseType.TURN_END, 1, Moves.MINIMIZE, undefined, false);
   }
 
   canAdd(pokemon: Pokemon): boolean {
@@ -719,7 +721,7 @@ export class MinimizeTag extends BattlerTag {
 
 export class DrowsyTag extends BattlerTag {
   constructor() {
-    super(BattlerTagType.DROWSY, BattlerTagLapseType.TURN_END, 2, Moves.YAWN);
+    super(BattlerTagType.DROWSY, BattlerTagLapseType.TURN_END, 2, Moves.YAWN, undefined, false);
   }
 
   canAdd(pokemon: Pokemon): boolean {
