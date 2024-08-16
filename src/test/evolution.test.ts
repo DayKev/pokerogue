@@ -1,9 +1,12 @@
 import { pokemonEvolutions, SpeciesFormEvolution, SpeciesWildEvolutionDelay } from "#app/data/pokemon-evolutions.js";
 import { Abilities } from "#app/enums/abilities.js";
+import { Moves } from "#app/enums/moves.js";
 import { Species } from "#app/enums/species.js";
 import GameManager from "#test/utils/gameManager";
 import Phaser from "phaser";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { getMovePosition } from "./utils/gameManagerUtils";
+import { SPLASH_ONLY } from "./utils/testUtils";
 
 describe("Evolution", () => {
   let phaserGame: Phaser.Game;
@@ -87,6 +90,31 @@ describe("Evolution", () => {
   it("should set wild delay to NONE by default", () => {
     const speciesFormEvo = new SpeciesFormEvolution(Species.ABRA, null, null, 1000, null, null);
 
-    expect(speciesFormEvo.wildDelay).toBe(SpeciesWildEvolutionDelay.NONE);
+    expect(speciesFormEvo. wildDelay).toBe(SpeciesWildEvolutionDelay.NONE);
   });
+
+  it("should increase both HP and max HP when evolving", async () => {
+    game.override.moveset([Moves.SURF])
+      .enemySpecies(Species.GOLEM)
+      .enemyMoveset(SPLASH_ONLY)
+      .startingWave(21)
+      .startingLevel(16)
+      .enemyLevel(50);
+
+    await game.startBattle([Species.TOTODILE]);
+
+    const totodile = game.scene.getPlayerPokemon()!;
+    const hpBefore = totodile.hp;
+
+    const enemyGolem = game.scene.getEnemyPokemon()!;
+    enemyGolem.hp = 1;
+
+    expect(totodile.hp).toBe(totodile.getMaxHp());
+
+    game.doAttack(getMovePosition(game.scene, 0, Moves.SURF));
+    await game.phaseInterceptor.to("EvolutionPhase");
+
+    expect(totodile.hp).toBe(totodile.getMaxHp());
+    expect(totodile.hp).toBeGreaterThan(hpBefore);
+  }, TIMEOUT);
 });
