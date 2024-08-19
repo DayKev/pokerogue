@@ -4,6 +4,7 @@ import { allMoves, ForceSwitchOutAttr } from "#app/data/move.js";
 import { getPokeballTintColor } from "#app/data/pokeball.js";
 import { SpeciesFormChangeActiveTrigger } from "#app/data/pokemon-forms.js";
 import { TrainerSlot } from "#app/data/trainer-config.js";
+import { StatusEffect } from "#app/enums/status-effect.js";
 import Pokemon from "#app/field/pokemon.js";
 import { getPokemonNameWithAffix } from "#app/messages.js";
 import { SwitchEffectTransferModifier } from "#app/modifier/modifier.js";
@@ -43,8 +44,11 @@ export class SwitchSummonPhase extends SummonPhase {
   preSummon(): void {
     if (!this.player) {
       if (this.slotIndex === -1) {
-        //@ts-ignore
-        this.slotIndex = this.scene.currentBattle.trainer?.getNextSummonIndex(!this.fieldIndex ? TrainerSlot.TRAINER : TrainerSlot.TRAINER_PARTNER); // TODO: what would be the default trainer-slot fallback?
+        if (this.scene.getEnemyField()[this.fieldIndex].status?.effect !== StatusEffect.FAINT) {
+          super.end();
+          return;
+        }
+        this.slotIndex = this.scene.currentBattle.trainer?.getNextSummonIndex(!this.fieldIndex ? TrainerSlot.TRAINER : TrainerSlot.TRAINER_PARTNER)!; // TODO: what would be the default trainer-slot fallback?
       }
       if (this.slotIndex > -1) {
         this.showEnemyTrainer(!(this.fieldIndex % 2) ? TrainerSlot.TRAINER : TrainerSlot.TRAINER_PARTNER);
