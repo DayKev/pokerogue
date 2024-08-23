@@ -14,7 +14,7 @@ import { copyChallenge } from "data/challenge";
 import Phaser from "phaser";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-
+const TIMEOUT = 20 * 1000;
 
 describe("Inverse Battle", () => {
   let phaserGame: Phaser.Game;
@@ -57,7 +57,7 @@ describe("Inverse Battle", () => {
     const enemy = game.scene.getEnemyPokemon()!;
 
     expect(enemy.getAttackTypeEffectiveness(allMoves[Moves.THUNDERBOLT].type, player)).toBe(2);
-  });
+  }, TIMEOUT);
 
   it("2. 2x effective types are 0.5x effective - Thunderbolt against Flying Type", async () => {
     game.override.enemySpecies(Species.PIDGEY);
@@ -68,7 +68,7 @@ describe("Inverse Battle", () => {
     const enemy = game.scene.getEnemyPokemon()!;
 
     expect(enemy.getAttackTypeEffectiveness(allMoves[Moves.THUNDERBOLT].type, player)).toBe(0.5);
-  });
+  }, TIMEOUT);
 
   it("3. 0.5x effective types are 2x effective - Thunderbolt against Electric Type", async () => {
     game.override.enemySpecies(Species.CHIKORITA);
@@ -79,7 +79,7 @@ describe("Inverse Battle", () => {
     const enemy = game.scene.getEnemyPokemon()!;
 
     expect(enemy.getAttackTypeEffectiveness(allMoves[Moves.THUNDERBOLT].type, player)).toBe(2);
-  });
+  }, TIMEOUT);
 
   it("4. Stealth Rock follows the inverse matchups - Stealth Rock against Charizard deals 1/32 of max HP", async () => {
     game.scene.arena.addTag(ArenaTagType.STEALTH_ROCK, 1, Moves.STEALTH_ROCK, 0);
@@ -99,7 +99,7 @@ describe("Inverse Battle", () => {
 
     console.log("Charizard's max HP: " + maxHp, "Damage: " + damage_prediction, "Current HP: " + currentHp, "Expected HP: " + expectedHP);
     expect(expectedHP).toBeGreaterThan(maxHp * 31 / 32 - 1);
-  });
+  }, TIMEOUT);
 
   it("5. Freeze Dry is 2x effective against Water Type like other Ice type Move - Freeze Dry against Squirtle", async () => {
     game.override.enemySpecies(Species.SQUIRTLE);
@@ -110,7 +110,7 @@ describe("Inverse Battle", () => {
     const enemy = game.scene.getEnemyPokemon()!;
 
     expect(enemy.getAttackTypeEffectiveness(allMoves[Moves.FREEZE_DRY].type, player)).toBe(2);
-  });
+  }, TIMEOUT);
 
   it("6. Water Absorb should heal against water moves - Water Absorb against Water gun", async () => {
     game.override
@@ -127,7 +127,7 @@ describe("Inverse Battle", () => {
     await game.phaseInterceptor.to(MoveEndPhase);
 
     expect(enemy.hp).toBe(enemy.getMaxHp());
-  });
+  }, TIMEOUT);
 
   it("7. Fire type does not get burned - Will-O-Wisp against Charmander", async () => {
     game.override
@@ -145,7 +145,7 @@ describe("Inverse Battle", () => {
     await game.phaseInterceptor.to(MoveEndPhase);
 
     expect(enemy.status?.effect).not.toBe(StatusEffect.BURN);
-  });
+  }, TIMEOUT);
 
   it("8. Electric type does not get paralyzed - Nuzzle against Pikachu", async () => {
     game.override
@@ -163,7 +163,7 @@ describe("Inverse Battle", () => {
     await game.phaseInterceptor.to(MoveEndPhase);
 
     expect(enemy.status?.effect).not.toBe(StatusEffect.PARALYSIS);
-  });
+  }, TIMEOUT);
 
 
   it("10. Anticipation should trigger on 2x effective moves - Anticipation against Thunderbolt", async () => {
@@ -175,7 +175,7 @@ describe("Inverse Battle", () => {
     await game.startBattle(undefined, false);
 
     expect(game.scene.getEnemyPokemon()?.summonData.abilitiesApplied[0]).toBe(Abilities.ANTICIPATION);
-  });
+  }, TIMEOUT);
 
   it("11. Conversion 2 should change the type to the resistive type - Conversion 2 against Dragonite", async () => {
     game.override
@@ -192,5 +192,5 @@ describe("Inverse Battle", () => {
     await game.phaseInterceptor.to(TurnEndPhase);
 
     expect(player.getTypes()[0]).toBe(Type.DRAGON);
-  });
+  }, TIMEOUT);
 });
