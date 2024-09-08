@@ -71,11 +71,11 @@ export function padInt(value: integer, length: integer, padWith?: string): strin
 }
 
 /**
-* Returns a random integer between min and min + range
+* Returns a random integer between min and min + range using {@linkcode Math.random}
 * @param range The amount of possible numbers
-* @param min The starting number
+* @param min The starting integer
 */
-export function randInt(range: integer, min: integer = 0): integer {
+export function randInt(range: number, min: number = 0): number {
   if (range === 1) {
     return min;
   }
@@ -83,12 +83,12 @@ export function randInt(range: integer, min: integer = 0): integer {
 }
 
 /**
- * Generates a random number using the global seed, or the current battle's seed if called via `Battle.randSeedInt`
- * @param range How large of a range of random numbers to choose from. If {@linkcode range} <= 1, returns {@linkcode min}
+ * Generates a random integer using the global seed, or the current battle's seed if called via `Battle.randSeedInt`
+ * @param range How large of a range of random integers to choose from. If {@linkcode range} <= 1, returns {@linkcode min}
  * @param min The minimum integer to pick, default `0`
  * @returns A random integer between {@linkcode min} and ({@linkcode min} + {@linkcode range} - 1)
  */
-export function randSeedInt(range: integer, min: integer = 0): integer {
+export function randSeedInt(range: number, min: number = 0): number {
   if (range <= 1) {
     return min;
   }
@@ -96,11 +96,18 @@ export function randSeedInt(range: integer, min: integer = 0): integer {
 }
 
 /**
+ * Generates a random number between 0 and 1 using the global seed, or the current battle's seed if called via `Battle.randSeedFloat`
+ */
+export function randSeedFloat(): number {
+  return Phaser.Math.RND.frac();
+}
+
+/**
 * Returns a random integer between min and max (non-inclusive)
-* @param min The lowest number
-* @param max The highest number
+* @param min The lowest integer
+* @param max The highest integer
 */
-export function randIntRange(min: integer, max: integer): integer {
+export function randIntRange(min: number, max: number): number {
   return randInt(max - min, min);
 }
 
