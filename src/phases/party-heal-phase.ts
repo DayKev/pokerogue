@@ -1,4 +1,5 @@
 import BattleScene from "#app/battle-scene";
+import { applyChallenges, ChallengeType } from "#app/data/challenge";
 import * as Utils from "#app/utils";
 import { BattlePhase } from "./battle-phase";
 
@@ -13,6 +14,13 @@ export class PartyHealPhase extends BattlePhase {
 
   start() {
     super.start();
+
+    const isHealPhaseActive = new Utils.BooleanHolder(true);
+    applyChallenges(this.scene.gameMode, ChallengeType.NO_HEAL_PHASE, isHealPhaseActive);
+    if (!isHealPhaseActive.value) {
+      this.end();
+      return;
+    }
 
     const bgmPlaying = this.scene.isBgmPlaying();
     if (bgmPlaying) {
