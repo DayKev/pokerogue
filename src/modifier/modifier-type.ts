@@ -1,5 +1,6 @@
 import BattleScene from "#app/battle-scene";
 import { getBerryEffectDescription, getBerryName } from "#app/data/berry";
+import { applyChallenges, ChallengeType } from "#app/data/challenge";
 import { allMoves, AttackMove, selfStatLowerMoves } from "#app/data/move";
 import { getNatureName, getNatureStatMultiplier, Nature } from "#app/data/nature";
 import { getPokeballCatchMultiplier, getPokeballName, MAX_PER_TYPE_POKEBALLS, PokeballType } from "#app/data/pokeball";
@@ -11,6 +12,7 @@ import { tmPoolTiers, tmSpecies } from "#app/data/tms";
 import { Type } from "#app/data/type";
 import { getStatKey, PermanentStat, Stat, TEMP_BATTLE_STATS, TempBattleStat } from "#app/enums/stat";
 import Pokemon, { EnemyPokemon, PlayerPokemon, PokemonMove } from "#app/field/pokemon";
+import { GameMode } from "#app/game-mode";
 import { getPokemonNameWithAffix } from "#app/messages";
 import Overrides from "#app/overrides";
 import { Unlockables } from "#app/system/unlockables";
@@ -2077,21 +2079,6 @@ export function getModifierTypeFuncById(id: string): ModifierTypeFunc {
 export function getPlayerModifierTypeOptions(count: integer, party: PlayerPokemon[], modifierTiers?: ModifierTier[], customModifierSettings?: CustomModifierSettings): ModifierTypeOption[] {
   const options: ModifierTypeOption[] = [];
   const retryCount = Math.min(count * 5, 50);
-  /*
-  // based on old version
-  new Array(count).fill(0).map((_, i) => {
-    let candidate = getNewModifierTypeOption(party, ModifierPoolType.PLAYER, modifierTiers?.length > i ? modifierTiers[i] : undefined);
-    let r = 0;
-    let isValidForChallenge = new Utils.BooleanHolder(true); // <--
-    applyChallenges(party[0].scene.gameMode, ChallengeType.RANDOM_ITEM_BLACKLIST, candidate, isValidForChallenge); // <--
-    while ((options.length && ++r < retryCount && options.filter(o => o.type.name === candidate.type.name || o.type.group === candidate.type.group).length) || !isValidForChallenge.value) { // <--
-      candidate = getNewModifierTypeOption(party, ModifierPoolType.PLAYER, candidate.type.tier, candidate.upgradeCount);
-      isValidForChallenge = new Utils.BooleanHolder(true); // <--
-      applyChallenges(party[0].scene.gameMode, ChallengeType.RANDOM_ITEM_BLACKLIST, candidate, isValidForChallenge); // <--
-    }
-    options.push(candidate);
-  });
-  */
   if (!customModifierSettings) {
     new Array(count).fill(0).map((_, i) => {
       options.push(getModifierTypeOptionWithRetry(options, retryCount, party, modifierTiers && modifierTiers.length > i ? modifierTiers[i] : undefined));
@@ -2154,8 +2141,12 @@ function getModifierTypeOptionWithRetry(existingOptions: ModifierTypeOption[], r
   allowLuckUpgrades = allowLuckUpgrades ?? true;
   let candidate = getNewModifierTypeOption(party, ModifierPoolType.PLAYER, tier, undefined, 0, allowLuckUpgrades);
   let r = 0;
-  while (existingOptions.length && ++r < retryCount && existingOptions.filter(o => o.type.name === candidate?.type.name || o.type.group === candidate?.type.group).length) {
+  let isValidForChallenge = new Utils.BooleanHolder(true);
+  applyChallenges(party[0].scene.gameMode, ChallengeType.RANDOM_ITEM_BLACKLIST, candidate!, isValidForChallenge);
+  while (existingOptions.length && ++r < retryCount && existingOptions.filter(o => o.type.name === candidate?.type.name || o.type.group === candidate?.type.group).length || !isValidForChallenge.value) {
     candidate = getNewModifierTypeOption(party, ModifierPoolType.PLAYER, candidate?.type.tier ?? tier, candidate?.upgradeCount, 0, allowLuckUpgrades);
+    isValidForChallenge = new Utils.BooleanHolder(true);
+    applyChallenges(party[0].scene.gameMode, ChallengeType.RANDOM_ITEM_BLACKLIST, candidate!, isValidForChallenge);
   }
   return candidate!;
 }
@@ -2185,7 +2176,7 @@ export function overridePlayerModifierTypeOptions(options: ModifierTypeOption[],
   }
 }
 
-export function getPlayerShopModifierTypeOptionsForWave(waveIndex: integer, baseCost: integer/*, gameMode: GameMode*/): ModifierTypeOption[] {
+export function getPlayerShopModifierTypeOptionsForWave(waveIndex: integer, baseCost: integer, gameMode: GameMode): ModifierTypeOption[] {
   if (!(waveIndex % 10)) {
     return [];
   }
@@ -2219,11 +2210,11 @@ export function getPlayerShopModifierTypeOptionsForWave(waveIndex: integer, base
       new ModifierTypeOption(modifierTypes.SACRED_ASH(), 0, baseCost * 10)
     ]
   ];
-  return options.slice(0, Math.ceil(Math.max(waveIndex + 10, 0) / 30)).flat();/*.filter(x => {
+  return options.slice(0, Math.ceil(Math.max(waveIndex + 10, 0) / 30)).flat().filter(x => {
     const isValidForChallenge = new Utils.BooleanHolder(true);
     applyChallenges(gameMode, ChallengeType.SHOP_ITEM_BLACKLIST, x, isValidForChallenge);
     return isValidForChallenge.value;
-  });*/
+  });
 }
 
 export function getEnemyBuffModifierForWave(tier: ModifierTier, enemyModifiers: Modifiers.PersistentModifier[], scene: BattleScene): Modifiers.EnemyPersistentModifier {

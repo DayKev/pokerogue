@@ -191,7 +191,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     this.scene.applyModifier(HealShopCostModifier, true, baseShopCost);
 
     const shopTypeOptions = !removeHealShop
-      ? getPlayerShopModifierTypeOptionsForWave(this.scene.currentBattle.waveIndex, baseShopCost.value).filter(shopItem => {
+      ? getPlayerShopModifierTypeOptionsForWave(this.scene.currentBattle.waveIndex, baseShopCost.value, this.scene.gameMode).filter(shopItem => {
         const isValidForChallenge = new BooleanHolder(true);
         applyChallenges(this.scene.gameMode, ChallengeType.SHOP_ITEM_BLACKLIST, shopItem, isValidForChallenge);
         return isValidForChallenge.value;

@@ -1,16 +1,15 @@
 import BattleScene from "#app/battle-scene";
-import { ModifierTier } from "#app/modifier/modifier-tier";
-import { regenerateModifierPoolThresholds, ModifierTypeOption, ModifierType, getPlayerShopModifierTypeOptionsForWave, PokemonModifierType, FusePokemonModifierType, PokemonMoveModifierType, TmModifierType, RememberMoveModifierType, PokemonPpRestoreModifierType, PokemonPpUpModifierType, ModifierPoolType, getPlayerModifierTypeOptions } from "#app/modifier/modifier-type";
 import { ExtraModifierModifier, Modifier, PokemonHeldItemModifier } from "#app/modifier/modifier";
-import ModifierSelectUiHandler, { SHOP_OPTIONS_ROW_LIMIT } from "#app/ui/modifier-select-ui-handler";
-import PartyUiHandler, { PartyUiMode, PartyOption } from "#app/ui/party-ui-handler";
-import { Mode } from "#app/ui/ui";
-import i18next from "i18next";
-import * as Utils from "#app/utils";
-import { BattlePhase } from "./battle-phase";
+import { ModifierTier } from "#app/modifier/modifier-tier";
+import { CustomModifierSettings, FusePokemonModifierType, ModifierPoolType, ModifierType, ModifierTypeOption, PokemonModifierType, PokemonMoveModifierType, PokemonPpRestoreModifierType, PokemonPpUpModifierType, RememberMoveModifierType, TmModifierType, getPlayerModifierTypeOptions, getPlayerShopModifierTypeOptionsForWave, regenerateModifierPoolThresholds } from "#app/modifier/modifier-type";
 import Overrides from "#app/overrides";
-import { CustomModifierSettings } from "#app/modifier/modifier-type";
+import ModifierSelectUiHandler, { SHOP_OPTIONS_ROW_LIMIT } from "#app/ui/modifier-select-ui-handler";
+import PartyUiHandler, { PartyOption, PartyUiMode } from "#app/ui/party-ui-handler";
+import { Mode } from "#app/ui/ui";
+import * as Utils from "#app/utils";
 import { isNullOrUndefined } from "#app/utils";
+import i18next from "i18next";
+import { BattlePhase } from "./battle-phase";
 
 export class SelectModifierPhase extends BattlePhase {
   private rerollCount: integer;
@@ -128,7 +127,7 @@ export class SelectModifierPhase extends BattlePhase {
         }
         break;
       default:
-        const shopOptions = getPlayerShopModifierTypeOptionsForWave(this.scene.currentBattle.waveIndex, this.scene.getWaveMoneyAmount(1));
+        const shopOptions = getPlayerShopModifierTypeOptionsForWave(this.scene.currentBattle.waveIndex, this.scene.getWaveMoneyAmount(1), this.scene.gameMode);
         const shopOption = shopOptions[rowCursor > 2 || shopOptions.length <= SHOP_OPTIONS_ROW_LIMIT ? cursor : cursor + SHOP_OPTIONS_ROW_LIMIT];
         if (shopOption.type) {
           modifierType = shopOption.type;
