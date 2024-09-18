@@ -33,5 +33,29 @@
     "desc": "Type matchups are reversed and no type is immune to any other type.\nDisables other challenges' achievements.",
     "value.0": "Off",
     "value.1": "On"
+  },
+  "noAutoHeal": {
+    "name": "No Auto Heal",
+    "desc": "Disables the automatic healing which normally occurs after every 10th wave.",
+    "value.0": "Off",
+    "value.1": "On"
+  },
+  "hardcore": {
+    "name": "Hardcore",
+    "desc": "You can no longer revive Pokemon that have fainted.",
+    "value.0": "Off",
+    "value.1": "On"
+  },
+  "noLegends": {
+    "name": "No Starter Legends",
+    "desc": "You can't choose any legendary, sub-legendary or mythical Pokemon as a starter.",
+    "value.0": "Off",
+    "value.1": "On"
+  },
+  "limitedCatch": {
+    "name": "Limited Catch",
+    "desc": "You can only add the first Pokemon of a biome to your current party.",
+    "value.0": "Off",
+    "value.1": "On"
   }
 }

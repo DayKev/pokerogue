@@ -847,15 +847,8 @@ export class NoAutomaticHealChallenge extends Challenge {
   }
 
   override applyNoHealPhase(applyHealPhase: BooleanHolder): boolean {
-    if (this.value === 1) {
-      return false;
-    }
     applyHealPhase.value = false;
     return true;
-  }
-
-  override getDifficulty(): number {
-    return this.value > 0 ? 1 : 0;
   }
 
   static override loadChallenge(source: NoAutomaticHealChallenge | any): NoAutomaticHealChallenge {
@@ -892,10 +885,6 @@ export class HardcoreChallenge extends Challenge {
     return true;
   }
 
-  override getDifficulty(): number {
-    return this.value > 0 ? 1 : 0;
-  }
-
   static override loadChallenge(source: HardcoreChallenge | any): HardcoreChallenge {
     const newChallenge = new HardcoreChallenge();
     newChallenge.value = source.value;
@@ -911,17 +900,9 @@ export class NoStarterLegendsChallenge extends Challenge {
   }
 
   override applyStarterChoice(pokemon: PokemonSpecies, valid: BooleanHolder, dexAttr: DexAttrProps, soft?: boolean): boolean {
-    if (this.value === 1) {
-      return false;
-    }
     valid.value = !pokemon.legendary && !pokemon.mythical && !pokemon.subLegendary;
     return true;
   }
-
-  override getDifficulty(): number {
-    return this.value > 0 ? 1 : 0;
-  }
-
   static override loadChallenge(source: NoStarterLegendsChallenge | any): NoStarterLegendsChallenge {
     const newChallenge = new NoStarterLegendsChallenge();
     newChallenge.value = source.value;
@@ -940,10 +921,6 @@ export class LimitedCatchChallenge extends Challenge {
   override applyAddPokemonToParty(pokemon: EnemyPokemon, waveIndex: number, canAddToParty: BooleanHolder): boolean {
     canAddToParty.value = waveIndex % 10 === 1;
     return true;
-  }
-
-  override getDifficulty(): number {
-    return this.value > 0 ? 1 : 0;
   }
 
   static override loadChallenge(source: LimitedCatchChallenge | any): LimitedCatchChallenge {
