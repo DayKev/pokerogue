@@ -35,8 +35,8 @@
     "value.1": "On"
   },
   "noAutoHeal": {
-    "name": "No Auto Heal",
-    "desc": "Disables the automatic healing which normally occurs after every 10th wave.",
+    "name": "No Free Heal",
+    "desc": "Disables the free automatic healing which normally occurs after every 10th wave.",
     "value.0": "Off",
     "value.1": "On"
   },
