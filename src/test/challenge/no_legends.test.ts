@@ -1,0 +1,32 @@
+import { Challenges } from "#enums/challenges";
+import GameManager from "#test/utils/gameManager";
+import Phaser from "phaser";
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+
+const TIMEOUT = 20 * 1000;
+
+describe("Inverse Battle", () => {
+  let phaserGame: Phaser.Game;
+  let game: GameManager;
+
+  beforeAll(() => {
+    phaserGame = new Phaser.Game({
+      type: Phaser.HEADLESS,
+    });
+  });
+
+  afterEach(() => {
+    game.phaseInterceptor.restoreOg();
+  });
+
+  beforeEach(() => {
+    game = new GameManager(phaserGame);
+
+    game.challengeMode.addChallenge(Challenges.NO_LEGENDS);
+  });
+
+  it("prevents PartyHealPhase from healing the player's pokemon", async () => {
+    await game.runToTitle();
+    expect(1);
+  }, TIMEOUT);
+});

@@ -14,6 +14,9 @@ import { getStatKey, PermanentStat, Stat, TEMP_BATTLE_STATS, TempBattleStat } fr
 import Pokemon, { EnemyPokemon, PlayerPokemon, PokemonMove } from "#app/field/pokemon";
 import { GameMode } from "#app/game-mode";
 import { getPokemonNameWithAffix } from "#app/messages";
+import * as Modifiers from "#app/modifier/modifier";
+import { MoneyMultiplierModifier } from "#app/modifier/modifier";
+import { ModifierTier } from "#app/modifier/modifier-tier";
 import Overrides from "#app/overrides";
 import { Unlockables } from "#app/system/unlockables";
 import { getVoucherTypeIcon, getVoucherTypeName, VoucherType } from "#app/system/voucher";
@@ -26,9 +29,6 @@ import { BerryType } from "#enums/berry-type";
 import { Moves } from "#enums/moves";
 import { Species } from "#enums/species";
 import i18next from "i18next";
-import * as Modifiers from "./modifier";
-import { MoneyMultiplierModifier } from "./modifier";
-import { ModifierTier } from "./modifier-tier";
 
 const outputModifierData = false;
 const useMaxWeightForOutput = false;
@@ -147,7 +147,7 @@ export class ModifierType {
 type ModifierTypeGeneratorFunc = (party: Pokemon[], pregenArgs?: any[]) => ModifierType | null;
 
 export class ModifierTypeGenerator extends ModifierType {
-  private genTypeFunc:  ModifierTypeGeneratorFunc;
+  private genTypeFunc: ModifierTypeGeneratorFunc;
 
   constructor(genTypeFunc: ModifierTypeGeneratorFunc) {
     super(null, null, null);
@@ -876,7 +876,7 @@ export class FormChangeItemModifierType extends PokemonModifierType implements G
         if (pokemonFormChanges.hasOwnProperty(pokemon.species.speciesId)
           // Get all form changes for this species with an item trigger, including any compound triggers
           && pokemonFormChanges[pokemon.species.speciesId].filter(fc => fc.trigger.hasTriggerType(SpeciesFormChangeItemTrigger) && (fc.preFormKey === pokemon.getFormKey()))
-          // Returns true if any form changes match this item
+            // Returns true if any form changes match this item
             .map(fc => fc.findTrigger(SpeciesFormChangeItemTrigger) as SpeciesFormChangeItemTrigger)
             .flat().flatMap(fc => fc.item).includes(this.formChangeItem)
         ) {
@@ -1275,7 +1275,7 @@ type WeightedModifierTypeWeightFunc = (party: Pokemon[], rerollCount?: integer) 
  */
 function skipInClassicAfterWave(wave: integer, defaultWeight: integer): WeightedModifierTypeWeightFunc {
   return (party: Pokemon[]) => {
-    const gameMode =  party[0].scene.gameMode;
+    const gameMode = party[0].scene.gameMode;
     const currentWave = party[0].scene.currentBattle.waveIndex;
     return gameMode.isClassic && currentWave >= wave ? 0 : defaultWeight;
   };
@@ -1287,7 +1287,7 @@ function skipInClassicAfterWave(wave: integer, defaultWeight: integer): Weighted
  * @param defaultWeight ModifierType default weight
  * @returns A WeightedModifierTypeWeightFunc
  */
-function skipInLastClassicWaveOrDefault(defaultWeight: integer) : WeightedModifierTypeWeightFunc {
+function skipInLastClassicWaveOrDefault(defaultWeight: integer): WeightedModifierTypeWeightFunc {
   return skipInClassicAfterWave(199, defaultWeight);
 }
 class WeightedModifierType {
@@ -1883,10 +1883,10 @@ const enemyBuffModifierPool: ModifierPool = {
   ].map(m => {
     m.setTier(ModifierTier.ULTRA); return m;
   }),
-  [ModifierTier.ROGUE]: [ ].map((m: WeightedModifierType) => {
+  [ModifierTier.ROGUE]: [].map((m: WeightedModifierType) => {
     m.setTier(ModifierTier.ROGUE); return m;
   }),
-  [ModifierTier.MASTER]: [ ].map((m: WeightedModifierType) => {
+  [ModifierTier.MASTER]: [].map((m: WeightedModifierType) => {
     m.setTier(ModifierTier.MASTER); return m;
   })
 };

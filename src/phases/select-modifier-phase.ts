@@ -3,13 +3,13 @@ import { ExtraModifierModifier, Modifier, PokemonHeldItemModifier } from "#app/m
 import { ModifierTier } from "#app/modifier/modifier-tier";
 import { CustomModifierSettings, FusePokemonModifierType, ModifierPoolType, ModifierType, ModifierTypeOption, PokemonModifierType, PokemonMoveModifierType, PokemonPpRestoreModifierType, PokemonPpUpModifierType, RememberMoveModifierType, TmModifierType, getPlayerModifierTypeOptions, getPlayerShopModifierTypeOptionsForWave, regenerateModifierPoolThresholds } from "#app/modifier/modifier-type";
 import Overrides from "#app/overrides";
+import { BattlePhase } from "#app/phases/battle-phase";
 import ModifierSelectUiHandler, { SHOP_OPTIONS_ROW_LIMIT } from "#app/ui/modifier-select-ui-handler";
 import PartyUiHandler, { PartyOption, PartyUiMode } from "#app/ui/party-ui-handler";
 import { Mode } from "#app/ui/ui";
 import * as Utils from "#app/utils";
 import { isNullOrUndefined } from "#app/utils";
 import i18next from "i18next";
-import { BattlePhase } from "./battle-phase";
 
 export class SelectModifierPhase extends BattlePhase {
   private rerollCount: integer;
