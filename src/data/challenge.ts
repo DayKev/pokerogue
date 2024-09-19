@@ -861,21 +861,19 @@ export class NoAutomaticHealChallenge extends Challenge {
 
 /** Challenge that removes the ability to revive fallen pokemon */
 export class HardcoreChallenge extends Challenge {
+  private itemBlackList = ["modifierType:ModifierType.REVIVE", "modifierType:ModifierType.MAX_REVIVE", "modifierType:ModifierType.SACRED_ASH", "modifierType:ModifierType.REVIVER_SEED"];
+
   constructor() {
     super(Challenges.HARDCORE, 1);
   }
 
   override applyRandomItemBlacklist(randomItem: ModifierTypeOption, isValid: BooleanHolder): boolean {
-    const randomItemBlackList = ["modifierType:ModifierType.REVIVE", "modifierType:ModifierType.MAX_REVIVE", "modifierType:ModifierType.SACRED_ASH", "modifierType:ModifierType.REVIVER_SEED"];
-
-    isValid.value = !randomItemBlackList.includes(randomItem.type.localeKey);
+    isValid.value = !this.itemBlackList.includes(randomItem.type.localeKey);
     return true;
   }
 
   override applyShopItemBlacklist(shopItem: ModifierTypeOption, isValid: BooleanHolder): boolean {
-    const shopItemBlackList = ["modifierType:ModifierType.REVIVE", "modifierType:ModifierType.MAX_REVIVE", "modifierType:ModifierType.SACRED_ASH", "modifierType:ModifierType.REVIVER_SEED"];
-
-    isValid.value = !shopItemBlackList.includes(shopItem.type.localeKey);
+    isValid.value = !this.itemBlackList.includes(shopItem.type.localeKey);
     return true;
   }
 
