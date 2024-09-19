@@ -6,7 +6,7 @@ import PokemonSpecies, { getPokemonSpecies, getPokemonSpeciesForm, speciesStarte
 import { Type } from "#app/data/type";
 import { TypeColor, TypeShadow } from "#app/enums/color";
 import { Moves } from "#app/enums/moves";
-import Pokemon, { EnemyPokemon, PokemonMove } from "#app/field/pokemon";
+import Pokemon, { EnemyPokemon, PlayerPokemon, PokemonMove } from "#app/field/pokemon";
 import Trainer, { TrainerVariant } from "#app/field/trainer";
 import { GameMode } from "#app/game-mode";
 import { ModifierTypeOption } from "#app/modifier/modifier-type";
@@ -109,6 +109,11 @@ export enum ChallengeType {
    * @see {@linkcode Challenge.applyMoveBlacklist}
   */
   MOVE_BLACKLIST,
+  /**
+   * Checks if pokemon are allowed to be revived from fainting
+   * @see {@linkcode Challenge.applyRevivePrevention}
+   */
+  PREVENT_REVIVE,
 }
 
 /**
@@ -482,6 +487,16 @@ export abstract class Challenge {
    * @returns `true` if this function did anything.
    */
   applyMoveBlacklist(move: PokemonMove, moveCanBeUsed: BooleanHolder): boolean {
+    return false;
+  }
+
+  /**
+   * An apply function for {@linkcode ChallengeType.PREVENT_REVIVE} challenges. Derived classes should alter this.
+   * @param pokemon The {@linkcode PlayerPokemon} being revived
+   * @param canBeRevived {@linkcode BooleanHolder} Whether the pokemon can be revived.
+   * @returns `true` if this function did anything.
+   */
+  applyRevivePrevention(pokemon: PlayerPokemon, canBeRevived: BooleanHolder): boolean {
     return false;
   }
 }
@@ -883,6 +898,11 @@ export class HardcoreChallenge extends Challenge {
     return true;
   }
 
+  override applyRevivePrevention(pokemon: PlayerPokemon, canBeRevived: BooleanHolder): boolean {
+    canBeRevived.value = false;
+    return true;
+  }
+
   static override loadChallenge(source: HardcoreChallenge | any): HardcoreChallenge {
     const newChallenge = new HardcoreChallenge();
     newChallenge.value = source.value;
@@ -1094,6 +1114,15 @@ export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType
  * @returns `true` if any challenge was successfully applied.
  */
 export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType.MOVE_BLACKLIST, move: PokemonMove, moveCanBeUsed: BooleanHolder): boolean;
+/**
+ * Apply all challenges that modify if pokemon can be revived.
+ * @param gameMode The current {@linkcode GameMode}
+ * @param challengeType {@linkcode ChallengeType.PREVENT_REVIVE}
+ * @param pokemon The {@linkcode PlayerPokemon} being revived.
+ * @param canBeRevived {@linkcode BooleanHolder} Whether the pokemon can be revived.
+ * @returns `true` if any challenge was successfully applied.
+ */
+export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType.PREVENT_REVIVE, pokemon: PlayerPokemon, canBeRevived: BooleanHolder): boolean;
 export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType, ...args: any[]): boolean {
   let ret = false;
   gameMode.challenges.forEach(c => {
@@ -1152,6 +1181,9 @@ export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType
         break;
       case ChallengeType.MOVE_BLACKLIST:
         ret ||= c.applyMoveBlacklist(args[0], args[1]);
+        break;
+      case ChallengeType.PREVENT_REVIVE:
+        ret ||= c.applyRevivePrevention(args[0], args[1]);
         break;
       }
     }
