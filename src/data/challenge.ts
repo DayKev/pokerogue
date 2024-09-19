@@ -929,7 +929,6 @@ export class NoStarterLegendsChallenge extends Challenge {
   }
 }
 
-// TODO: Check for ME compatibility
 /** Challenge that only allows the first pokemon of every 10 waves to be caught */
 export class LimitedCatchChallenge extends Challenge {
   constructor() {
@@ -937,7 +936,9 @@ export class LimitedCatchChallenge extends Challenge {
   }
 
   override applyAddPokemonToParty(pokemon: EnemyPokemon, waveIndex: number, canAddToParty: BooleanHolder): boolean {
-    canAddToParty.value = waveIndex % 10 === 1;
+    if (!(waveIndex % 10 === 1) && !(pokemon.scene.lastMysteryEncounter && (waveIndex % 10 === 2))) {
+      canAddToParty.value = false;
+    }
     return true;
   }
 
