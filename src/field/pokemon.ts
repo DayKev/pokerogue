@@ -3802,21 +3802,29 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
   }
 
   /**
-   * Generates a random number using the current battle's seed, or the global seed if `this.scene.currentBattle` is falsy
+   * Generates a random integer using the current battle's seed, or the global seed if `this.scene.currentBattle` is falsy
    * <!-- @import "../battle".Battle -->
    * This calls either {@linkcode BattleScene.randBattleSeedInt}({@linkcode range}, {@linkcode min}) in `src/battle-scene.ts`
    * which calls {@linkcode Battle.randSeedInt}(`scene`, {@linkcode range}, {@linkcode min}) in `src/battle.ts`
    * which calls {@linkcode Utils.randSeedInt randSeedInt}({@linkcode range}, {@linkcode min}) in `src/utils.ts`,
    * or it directly calls {@linkcode Utils.randSeedInt randSeedInt}({@linkcode range}, {@linkcode min}) in `src/utils.ts` if there is no current battle
    *
-   * @param range How large of a range of random numbers to choose from. If {@linkcode range} <= 1, returns {@linkcode min}
+   * @param range How large of a range of random integers to choose from. If {@linkcode range} <= 1, returns {@linkcode min}
    * @param min The minimum integer to pick, default `0`
    * @returns A random integer between {@linkcode min} and ({@linkcode min} + {@linkcode range} - 1)
    */
-  randSeedInt(range: integer, min: integer = 0): integer {
+  randSeedInt(range: number, min: number = 0): number {
     return this.scene.currentBattle
       ? this.scene.randBattleSeedInt(range, min)
       : Utils.randSeedInt(range, min);
+  }
+
+  /**
+   * Generates a random number between 0 and 1 using the current battle's seed, or the global seed if `this.scene.currentBattle` is falsy
+   * @returns A random number between 0 and 1
+   */
+  randSeedFloat(): number {
+    return this.scene.currentBattle ? this.scene.randBattleSeedFloat() : Utils.randSeedFloat();
   }
 
   /**
@@ -3825,7 +3833,7 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
    * @param max The maximum integer to generate
    * @returns a random integer between {@linkcode min} and {@linkcode max} inclusive
    */
-  randSeedIntRange(min: integer, max: integer): integer {
+  randSeedIntRange(min: number, max: number): number {
     return this.randSeedInt((max - min) + 1, min);
   }
 

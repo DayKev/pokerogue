@@ -380,8 +380,8 @@ export default class Battle {
   }
 
   /**
-   * Generates a random number using the current battle's seed. Calls {@linkcode Utils.randSeedInt}
-   * @param range How large of a range of random numbers to choose from. If {@linkcode range} <= 1, returns {@linkcode min}
+   * Generates a random integer using the current battle's seed. Calls {@linkcode Utils.randSeedInt}
+   * @param range How large of a range of random integers to choose from. If {@linkcode range} <= 1, returns {@linkcode min}
    * @param min The minimum integer to pick, default `0`
    * @returns A random integer between {@linkcode min} and ({@linkcode min} + {@linkcode range} - 1)
    */
@@ -401,6 +401,27 @@ export default class Battle {
     scene.rngCounter = this.rngCounter++;
     scene.rngSeedOverride = this.battleSeed;
     const ret = Utils.randSeedInt(range, min);
+    this.battleSeedState = Phaser.Math.RND.state();
+    Phaser.Math.RND.state(state);
+    scene.rngCounter = tempRngCounter;
+    scene.rngSeedOverride = tempSeedOverride;
+    return ret;
+  }
+
+  /** Generates a random number between 0 and 1 using the current battle's seed. Calls {@linkcode Utils.randSeedFloat} */
+  randSeedFloat(scene: BattleScene): number {
+    const tempRngCounter = scene.rngCounter;
+    const tempSeedOverride = scene.rngSeedOverride;
+    const state = Phaser.Math.RND.state();
+    if (this.battleSeedState) {
+      Phaser.Math.RND.state(this.battleSeedState);
+    } else {
+      Phaser.Math.RND.sow([ Utils.shiftCharCodes(this.battleSeed, this.turn << 6) ]);
+      console.log("Battle Seed:", this.battleSeed);
+    }
+    scene.rngCounter = this.rngCounter++;
+    scene.rngSeedOverride = this.battleSeed;
+    const ret = Utils.randSeedFloat();
     this.battleSeedState = Phaser.Math.RND.state();
     Phaser.Math.RND.state(state);
     scene.rngCounter = tempRngCounter;

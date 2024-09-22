@@ -1020,17 +1020,27 @@ export default class BattleScene extends SceneBase {
   }
 
   /**
-   * Generates a random number using the current battle's seed
+   * Generates a random integer using the current battle's seed
    *
    * This calls {@linkcode Battle.randSeedInt}(`scene`, {@linkcode range}, {@linkcode min}) in `src/battle.ts`
    * which calls {@linkcode Utils.randSeedInt randSeedInt}({@linkcode range}, {@linkcode min}) in `src/utils.ts`
    *
-   * @param range How large of a range of random numbers to choose from. If {@linkcode range} <= 1, returns {@linkcode min}
+   * @param range How large of a range of random integers to choose from. If {@linkcode range} <= 1, returns {@linkcode min}
    * @param min The minimum integer to pick, default `0`
    * @returns A random integer between {@linkcode min} and ({@linkcode min} + {@linkcode range} - 1)
    */
-  randBattleSeedInt(range: integer, min: integer = 0): integer {
+  randBattleSeedInt(range: number, min: number = 0): number {
     return this.currentBattle?.randSeedInt(this, range, min);
+  }
+
+  /**
+   * Generates a random number between 0 and 1 using the current battle's seed
+   *
+   * Calls {@linkcode Battle.randSeedFloat} which calls {@linkcode Utils.randSeedFloat}
+   * @returns A random number between 0 and 1
+   */
+  randBattleSeedFloat(): number {
+    return this.currentBattle.randSeedFloat(this);
   }
 
   reset(clearScene: boolean = false, clearData: boolean = false, reloadI18n: boolean = false): void {
