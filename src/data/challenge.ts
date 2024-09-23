@@ -615,9 +615,9 @@ export class SingleGenerationChallenge extends Challenge {
   override getDescription(overrideValue?: number): string {
     const value = overrideValue ?? this.value;
     if (value === 0) {
-      return i18next.t("challenges:singleGeneration.desc_default");
+      return i18next.t(`challenges:${this.geti18nKey()}.desc_default`);
     }
-    return i18next.t("challenges:singleGeneration.desc", { gen: i18next.t(`challenges:singleGeneration.gen_${value}`) });
+    return i18next.t(`challenges:${this.geti18nKey()}.desc`, { gen: i18next.t(`challenges:${this.geti18nKey()}.gen_${value}`) });
   }
 
 
@@ -714,8 +714,8 @@ export class SingleTypeChallenge extends Challenge {
     const value = overrideValue ?? this.value;
     const type = i18next.t(`pokemonInfo:Type.${Type[value - 1]}`);
     const typeColor = `[color=${TypeColor[Type[value-1]]}][shadow=${TypeShadow[Type[value-1]]}]${type}[/shadow][/color]`;
-    const defaultDesc = i18next.t("challenges:singleType.desc_default");
-    const typeDesc = i18next.t("challenges:singleType.desc", {type: typeColor});
+    const defaultDesc = i18next.t(`challenges:${this.geti18nKey()}.desc_default`);
+    const typeDesc = i18next.t(`challenges:${this.geti18nKey()}.desc`, {type: typeColor});
     return value === 0 ? defaultDesc : typeDesc;
   }
 
