@@ -6,9 +6,7 @@ import GameManager from "#test/utils/gameManager";
 import Phaser from "phaser";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-const TIMEOUT = 20 * 1000;
-
-describe("No Auto Heal", () => {
+describe("Challenge - No Auto Heal", () => {
   let phaserGame: Phaser.Game;
   let game: GameManager;
 
@@ -53,5 +51,5 @@ describe("No Auto Heal", () => {
 
     expect(player.hp).toBe(player.getMaxHp() - 1);
     expect(player.moveset[0]?.ppUsed).toBe(1);
-  }, TIMEOUT);
+  });
 });

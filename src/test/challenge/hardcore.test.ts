@@ -7,9 +7,7 @@ import Phaser from "phaser";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 //import { itemPoolChecks } from "#app/modifier/modifier-type"; // waiting for #3776
 
-const TIMEOUT = 20 * 1000;
-
-describe("Hardcore", () => {
+describe("Challenge - Hardcore", () => {
   let phaserGame: Phaser.Game;
   let game: GameManager;
 
@@ -50,5 +48,5 @@ describe("Hardcore", () => {
     await game.phaseInterceptor.to("SelectModifierPhase");
 
     expect(1);
-  }, TIMEOUT);
+  });
 });

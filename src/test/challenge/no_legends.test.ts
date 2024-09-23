@@ -3,9 +3,7 @@ import GameManager from "#test/utils/gameManager";
 import Phaser from "phaser";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-const TIMEOUT = 20 * 1000;
-
-describe("No Legends", () => {
+describe("Challenge - No Legends", () => {
   let phaserGame: Phaser.Game;
   let game: GameManager;
 
@@ -29,5 +27,5 @@ describe("No Legends", () => {
   it.todo("removes legends/sub-legends/mythicals from the starter select screen", async () => {
     await game.runToTitle();
     expect(1);
-  }, TIMEOUT);
+  });
 });
