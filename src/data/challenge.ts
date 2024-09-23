@@ -701,10 +701,8 @@ export class SingleTypeChallenge extends Challenge {
    * @returns The localised name for the current value.
    */
   override getValue(overrideValue?: number): string {
-    if (overrideValue === undefined) {
-      overrideValue = this.value;
-    }
-    return Type[this.value - 1].toLowerCase();
+    const value = overrideValue ?? this.value;
+    return Type[value - 1].toLowerCase();
   }
 
   /**
@@ -713,14 +711,12 @@ export class SingleTypeChallenge extends Challenge {
    * @returns The localised description for the current value.
    */
   override getDescription(overrideValue?: number): string {
-    if (overrideValue === undefined) {
-      overrideValue = this.value;
-    }
-    const type = i18next.t(`pokemonInfo:Type.${Type[this.value - 1]}`);
-    const typeColor = `[color=${TypeColor[Type[this.value-1]]}][shadow=${TypeShadow[Type[this.value-1]]}]${type}[/shadow][/color]`;
+    const value = overrideValue ?? this.value;
+    const type = i18next.t(`pokemonInfo:Type.${Type[value - 1]}`);
+    const typeColor = `[color=${TypeColor[Type[value-1]]}][shadow=${TypeShadow[Type[value-1]]}]${type}[/shadow][/color]`;
     const defaultDesc = i18next.t("challenges:singleType.desc_default");
     const typeDesc = i18next.t("challenges:singleType.desc", {type: typeColor});
-    return this.value === 0 ? defaultDesc : typeDesc;
+    return value === 0 ? defaultDesc : typeDesc;
   }
 
   static override loadChallenge(source: SingleTypeChallenge | any): SingleTypeChallenge {
@@ -821,10 +817,8 @@ export class LowerStarterMaxCostChallenge extends Challenge {
   }
 
   override getValue(overrideValue?: number): string {
-    if (overrideValue === undefined) {
-      overrideValue = this.value;
-    }
-    return (DEFAULT_PARTY_MAX_COST - overrideValue).toString();
+    const value = overrideValue ?? this.value;
+    return (DEFAULT_PARTY_MAX_COST - value).toString();
   }
 
   override applyStarterChoice(pokemon: PokemonSpecies, valid: BooleanHolder): boolean {
@@ -852,10 +846,8 @@ export class LowerStarterPointsChallenge extends Challenge {
   }
 
   override getValue(overrideValue?: number): string {
-    if (overrideValue === undefined) {
-      overrideValue = this.value;
-    }
-    return (DEFAULT_PARTY_MAX_COST - overrideValue).toString();
+    const value = overrideValue ?? this.value;
+    return (DEFAULT_PARTY_MAX_COST - value).toString();
   }
 
   override applyStarterPoints(points: NumberHolder): boolean {
