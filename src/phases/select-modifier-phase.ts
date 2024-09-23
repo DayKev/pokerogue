@@ -1,14 +1,13 @@
 import BattleScene from "#app/battle-scene";
-import { ExtraModifierModifier, Modifier, PokemonHeldItemModifier } from "#app/modifier/modifier";
+import { ExtraModifierModifier, HealShopCostModifier, Modifier, PokemonHeldItemModifier } from "#app/modifier/modifier";
 import { ModifierTier } from "#app/modifier/modifier-tier";
-import { CustomModifierSettings, FusePokemonModifierType, ModifierPoolType, ModifierType, ModifierTypeOption, PokemonModifierType, PokemonMoveModifierType, PokemonPpRestoreModifierType, PokemonPpUpModifierType, RememberMoveModifierType, TmModifierType, getPlayerModifierTypeOptions, getPlayerShopModifierTypeOptionsForWave, regenerateModifierPoolThresholds } from "#app/modifier/modifier-type";
+import { CustomModifierSettings, FusePokemonModifierType, getPlayerModifierTypeOptions, getPlayerShopModifierTypeOptionsForWave, ModifierPoolType, ModifierType, ModifierTypeOption, PokemonModifierType, PokemonMoveModifierType, PokemonPpRestoreModifierType, PokemonPpUpModifierType, regenerateModifierPoolThresholds, RememberMoveModifierType, TmModifierType } from "#app/modifier/modifier-type";
 import Overrides from "#app/overrides";
 import { BattlePhase } from "#app/phases/battle-phase";
 import ModifierSelectUiHandler, { SHOP_OPTIONS_ROW_LIMIT } from "#app/ui/modifier-select-ui-handler";
 import PartyUiHandler, { PartyOption, PartyUiMode } from "#app/ui/party-ui-handler";
 import { Mode } from "#app/ui/ui";
-import * as Utils from "#app/utils";
-import { isNullOrUndefined } from "#app/utils";
+import { isNullOrUndefined, NumberHolder } from "#app/utils";
 import i18next from "i18next";
 
 export class SelectModifierPhase extends BattlePhase {
@@ -35,7 +34,7 @@ export class SelectModifierPhase extends BattlePhase {
 
     const party = this.scene.getParty();
     regenerateModifierPoolThresholds(party, this.getPoolType(), this.rerollCount);
-    const modifierCount = new Utils.IntegerHolder(3);
+    const modifierCount = new NumberHolder(3);
     if (this.isPlayer()) {
       this.scene.applyModifiers(ExtraModifierModifier, true, modifierCount);
     }
@@ -68,11 +67,11 @@ export class SelectModifierPhase extends BattlePhase {
       }
       let modifierType: ModifierType;
       let cost: integer;
+      const rerollCost = this.getRerollCost(typeOptions, this.scene.lockModifierTiers);
       switch (rowCursor) {
       case 0:
         switch (cursor) {
         case 0:
-          const rerollCost = this.getRerollCost(typeOptions, this.scene.lockModifierTiers);
           if (rerollCost < 0 || this.scene.money < rerollCost) {
             this.scene.ui.playError();
             return false;
@@ -93,7 +92,7 @@ export class SelectModifierPhase extends BattlePhase {
           this.scene.ui.setModeWithoutClear(Mode.PARTY, PartyUiMode.MODIFIER_TRANSFER, -1, (fromSlotIndex: integer, itemIndex: integer, itemQuantity: integer, toSlotIndex: integer) => {
             if (toSlotIndex !== undefined && fromSlotIndex < 6 && toSlotIndex < 6 && fromSlotIndex !== toSlotIndex && itemIndex > -1) {
               const itemModifiers = this.scene.findModifiers(m => m instanceof PokemonHeldItemModifier
-                      && m.isTransferrable && m.pokemonId === party[fromSlotIndex].id) as PokemonHeldItemModifier[];
+                      && m.isTransferable && m.pokemonId === party[fromSlotIndex].id) as PokemonHeldItemModifier[];
               const itemModifier = itemModifiers[itemIndex];
               this.scene.tryTransferHeldItemModifier(itemModifier, party[toSlotIndex], true, itemQuantity);
             } else {
@@ -107,6 +106,11 @@ export class SelectModifierPhase extends BattlePhase {
           });
           break;
         case 3:
+          if (rerollCost < 0) {
+            // Reroll lock button is also disabled when reroll is disabled
+            this.scene.ui.playError();
+            return false;
+          }
           this.scene.lockModifierTiers = !this.scene.lockModifierTiers;
           const uiHandler = this.scene.ui.getHandler() as ModifierSelectUiHandler;
           uiHandler.setRerollCost(this.getRerollCost(typeOptions, this.scene.lockModifierTiers));
@@ -132,7 +136,10 @@ export class SelectModifierPhase extends BattlePhase {
         if (shopOption.type) {
           modifierType = shopOption.type;
         }
-        cost = shopOption.cost;
+        // Apply Black Sludge to healing item cost
+        const healingItemCost = new NumberHolder(shopOption.cost);
+        this.scene.applyModifier(HealShopCostModifier, true, healingItemCost);
+        cost = healingItemCost.value;
         break;
       }
 
