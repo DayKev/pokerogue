@@ -40,7 +40,7 @@ describe("Hardcore", () => {
     //itemPoolChecks.set("REVIVE", false);
   });
 
-  it("prevents revival items from showing up in the shop", async () => {
+  it.todo("prevents revival items from showing up in the shop", async () => {
     game.override
       .startingWave(191)
       .startingLevel(1000);

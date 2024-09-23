@@ -25,7 +25,8 @@ describe("No Legends", () => {
     game.challengeMode.addChallenge(Challenges.NO_LEGENDS);
   });
 
-  it("prevents PartyHealPhase from healing the player's pokemon", async () => {
+  // TODO: Figure out how to check this.
+  it.todo("removes legends/sub-legends/mythicals from the starter select screen", async () => {
     await game.runToTitle();
     expect(1);
   }, TIMEOUT);
