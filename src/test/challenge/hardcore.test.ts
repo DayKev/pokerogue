@@ -9,7 +9,7 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 const TIMEOUT = 20 * 1000;
 
-describe("Inverse Battle", () => {
+describe("Hardcore", () => {
   let phaserGame: Phaser.Game;
   let game: GameManager;
 
