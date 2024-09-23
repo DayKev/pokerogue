@@ -19,12 +19,13 @@ import { vi } from "vitest";
  */
 export class OverridesHelper extends GameManagerHelper {
   /**
-   * Overtride the starting biome
+   * Override the starting biome
+   * @warning Any event listeners that are attached to [NewArenaEvent](events\battle-scene.ts) may need to be handled down the line
    * @param biome The {@linkcode Biome} to set
    * @returns `this`
    */
   startingBiome(biome: Biome): this {
-    vi.spyOn(Overrides, "STARTING_BIOME_OVERRIDE", "get").mockReturnValue(biome);
+    this.game.scene.newArena(biome);
     this.log(`Starting biome set to ${Biome[biome]} (=${biome})!`);
     return this;
   }
