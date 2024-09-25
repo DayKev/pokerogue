@@ -44,7 +44,7 @@ describe("Spec - Pokemon", () => {
       const zubat = scene.getEnemyPokemon()!;
       zubat.addToParty(PokeballType.LUXURY_BALL);
 
-      const party = scene.getParty();
+      const party = scene.getPlayerParty();
       expect(party).toHaveLength(6);
       party.forEach((pkm, index) =>{
         expect(pkm.species.speciesId).toBe(index === 5 ? Species.ZUBAT : Species.ABRA);
@@ -56,7 +56,7 @@ describe("Spec - Pokemon", () => {
       const zubat = scene.getEnemyPokemon()!;
       zubat.addToParty(PokeballType.LUXURY_BALL, slotIndex);
 
-      const party = scene.getParty();
+      const party = scene.getPlayerParty();
       expect(party).toHaveLength(6);
       party.forEach((pkm, index) =>{
         expect(pkm.species.speciesId).toBe(index === slotIndex ? Species.ZUBAT : Species.ABRA);

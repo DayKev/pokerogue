@@ -24,7 +24,7 @@ export class TurnInitPhase extends FieldPhase {
       if (p.isOnField() && !p.isAllowedInBattle()) {
         this.scene.queueMessage(i18next.t("challenges:illegalEvolution", { "pokemon": p.name }), null, true);
 
-        const allowedPokemon = this.scene.getParty().filter(p => p.isAllowedInBattle());
+        const allowedPokemon = this.scene.getPlayerParty().filter(p => p.isAllowedInBattle());
 
         if (!allowedPokemon.length) {
           // If there are no longer any legal pokemon in the party, game over.

@@ -90,7 +90,7 @@ export class FaintPhase extends PokemonPhase {
 
     if (this.player) {
       /** The total number of Pokemon in the player's party that can legally fight */
-      const legalPlayerPokemon = this.scene.getParty().filter(p => p.isAllowedInBattle());
+      const legalPlayerPokemon = this.scene.getPlayerParty().filter(p => p.isAllowedInBattle());
       /** The total number of legal player Pokemon that aren't currently on the field */
       const legalPlayerPartyPokemon = legalPlayerPokemon.filter(p => !p.isActive(true));
       if (!legalPlayerPokemon.length) {

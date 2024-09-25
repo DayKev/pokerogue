@@ -17,10 +17,10 @@ import { getBiomeName } from "../data/biomes";
 import { Nature, getNatureName, getNatureStatMultiplier } from "../data/nature";
 import { loggedInUser } from "../account";
 import { Variant, getVariantTint } from "#app/data/variant";
-import {Button} from "#enums/buttons";
+import { Button } from "#enums/buttons";
 import { Ability } from "../data/ability";
 import i18next from "i18next";
-import {modifierSortFunc} from "../modifier/modifier";
+import { modifierSortFunc } from "../modifier/modifier";
 import { PlayerGender } from "#enums/player-gender";
 import { Stat, PERMANENT_STATS, getStatKey } from "#app/enums/stat";
 
@@ -521,7 +521,7 @@ export default class SummaryUiHandler extends UiHandler {
             break;
           }
           const isDown = button === Button.DOWN;
-          const party = this.scene.getParty();
+          const party = this.scene.getPlayerParty();
           const partyMemberIndex = this.pokemon ? party.indexOf(this.pokemon) : -1;
           if ((isDown && partyMemberIndex < party.length - 1) || (!isDown && partyMemberIndex)) {
             const page = this.cursor;

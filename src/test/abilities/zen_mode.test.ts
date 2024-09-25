@@ -53,9 +53,9 @@ describe("Abilities - ZEN MODE", () => {
     async () => {
       const moveToUse = Moves.SPLASH;
       await game.startBattle([Species.DARMANITAN]);
-      game.scene.getParty()[0].stats[Stat.HP] = 100;
-      game.scene.getParty()[0].hp = 100;
-      expect(game.scene.getParty()[0].formIndex).toBe(0);
+      game.scene.getPlayerParty()[0].stats[Stat.HP] = 100;
+      game.scene.getPlayerParty()[0].hp = 100;
+      expect(game.scene.getPlayerParty()[0].formIndex).toBe(0);
 
       game.move.select(moveToUse);
 
@@ -65,8 +65,8 @@ describe("Abilities - ZEN MODE", () => {
       const damagePhase = game.scene.getCurrentPhase() as DamagePhase;
       damagePhase.updateAmount(40);
       await game.phaseInterceptor.runFrom(DamagePhase).to(TurnEndPhase, false);
-      expect(game.scene.getParty()[0].hp).toBeLessThan(100);
-      expect(game.scene.getParty()[0].formIndex).toBe(0);
+      expect(game.scene.getPlayerParty()[0].hp).toBeLessThan(100);
+      expect(game.scene.getPlayerParty()[0].formIndex).toBe(0);
     },
   );
 
@@ -75,17 +75,17 @@ describe("Abilities - ZEN MODE", () => {
     async () => {
       const moveToUse = Moves.SPLASH;
       await game.startBattle([Species.DARMANITAN]);
-      game.scene.getParty()[0].stats[Stat.HP] = 1000;
-      game.scene.getParty()[0].hp = 100;
-      expect(game.scene.getParty()[0].formIndex).toBe(0);
+      game.scene.getPlayerParty()[0].stats[Stat.HP] = 1000;
+      game.scene.getPlayerParty()[0].hp = 100;
+      expect(game.scene.getPlayerParty()[0].formIndex).toBe(0);
 
       game.move.select(moveToUse);
 
       await game.setTurnOrder([BattlerIndex.ENEMY, BattlerIndex.PLAYER]);
       await game.phaseInterceptor.to(QuietFormChangePhase);
       await game.phaseInterceptor.to(TurnInitPhase, false);
-      expect(game.scene.getParty()[0].hp).not.toBe(100);
-      expect(game.scene.getParty()[0].formIndex).not.toBe(0);
+      expect(game.scene.getPlayerParty()[0].hp).not.toBe(100);
+      expect(game.scene.getPlayerParty()[0].formIndex).not.toBe(0);
     },
   );
 
@@ -94,9 +94,9 @@ describe("Abilities - ZEN MODE", () => {
     async () => {
       const moveToUse = Moves.SPLASH;
       await game.startBattle([Species.DARMANITAN, Species.CHARIZARD]);
-      game.scene.getParty()[0].stats[Stat.HP] = 1000;
-      game.scene.getParty()[0].hp = 100;
-      expect(game.scene.getParty()[0].formIndex).toBe(0);
+      game.scene.getPlayerParty()[0].stats[Stat.HP] = 1000;
+      game.scene.getPlayerParty()[0].hp = 100;
+      expect(game.scene.getPlayerParty()[0].formIndex).toBe(0);
 
       game.move.select(moveToUse);
 
@@ -106,10 +106,10 @@ describe("Abilities - ZEN MODE", () => {
       const damagePhase = game.scene.getCurrentPhase() as DamagePhase;
       damagePhase.updateAmount(80);
       await game.phaseInterceptor.runFrom(DamagePhase).to(QuietFormChangePhase);
-      expect(game.scene.getParty()[0].hp).not.toBe(100);
-      expect(game.scene.getParty()[0].formIndex).not.toBe(0);
-      await game.killPokemon(game.scene.getParty()[0]);
-      expect(game.scene.getParty()[0].isFainted()).toBe(true);
+      expect(game.scene.getPlayerParty()[0].hp).not.toBe(100);
+      expect(game.scene.getPlayerParty()[0].formIndex).not.toBe(0);
+      await game.killPokemon(game.scene.getPlayerParty()[0]);
+      expect(game.scene.getPlayerParty()[0].isFainted()).toBe(true);
       await game.phaseInterceptor.run(MessagePhase);
       await game.phaseInterceptor.run(EnemyCommandPhase);
       await game.phaseInterceptor.run(TurnStartPhase);
@@ -122,7 +122,7 @@ describe("Abilities - ZEN MODE", () => {
       });
       await game.phaseInterceptor.run(SwitchPhase);
       await game.phaseInterceptor.to(PostSummonPhase);
-      expect(game.scene.getParty()[1].formIndex).toBe(1);
+      expect(game.scene.getPlayerParty()[1].formIndex).toBe(1);
     },
   );
 
@@ -138,7 +138,7 @@ describe("Abilities - ZEN MODE", () => {
 
       await game.startBattle([Species.MAGIKARP, Species.DARMANITAN]);
 
-      const darmanitan = game.scene.getParty().find((p) => p.species.speciesId === Species.DARMANITAN)!;
+      const darmanitan = game.scene.getPlayerParty().find((p) => p.species.speciesId === Species.DARMANITAN)!;
       expect(darmanitan).not.toBe(undefined);
       expect(darmanitan.formIndex).toBe(zenForm);
 

@@ -26,7 +26,7 @@ export class PartyStatusCurePhase extends BattlePhase {
 
   start() {
     super.start();
-    for (const pokemon of this.scene.getParty()) {
+    for (const pokemon of this.scene.getPlayerParty()) {
       if (!pokemon.isOnField() || pokemon === this.user) {
         pokemon.resetStatus(false);
         pokemon.updateInfo(true);

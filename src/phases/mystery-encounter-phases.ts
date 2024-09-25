@@ -229,7 +229,7 @@ export class MysteryEncounterBattleStartCleanupPhase extends Phase {
     }
 
     // The total number of Pokemon in the player's party that can legally fight
-    const legalPlayerPokemon = this.scene.getParty().filter(p => p.isAllowedInBattle());
+    const legalPlayerPokemon = this.scene.getPlayerParty().filter(p => p.isAllowedInBattle());
     // The total number of legal player Pokemon that aren't currently on the field
     const legalPlayerPartyPokemon = legalPlayerPokemon.filter(p => !p.isActive(true));
     if (!legalPlayerPokemon.length) {
@@ -334,7 +334,7 @@ export class MysteryEncounterBattlePhase extends Phase {
       const doSummon = () => {
         scene.currentBattle.started = true;
         scene.playBgm(undefined);
-        scene.pbTray.showPbTray(scene.getParty());
+        scene.pbTray.showPbTray(scene.getPlayerParty());
         scene.pbTrayEnemy.showPbTray(scene.getEnemyParty());
         const doTrainerSummon = () => {
           this.hideEnemyTrainer();
@@ -393,7 +393,7 @@ export class MysteryEncounterBattlePhase extends Phase {
       }
     }
 
-    const availablePartyMembers = scene.getParty().filter(p => !p.isFainted());
+    const availablePartyMembers = scene.getPlayerParty().filter(p => !p.isFainted());
 
     if (!availablePartyMembers[0].isOnField()) {
       scene.pushPhase(new SummonPhase(scene, 0));

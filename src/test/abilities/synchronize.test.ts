@@ -38,7 +38,7 @@ describe("Abilities - Synchronize", () => {
     game.move.select(Moves.SPLASH);
     await game.phaseInterceptor.to("BerryPhase");
 
-    expect(game.scene.getParty()[0].status).toBeUndefined();
+    expect(game.scene.getPlayerParty()[0].status).toBeUndefined();
     expect(game.phaseInterceptor.log).not.toContain("ShowAbilityPhase");
   }, 20000);
 
@@ -48,7 +48,7 @@ describe("Abilities - Synchronize", () => {
     game.move.select(Moves.THUNDER_WAVE);
     await game.phaseInterceptor.to("BerryPhase");
 
-    expect(game.scene.getParty()[0].status?.effect).toBe(StatusEffect.PARALYSIS);
+    expect(game.scene.getPlayerParty()[0].status?.effect).toBe(StatusEffect.PARALYSIS);
     expect(game.scene.getEnemyParty()[0].status?.effect).toBe(StatusEffect.PARALYSIS);
     expect(game.phaseInterceptor.log).toContain("ShowAbilityPhase");
   }, 20000);
@@ -60,7 +60,7 @@ describe("Abilities - Synchronize", () => {
 
     await game.phaseInterceptor.to("BerryPhase");
 
-    expect(game.scene.getParty()[0].status?.effect).toBeUndefined();
+    expect(game.scene.getPlayerParty()[0].status?.effect).toBeUndefined();
     expect(game.scene.getEnemyParty()[0].status?.effect).toBe(StatusEffect.SLEEP);
     expect(game.phaseInterceptor.log).not.toContain("ShowAbilityPhase");
   }, 20000);
@@ -79,7 +79,7 @@ describe("Abilities - Synchronize", () => {
     game.doSwitchPokemon(1);
     await game.phaseInterceptor.to("BerryPhase");
 
-    expect(game.scene.getParty()[0].status?.effect).toBe(StatusEffect.POISON);
+    expect(game.scene.getPlayerParty()[0].status?.effect).toBe(StatusEffect.POISON);
     expect(game.scene.getEnemyParty()[0].status?.effect).toBeUndefined();
     expect(game.phaseInterceptor.log).not.toContain("ShowAbilityPhase");
   }, 20000);
@@ -90,7 +90,7 @@ describe("Abilities - Synchronize", () => {
     game.move.select(Moves.THUNDER_WAVE);
     await game.phaseInterceptor.to("BerryPhase");
 
-    expect(game.scene.getParty()[0].status?.effect).toBeUndefined();
+    expect(game.scene.getPlayerParty()[0].status?.effect).toBeUndefined();
     expect(game.scene.getEnemyParty()[0].status?.effect).toBe(StatusEffect.PARALYSIS);
     expect(game.phaseInterceptor.log).toContain("ShowAbilityPhase");
   }, 20000);
@@ -102,7 +102,7 @@ describe("Abilities - Synchronize", () => {
     game.move.select(Moves.PSYCHO_SHIFT);
     await game.phaseInterceptor.to("BerryPhase");
 
-    expect(game.scene.getParty()[0].status?.effect).toBe(StatusEffect.PARALYSIS); // keeping old gen < V impl for now since it's buggy otherwise
+    expect(game.scene.getPlayerParty()[0].status?.effect).toBe(StatusEffect.PARALYSIS); // keeping old gen < V impl for now since it's buggy otherwise
     expect(game.scene.getEnemyParty()[0].status?.effect).toBe(StatusEffect.PARALYSIS);
     expect(game.phaseInterceptor.log).toContain("ShowAbilityPhase");
   }, 20000);

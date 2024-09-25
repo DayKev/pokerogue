@@ -235,7 +235,7 @@ export class AttemptCapturePhase extends PokemonPhase {
       const addToParty = (slotIndex?: number) => {
         const newPokemon = pokemon.addToParty(this.pokeballType, slotIndex);
         const modifiers = this.scene.findModifiers(m => m instanceof PokemonHeldItemModifier, false);
-        if (this.scene.getParty().filter(p => p.isShiny()).length === 6) {
+        if (this.scene.getPlayerParty().filter(p => p.isShiny()).length === 6) {
           this.scene.validateAchv(achvs.SHINY_PARTY);
         }
         Promise.all(modifiers.map(m => this.scene.addModifier(m, true))).then(() => {
@@ -249,7 +249,7 @@ export class AttemptCapturePhase extends PokemonPhase {
         });
       };
       Promise.all([pokemon.hideInfo(), this.scene.gameData.setPokemonCaught(pokemon)]).then(() => {
-        if (this.scene.getParty().length === 6) {
+        if (this.scene.getPlayerParty().length === 6) {
           const promptRelease = () => {
             this.scene.ui.showText(i18next.t("battle:partyFull", { pokemonName: pokemon.getNameToRender() }), null, () => {
               this.scene.pokemonInfoContainer.makeRoomForConfirmUi(1, true);

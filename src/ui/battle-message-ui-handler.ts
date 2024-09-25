@@ -4,7 +4,7 @@ import { Mode } from "./ui";
 import MessageUiHandler from "./message-ui-handler";
 import { addWindow } from "./ui-theme";
 import BBCodeText from "phaser3-rex-plugins/plugins/bbcodetext";
-import {Button} from "#enums/buttons";
+import { Button } from "#enums/buttons";
 import i18next from "i18next";
 import { Stat, PERMANENT_STATS, getStatKey } from "#app/enums/stat";
 
@@ -170,7 +170,7 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
       if (!this.scene.showLevelUpStats) {
         return resolve();
       }
-      const newStats = (this.scene as BattleScene).getParty()[partyMemberIndex].stats;
+      const newStats = (this.scene as BattleScene).getPlayerParty()[partyMemberIndex].stats;
       let levelUpStatsValuesText = "";
       for (const s of PERMANENT_STATS) {
         levelUpStatsValuesText += `${showTotals ? newStats[s] : newStats[s] - prevStats[s]}\n`;

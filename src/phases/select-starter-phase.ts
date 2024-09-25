@@ -44,7 +44,7 @@ export class SelectStarterPhase extends Phase {
    * @param starters {@linkcode Pokemon} with which to start the first battle
    */
   initBattle(starters: Starter[]) {
-    const party = this.scene.getParty();
+    const party = this.scene.getPlayerParty();
     const loadPokemonAssets: Promise<void>[] = [];
     starters.forEach((starter: Starter, i: integer) => {
       if (!i && Overrides.STARTER_SPECIES_OVERRIDE) {
@@ -103,7 +103,7 @@ export class SelectStarterPhase extends Phase {
       this.scene.sessionPlayTime = 0;
       this.scene.lastSavePlayTime = 0;
       // Ensures Keldeo (or any future Pokemon that have this type of form change) starts in the correct form
-      this.scene.getParty().forEach((p: PlayerPokemon) => {
+      this.scene.getPlayerParty().forEach((p: PlayerPokemon) => {
         this.scene.triggerPokemonFormChange(p, SpeciesFormChangeMoveLearnedTrigger);
       });
       this.end();

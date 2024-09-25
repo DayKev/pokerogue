@@ -763,57 +763,57 @@ export default class BattleScene extends SceneBase {
     return true;
   }
 
-  getParty(): PlayerPokemon[] {
+  public getPlayerParty(): PlayerPokemon[] {
     return this.party;
   }
 
-  getPlayerPokemon(): PlayerPokemon | undefined {
-    return this.getPlayerField().find(p => p.isActive());
-  }
-
   /**
-   * Finds the first {@linkcode Pokemon.isActive() | active PlayerPokemon} that isn't also currently switching out
-   * @returns Either the first {@linkcode PlayerPokemon} satisfying, or undefined if no player pokemon on the field satisfy
+   * @returns The first {@linkcode PlayerPokemon} that is {@linkcode getPlayerField on the field}
+   * and {@linkcode PlayerPokemon.isActive is active}
+   * (aka {@linkcode PlayerPokemon.isAllowedInBattle is allowed in battle}),
+   * or `undefined` if there are no valid pokemon
+   * @param includeSwitching Whether a pokemon that is currently switching out is valid, default `true`
    */
-  getNonSwitchedPlayerPokemon(): PlayerPokemon | undefined {
-    return this.getPlayerField().find(p => p.isActive() && p.switchOutStatus === false);
+  public getPlayerPokemon(includeSwitching: boolean = true): PlayerPokemon | undefined {
+    return this.getPlayerField().find(p => p.isActive() && (includeSwitching || p.switchOutStatus === false));
   }
 
   /**
-   * Returns an array of PlayerPokemon of length 1 or 2 depending on if double battles or not
+   * Returns an array of PlayerPokemon of length 1 or 2 depending on if in a double battle or not.
+   * Does not actually check if the pokemon are on the field or not.
    * @returns array of {@linkcode PlayerPokemon}
    */
-  getPlayerField(): PlayerPokemon[] {
-    const party = this.getParty();
+  public getPlayerField(): PlayerPokemon[] {
+    const party = this.getPlayerParty();
     return party.slice(0, Math.min(party.length, this.currentBattle?.double ? 2 : 1));
   }
 
-  getEnemyParty(): EnemyPokemon[] {
-    return this.currentBattle?.enemyParty || [];
-  }
-
-  getEnemyPokemon(): EnemyPokemon | undefined {
-    return this.getEnemyField().find(p => p.isActive());
+  public getEnemyParty(): EnemyPokemon[] {
+    return this.currentBattle?.enemyParty ?? [];
   }
 
   /**
-   * Finds the first {@linkcode Pokemon.isActive() | active EnemyPokemon} pokemon from the enemy that isn't also currently switching out
-   * @returns Either the first {@linkcode EnemyPokemon} satisfying, or undefined if no player pokemon on the field satisfy
+   * @returns The first {@linkcode EnemyPokemon} that is {@linkcode getEnemyField on the field}
+   * and {@linkcode EnemyPokemon.isActive is active}
+   * (aka {@linkcode EnemyPokemon.isAllowedInBattle is allowed in battle}),
+   * or `undefined` if there are no valid pokemon
+   * @param includeSwitching Whether a pokemon that is currently switching out is valid, default `true`
    */
-  getNonSwitchedEnemyPokemon(): EnemyPokemon | undefined {
-    return this.getEnemyField().find(p => p.isActive() && p.switchOutStatus === false);
+  public getEnemyPokemon(includeSwitching: boolean = true): EnemyPokemon | undefined {
+    return this.getEnemyField().find(p => p.isActive() && (includeSwitching || p.switchOutStatus === false));
   }
 
   /**
-   * Returns an array of EnemyPokemon of length 1 or 2 depending on if double battles or not
+   * Returns an array of EnemyPokemon of length 1 or 2 depending on if in a double battle or not.
+   * Does not actually check if the pokemon are on the field or not.
    * @returns array of {@linkcode EnemyPokemon}
    */
-  getEnemyField(): EnemyPokemon[] {
+  public getEnemyField(): EnemyPokemon[] {
     const party = this.getEnemyParty();
     return party.slice(0, Math.min(party.length, this.currentBattle?.double ? 2 : 1));
   }
 
-  getField(activeOnly: boolean = false): Pokemon[] {
+  public getField(activeOnly: boolean = false): Pokemon[] {
     const ret = new Array(4).fill(null);
     const playerField = this.getPlayerField();
     const enemyField = this.getEnemyField();
@@ -866,7 +866,7 @@ export default class BattleScene extends SceneBase {
 
   getPokemonById(pokemonId: integer): Pokemon | null {
     const findInParty = (party: Pokemon[]) => party.find(p => p.id === pokemonId);
-    return (findInParty(this.getParty()) || findInParty(this.getEnemyParty())) ?? null;
+    return (findInParty(this.getPlayerParty()) || findInParty(this.getEnemyParty())) ?? null;
   }
 
   addPlayerPokemon(species: PokemonSpecies, level: integer, abilityIndex?: integer, formIndex?: integer, gender?: Gender, shiny?: boolean, variant?: Variant, ivs?: integer[], nature?: Nature, dataSource?: Pokemon | PokemonData, postProcess?: (playerPokemon: PlayerPokemon) => void): PlayerPokemon {
@@ -1062,7 +1062,7 @@ export default class BattleScene extends SceneBase {
     this.modifierBar.removeAll(true);
     this.enemyModifierBar.removeAll(true);
 
-    for (const p of this.getParty()) {
+    for (const p of this.getPlayerParty()) {
       p.destroy();
     }
     this.party = [];
@@ -1274,7 +1274,7 @@ export default class BattleScene extends SceneBase {
           }
         });
 
-        for (const pokemon of this.getParty()) {
+        for (const pokemon of this.getPlayerParty()) {
           pokemon.resetBattleData();
           applyPostBattleInitAbAttrs(PostBattleInitAbAttr, pokemon);
         }
@@ -1284,7 +1284,7 @@ export default class BattleScene extends SceneBase {
         }
       }
 
-      for (const pokemon of this.getParty()) {
+      for (const pokemon of this.getPlayerParty()) {
         this.triggerPokemonFormChange(pokemon, SpeciesFormChangeTimeOfDayTrigger);
       }
 
@@ -1479,7 +1479,7 @@ export default class BattleScene extends SceneBase {
   }
 
   trySpreadPokerus(): void {
-    const party = this.getParty();
+    const party = this.getPlayerParty();
     const infectedIndexes: integer[] = [];
     const spread = (index: number, spreadTo: number) => {
       const partyMember = party[index + spreadTo];
@@ -1676,7 +1676,7 @@ export default class BattleScene extends SceneBase {
   updateAndShowText(duration: number): void {
     const labels = [ this.luckLabelText, this.luckText ];
     labels.forEach(t => t.setAlpha(0));
-    const luckValue = getPartyLuckValue(this.getParty());
+    const luckValue = getPartyLuckValue(this.getPlayerParty());
     this.luckText.setText(getLuckString(luckValue));
     if (luckValue < 14) {
       this.luckText.setTint(getLuckTextTint(luckValue));
@@ -2600,7 +2600,7 @@ export default class BattleScene extends SceneBase {
 
   removePartyMemberModifiers(partyMemberIndex: integer): Promise<void> {
     return new Promise(resolve => {
-      const pokemonId = this.getParty()[partyMemberIndex].id;
+      const pokemonId = this.getPlayerParty()[partyMemberIndex].id;
       const modifiersToRemove = this.modifiers.filter(m => m instanceof PokemonHeldItemModifier && (m as PokemonHeldItemModifier).pokemonId === pokemonId);
       for (const m of modifiersToRemove) {
         this.modifiers.splice(this.modifiers.indexOf(m), 1);
@@ -2726,7 +2726,7 @@ export default class BattleScene extends SceneBase {
         }
       }
 
-      this.updatePartyForModifiers(player ? this.getParty() : this.getEnemyParty(), instant).then(() => {
+      this.updatePartyForModifiers(player ? this.getPlayerParty() : this.getEnemyParty(), instant).then(() => {
         (player ? this.modifierBar : this.enemyModifierBar).updateModifiers(modifiers);
         if (!player) {
           this.updateUIPositions();
@@ -2926,7 +2926,7 @@ export default class BattleScene extends SceneBase {
    */
   getActiveKeys(): string[] {
     const keys: string[] = [];
-    const playerParty = this.getParty();
+    const playerParty = this.getPlayerParty();
     playerParty.forEach(p => {
       keys.push(p.getSpriteKey(true));
       keys.push(p.getBattleSpriteKey(true, true));
@@ -2962,7 +2962,7 @@ export default class BattleScene extends SceneBase {
         this.setFieldScale(0.75);
         this.triggerPokemonFormChange(pokemon, SpeciesFormChangeManualTrigger, false);
         this.currentBattle.double = true;
-        const availablePartyMembers = this.getParty().filter((p) => p.isAllowedInBattle());
+        const availablePartyMembers = this.getPlayerParty().filter((p) => p.isAllowedInBattle());
         if (availablePartyMembers.length > 1) {
           this.pushPhase(new ToggleDoublePositionPhase(this, true));
           if (!availablePartyMembers[1].isOnField()) {
@@ -2987,7 +2987,7 @@ export default class BattleScene extends SceneBase {
    */
   applyPartyExp(expValue: number, pokemonDefeated: boolean, useWaveIndexMultiplier?: boolean, pokemonParticipantIds?: Set<number>): void {
     const participantIds = pokemonParticipantIds ?? this.currentBattle.playerParticipantIds;
-    const party = this.getParty();
+    const party = this.getPlayerParty();
     const expShareModifier = this.findModifier(m => m instanceof ExpShareModifier) as ExpShareModifier;
     const expBalanceModifier = this.findModifier(m => m instanceof ExpBalanceModifier) as ExpBalanceModifier;
     const multipleParticipantExpBonusModifier = this.findModifier(m => m instanceof MultipleParticipantExpBonusModifier) as MultipleParticipantExpBonusModifier;

@@ -55,7 +55,7 @@ describe("Items - Eviolite", () => {
       Species.RAICHU,
     ]);
 
-    const partyMember = game.scene.getParty()[0];
+    const partyMember = game.scene.getPlayerParty()[0];
 
     vi.spyOn(partyMember, "getEffectiveStat").mockImplementation((stat, _opponent?, _move?, _isCritical?) => {
       const statValue = new Utils.NumberHolder(partyMember.getStat(stat, false));
@@ -80,7 +80,7 @@ describe("Items - Eviolite", () => {
       Species.CLEFFA
     ]);
 
-    const [ partyMember, ally ] = game.scene.getParty();
+    const [ partyMember, ally ] = game.scene.getPlayerParty();
 
     // Fuse party members (taken from PlayerPokemon.fuse(...) function)
     partyMember.fusionSpecies = ally.species;
@@ -113,7 +113,7 @@ describe("Items - Eviolite", () => {
       Species.CLEFABLE
     ]);
 
-    const [ partyMember, ally ] = game.scene.getParty();
+    const [ partyMember, ally ] = game.scene.getPlayerParty();
 
     // Fuse party members (taken from PlayerPokemon.fuse(...) function)
     partyMember.fusionSpecies = ally.species;
@@ -146,7 +146,7 @@ describe("Items - Eviolite", () => {
       Species.CLEFFA
     ]);
 
-    const [ partyMember, ally ] = game.scene.getParty();
+    const [ partyMember, ally ] = game.scene.getPlayerParty();
 
     // Fuse party members (taken from PlayerPokemon.fuse(...) function)
     partyMember.fusionSpecies = ally.species;
@@ -179,7 +179,7 @@ describe("Items - Eviolite", () => {
       Species.CLEFABLE
     ]);
 
-    const [ partyMember, ally ] = game.scene.getParty();
+    const [ partyMember, ally ] = game.scene.getPlayerParty();
 
     // Fuse party members (taken from PlayerPokemon.fuse(...) function)
     partyMember.fusionSpecies = ally.species;

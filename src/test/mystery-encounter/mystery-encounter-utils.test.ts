@@ -49,7 +49,7 @@ describe("Mystery Encounter Utils", () => {
 
     it("gets a fainted pokemon from player party if isAllowedInBattle is false", () => {
       // Both pokemon fainted
-      scene.getParty().forEach(p => {
+      scene.getPlayerParty().forEach(p => {
         p.hp = 0;
         p.trySetStatus(StatusEffect.FAINT);
         p.updateInfo();
@@ -69,7 +69,7 @@ describe("Mystery Encounter Utils", () => {
 
     it("gets an unfainted legal pokemon from player party if isAllowed is true and isFainted is false", () => {
       // Only faint 1st pokemon
-      const party = scene.getParty();
+      const party = scene.getPlayerParty();
       party[0].hp = 0;
       party[0].trySetStatus(StatusEffect.FAINT);
       party[0].updateInfo();
@@ -88,7 +88,7 @@ describe("Mystery Encounter Utils", () => {
 
     it("returns last unfainted pokemon if doNotReturnLastAbleMon is false", () => {
       // Only faint 1st pokemon
-      const party = scene.getParty();
+      const party = scene.getPlayerParty();
       party[0].hp = 0;
       party[0].trySetStatus(StatusEffect.FAINT);
       party[0].updateInfo();
@@ -107,7 +107,7 @@ describe("Mystery Encounter Utils", () => {
 
     it("never returns last unfainted pokemon if doNotReturnLastAbleMon is true", () => {
       // Only faint 1st pokemon
-      const party = scene.getParty();
+      const party = scene.getPlayerParty();
       party[0].hp = 0;
       party[0].trySetStatus(StatusEffect.FAINT);
       party[0].updateInfo();
@@ -127,7 +127,7 @@ describe("Mystery Encounter Utils", () => {
 
   describe("getHighestLevelPlayerPokemon", () => {
     it("gets highest level pokemon", () => {
-      const party = scene.getParty();
+      const party = scene.getPlayerParty();
       party[0].level = 100;
 
       const result = getHighestLevelPlayerPokemon(scene);
@@ -135,7 +135,7 @@ describe("Mystery Encounter Utils", () => {
     });
 
     it("gets highest level pokemon at different index", () => {
-      const party = scene.getParty();
+      const party = scene.getPlayerParty();
       party[1].level = 100;
 
       const result = getHighestLevelPlayerPokemon(scene);
@@ -143,7 +143,7 @@ describe("Mystery Encounter Utils", () => {
     });
 
     it("breaks ties by getting returning lower index", () => {
-      const party = scene.getParty();
+      const party = scene.getPlayerParty();
       party[0].level = 100;
       party[1].level = 100;
 
@@ -152,7 +152,7 @@ describe("Mystery Encounter Utils", () => {
     });
 
     it("returns highest level unfainted if unfainted is true", () => {
-      const party = scene.getParty();
+      const party = scene.getPlayerParty();
       party[0].level = 100;
       party[0].hp = 0;
       party[0].trySetStatus(StatusEffect.FAINT);
@@ -166,7 +166,7 @@ describe("Mystery Encounter Utils", () => {
 
   describe("getLowestLevelPokemon", () => {
     it("gets lowest level pokemon", () => {
-      const party = scene.getParty();
+      const party = scene.getPlayerParty();
       party[0].level = 100;
 
       const result = getLowestLevelPlayerPokemon(scene);
@@ -174,7 +174,7 @@ describe("Mystery Encounter Utils", () => {
     });
 
     it("gets lowest level pokemon at different index", () => {
-      const party = scene.getParty();
+      const party = scene.getPlayerParty();
       party[1].level = 100;
 
       const result = getLowestLevelPlayerPokemon(scene);
@@ -182,7 +182,7 @@ describe("Mystery Encounter Utils", () => {
     });
 
     it("breaks ties by getting returning lower index", () => {
-      const party = scene.getParty();
+      const party = scene.getPlayerParty();
       party[0].level = 100;
       party[1].level = 100;
 
@@ -191,7 +191,7 @@ describe("Mystery Encounter Utils", () => {
     });
 
     it("returns lowest level unfainted if unfainted is true", () => {
-      const party = scene.getParty();
+      const party = scene.getPlayerParty();
       party[0].level = 10;
       party[0].hp = 0;
       party[0].trySetStatus(StatusEffect.FAINT);
@@ -238,7 +238,7 @@ describe("Mystery Encounter Utils", () => {
 
   describe("koPlayerPokemon", () => {
     it("KOs a pokemon", () => {
-      const party = scene.getParty();
+      const party = scene.getPlayerParty();
       const arceus = party[0];
       arceus.hp = 100;
       expect(arceus.isAllowedInBattle()).toBe(true);

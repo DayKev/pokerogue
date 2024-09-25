@@ -176,7 +176,7 @@ export const MysteriousChestEncounter: MysteryEncounter =
             await showEncounterText(scene, `${namespace}.option.1.bad`);
 
             // Handle game over edge case
-            const allowedPokemon = scene.getParty().filter(p => p.isAllowedInBattle());
+            const allowedPokemon = scene.getPlayerParty().filter(p => p.isAllowedInBattle());
             if (allowedPokemon.length === 0) {
               // If there are no longer any legal pokemon in the party, game over.
               scene.clearPhaseQueue();

@@ -25,7 +25,7 @@ describe("Lokalization - french", () => {
     await game.startBattle([
       Species.BULBASAUR,
     ]);
-    expect(game.scene.getParty()[0].name).toBe("Bulbasaur");
+    expect(game.scene.getPlayerParty()[0].name).toBe("Bulbasaur");
   }, 20000);
 
   it("test bulbasaure name french", async () => {
@@ -37,6 +37,6 @@ describe("Lokalization - french", () => {
     await game.startBattle([
       Species.BULBASAUR,
     ]);
-    expect(game.scene.getParty()[0].name).toBe("Bulbizarre");
+    expect(game.scene.getPlayerParty()[0].name).toBe("Bulbizarre");
   }, 20000);
 });

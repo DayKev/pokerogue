@@ -92,7 +92,7 @@ export const DancingLessonsEncounter: MysteryEncounter =
     .withCatchAllowed(true)
     .withFleeAllowed(false)
     .withOnVisualsStart((scene: BattleScene) => {
-      const danceAnim = new EncounterBattleAnim(EncounterAnim.DANCE, scene.getEnemyPokemon()!, scene.getParty()[0]);
+      const danceAnim = new EncounterBattleAnim(EncounterAnim.DANCE, scene.getEnemyPokemon()!, scene.getPlayerParty()[0]);
       danceAnim.play(scene);
 
       return true;
@@ -216,7 +216,7 @@ export const DancingLessonsEncounter: MysteryEncounter =
 
           const onPokemonSelected = (pokemon: PlayerPokemon) => {
             encounter.setDialogueToken("selectedPokemon", pokemon.getNameToRender());
-            scene.unshiftPhase(new LearnMovePhase(scene, scene.getParty().indexOf(pokemon), Moves.REVELATION_DANCE));
+            scene.unshiftPhase(new LearnMovePhase(scene, scene.getPlayerParty().indexOf(pokemon), Moves.REVELATION_DANCE));
 
             // Play animation again to "learn" the dance
             const danceAnim = new EncounterBattleAnim(EncounterAnim.DANCE, scene.getEnemyPokemon()!, scene.getPlayerPokemon());

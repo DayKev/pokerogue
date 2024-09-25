@@ -203,7 +203,7 @@ export class TitlePhase extends Phase {
         const starters = getDailyRunStarters(this.scene, seed);
         const startingLevel = this.scene.gameMode.getStartingLevel();
 
-        const party = this.scene.getParty();
+        const party = this.scene.getPlayerParty();
         const loadPokemonAssets: Promise<void>[] = [];
         for (const starter of starters) {
           const starterProps = this.scene.gameData.getSpeciesDexAttrProps(starter.species, starter.dexAttr);
@@ -276,7 +276,7 @@ export class TitlePhase extends Phase {
     this.scene.pushPhase(new EncounterPhase(this.scene, this.loaded));
 
     if (this.loaded) {
-      const availablePartyMembers = this.scene.getParty().filter(p => p.isAllowedInBattle()).length;
+      const availablePartyMembers = this.scene.getPlayerParty().filter(p => p.isAllowedInBattle()).length;
 
       this.scene.pushPhase(new SummonPhase(this.scene, 0, true, true));
       if (this.scene.currentBattle.double && availablePartyMembers > 1) {

@@ -115,7 +115,7 @@ export class EncounterPhase extends BattlePhase {
           if (this.scene.currentBattle.battleSpec === BattleSpec.FINAL_BOSS) {
             battle.enemyParty[e].ivs = new Array(6).fill(31);
           }
-          this.scene.getParty().slice(0, !battle.double ? 1 : 2).reverse().forEach(playerPokemon => {
+          this.scene.getPlayerParty().slice(0, !battle.double ? 1 : 2).reverse().forEach(playerPokemon => {
             applyAbAttrs(SyncEncounterNatureAbAttr, playerPokemon, null, false, battle.enemyParty[e]);
           });
         }
@@ -155,7 +155,7 @@ export class EncounterPhase extends BattlePhase {
       return true;
     });
 
-    if (this.scene.getParty().filter(p => p.isShiny()).length === 6) {
+    if (this.scene.getPlayerParty().filter(p => p.isShiny()).length === 6) {
       this.scene.validateAchv(achvs.SHINY_PARTY);
     }
 
@@ -251,7 +251,7 @@ export class EncounterPhase extends BattlePhase {
         this.scene.updateModifiers(true);
       }*/
 
-    for (const pokemon of this.scene.getParty()) {
+    for (const pokemon of this.scene.getPlayerParty()) {
       if (pokemon) {
         pokemon.resetBattleData();
       }
@@ -330,7 +330,7 @@ export class EncounterPhase extends BattlePhase {
       const doSummon = () => {
         this.scene.currentBattle.started = true;
         this.scene.playBgm(undefined);
-        this.scene.pbTray.showPbTray(this.scene.getParty());
+        this.scene.pbTray.showPbTray(this.scene.getPlayerParty());
         this.scene.pbTrayEnemy.showPbTray(this.scene.getEnemyParty());
         const doTrainerSummon = () => {
           this.hideEnemyTrainer();
@@ -439,13 +439,13 @@ export class EncounterPhase extends BattlePhase {
     if (![BattleType.TRAINER, BattleType.MYSTERY_ENCOUNTER].includes(this.scene.currentBattle.battleType)) {
       enemyField.map(p => this.scene.pushConditionalPhase(new PostSummonPhase(this.scene, p.getBattlerIndex()), () => {
         // if there is not a player party, we can't continue
-        if (!this.scene.getParty()?.length) {
+        if (!this.scene.getPlayerParty()?.length) {
           return false;
         }
         // how many player pokemon are on the field ?
-        const pokemonsOnFieldCount = this.scene.getParty().filter(p => p.isOnField()).length;
+        const pokemonsOnFieldCount = this.scene.getPlayerParty().filter(p => p.isOnField()).length;
         // if it's a 2vs1, there will never be a 2nd pokemon on our field even
-        const requiredPokemonsOnField = Math.min(this.scene.getParty().filter((p) => !p.isFainted()).length, 2);
+        const requiredPokemonsOnField = Math.min(this.scene.getPlayerParty().filter((p) => !p.isFainted()).length, 2);
         // if it's a double, there should be 2, otherwise 1
         if (this.scene.currentBattle.double) {
           return pokemonsOnFieldCount === requiredPokemonsOnField;
@@ -459,7 +459,7 @@ export class EncounterPhase extends BattlePhase {
     }
 
     if (!this.loaded) {
-      const availablePartyMembers = this.scene.getParty().filter(p => p.isAllowedInBattle());
+      const availablePartyMembers = this.scene.getPlayerParty().filter(p => p.isAllowedInBattle());
 
       if (!availablePartyMembers[0].isOnField()) {
         this.scene.pushPhase(new SummonPhase(this.scene, 0));

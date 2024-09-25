@@ -689,7 +689,7 @@ export abstract class PokemonHeldItemModifier extends PersistentModifier {
       return 0;
     }
     if (pokemon.isPlayer() && forThreshold) {
-      return scene.getParty().map(p => this.getMaxHeldItemCount(p)).reduce((stackCount: integer, maxStackCount: integer) => Math.max(stackCount, maxStackCount), 0);
+      return scene.getPlayerParty().map(p => this.getMaxHeldItemCount(p)).reduce((stackCount: integer, maxStackCount: integer) => Math.max(stackCount, maxStackCount), 0);
     }
     return this.getMaxHeldItemCount(pokemon);
   }
@@ -1795,7 +1795,7 @@ export abstract class ConsumablePokemonModifier extends ConsumableModifier {
   }
 
   getPokemon(scene: BattleScene) {
-    return scene.getParty().find(p => p.id === this.pokemonId);
+    return scene.getPlayerParty().find(p => p.id === this.pokemonId);
   }
 }
 
@@ -1954,7 +1954,7 @@ export class PokemonLevelIncrementModifier extends ConsumablePokemonModifier {
 
     pokemon.addFriendship(5);
 
-    pokemon.scene.unshiftPhase(new LevelUpPhase(pokemon.scene, pokemon.scene.getParty().indexOf(pokemon), pokemon.level - levelCount.value, pokemon.level));
+    pokemon.scene.unshiftPhase(new LevelUpPhase(pokemon.scene, pokemon.scene.getPlayerParty().indexOf(pokemon), pokemon.level - levelCount.value, pokemon.level));
 
     return true;
   }
@@ -1968,7 +1968,7 @@ export class TmModifier extends ConsumablePokemonModifier {
   apply(args: any[]): boolean {
     const pokemon = args[0] as PlayerPokemon;
 
-    pokemon.scene.unshiftPhase(new LearnMovePhase(pokemon.scene, pokemon.scene.getParty().indexOf(pokemon), (this.type as ModifierTypes.TmModifierType).moveId, true));
+    pokemon.scene.unshiftPhase(new LearnMovePhase(pokemon.scene, pokemon.scene.getPlayerParty().indexOf(pokemon), (this.type as ModifierTypes.TmModifierType).moveId, true));
 
     return true;
   }
@@ -1986,7 +1986,7 @@ export class RememberMoveModifier extends ConsumablePokemonModifier {
   apply(args: any[]): boolean {
     const pokemon = args[0] as PlayerPokemon;
 
-    pokemon.scene.unshiftPhase(new LearnMovePhase(pokemon.scene, pokemon.scene.getParty().indexOf(pokemon), pokemon.getLearnableLevelMoves()[this.levelMoveIndex]));
+    pokemon.scene.unshiftPhase(new LearnMovePhase(pokemon.scene, pokemon.scene.getPlayerParty().indexOf(pokemon), pokemon.getLearnableLevelMoves()[this.levelMoveIndex]));
 
     return true;
   }
@@ -2412,7 +2412,7 @@ export class MoneyRewardModifier extends ConsumableModifier {
 
     scene.addMoney(moneyAmount.value);
 
-    scene.getParty().map(p => {
+    scene.getPlayerParty().map(p => {
       if (p.species?.speciesId === Species.GIMMIGHOUL || p.fusionSpecies?.speciesId === Species.GIMMIGHOUL) {
         p.evoCounter++;
         const modifierType: ModifierType = modifierTypes.EVOLUTION_TRACKER_GIMMIGHOUL();
