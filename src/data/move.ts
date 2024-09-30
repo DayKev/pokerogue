@@ -5228,7 +5228,7 @@ export class ForceSwitchOutAttr extends MoveEffectAttr {
      */
     const switchOutTarget = this.selfSwitch ? user : target;
     if (switchOutTarget instanceof PlayerPokemon) {
-      if (switchOutTarget.scene.getParty().filter((p) => p.isAllowedInBattle() && !p.isOnField()).length < 1) {
+      if (switchOutTarget.scene.getPlayerParty().filter((p) => p.isAllowedInBattle() && !p.isOnField()).length < 1) {
         return false;
       }
       switchOutTarget.leaveField(this.switchType === SwitchType.SWITCH);
