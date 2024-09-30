@@ -42,19 +42,19 @@
   },
   "hardcore": {
     "name": "Hardcore",
-    "desc": "You can no longer revive Pokemon that have fainted.",
+    "desc": "You can no longer revive Pokémon that have fainted.",
     "value.0": "Off",
     "value.1": "On"
   },
   "noLegends": {
     "name": "No Starter Legends",
-    "desc": "You can't choose any legendary, sub-legendary or mythical Pokemon as a starter.",
+    "desc": "You can't choose any legendary, sub-legendary or mythical Pokémon as a starter.",
     "value.0": "Off",
     "value.1": "On"
   },
   "limitedCatch": {
     "name": "Limited Catch",
-    "desc": "You can only add the first Pokemon of a biome to your current party.",
+    "desc": "You can only add the first Pokémon of a biome to your current party.",
     "value.0": "Off",
     "value.1": "On"
   }
