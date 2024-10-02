@@ -504,9 +504,6 @@ export default class RunInfoUiHandler extends UiHandler {
         case Challenges.NO_AUTO_HEAL:
           rules.push(i18next.t("challenges:noAutoHeal.name"));
           break;
-        case Challenges.NO_LEGENDS:
-          rules.push(i18next.t("challenges:noLegends.name"));
-          break;
         }
       }
     }

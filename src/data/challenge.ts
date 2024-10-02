@@ -896,24 +896,6 @@ export class HardcoreChallenge extends Challenge {
   }
 }
 
-/** Challenge that prevents choosing legendary, sub-legendary or mythical pokemon as starters */
-export class NoStarterLegendsChallenge extends Challenge {
-  constructor() {
-    super(Challenges.NO_LEGENDS, 1);
-  }
-
-  override applyStarterChoice(pokemon: PokemonSpecies, valid: BooleanHolder, dexAttr: DexAttrProps, soft?: boolean): boolean {
-    valid.value = !pokemon.legendary && !pokemon.mythical && !pokemon.subLegendary;
-    return true;
-  }
-  static override loadChallenge(source: NoStarterLegendsChallenge | any): NoStarterLegendsChallenge {
-    const newChallenge = new NoStarterLegendsChallenge();
-    newChallenge.value = source.value;
-    newChallenge.severity = source.severity;
-    return newChallenge;
-  }
-}
-
 /** Challenge that only allows the first pokemon of every 10 waves to be caught */
 export class LimitedCatchChallenge extends Challenge {
   constructor() {
@@ -1200,8 +1182,6 @@ export function copyChallenge(source: Challenge | any): Challenge {
     return NoAutomaticHealChallenge.loadChallenge(source);
   case Challenges.HARDCORE:
     return HardcoreChallenge.loadChallenge(source);
-  case Challenges.NO_LEGENDS:
-    return NoStarterLegendsChallenge.loadChallenge(source);
   case Challenges.LIMITED_CATCH:
     return LimitedCatchChallenge.loadChallenge(source);
   }
@@ -1218,7 +1198,6 @@ export function initChallenges() {
     new InverseBattleChallenge(),
     new NoAutomaticHealChallenge(),
     new HardcoreChallenge(),
-    new NoStarterLegendsChallenge(),
     new LimitedCatchChallenge(),
   );
 }
