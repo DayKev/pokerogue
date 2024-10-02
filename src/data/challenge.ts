@@ -9,7 +9,7 @@ import { Moves } from "#app/enums/moves";
 import Pokemon, { EnemyPokemon, PlayerPokemon, PokemonMove } from "#app/field/pokemon";
 import Trainer, { TrainerVariant } from "#app/field/trainer";
 import { GameMode } from "#app/game-mode";
-import { ModifierTypeOption, WeightedModifierType } from "#app/modifier/modifier-type";
+import { ModifierPool, ModifierTypeOption, WeightedModifierType } from "#app/modifier/modifier-type";
 import { defaultStarterSpecies, DexAttrProps, GameData } from "#app/system/game-data";
 import { BooleanHolder, NumberHolder, randSeedItem } from "#app/utils";
 import { Challenges } from "#enums/challenges";
@@ -96,9 +96,9 @@ export enum ChallengeType {
   SHOP_ITEM_BLACKLIST,
   /**
    * Checks if the random item is blacklisted
-   * @see {@linkcode Challenge.applyRandomItemBlacklist}
+   * @see {@linkcode Challenge.applyRandomItemPoolModifier}
   */
-  RANDOM_ITEM_BLACKLIST,
+  RANDOM_ITEM_POOL_MODIFIER,
   /**
    * Checks if the caught pokemon can be add to the team
    * @see {@linkcode Challenge.applyAddPokemonToParty}
@@ -456,12 +456,11 @@ export abstract class Challenge {
   }
 
   /**
-   * An apply function for {@linkcode ChallengeType.RANDOM_ITEM_BLACKLIST} challenges. Derived classes should alter this.
-   * @param randomItem {@linkcode ModifierTypeOption} The random item.
-   * @param isValid {@linkcode BooleanHolder} Whether this item is valid for this challenge.
+   * An apply function for {@linkcode ChallengeType.RANDOM_ITEM_POOL_MODIFIER} challenges. Derived classes should alter this.
+   * @param pool {@linkcode ModifierPool} The random item pool.
    * @returns `true` if this function did anything.
    */
-  applyRandomItemBlacklist(randomItem: WeightedModifierType, isValid: BooleanHolder): boolean {
+  applyRandomItemPoolModifier(pool: ModifierPool): boolean {
     return false;
   }
 
@@ -867,8 +866,10 @@ export class HardcoreChallenge extends Challenge {
     super(Challenges.HARDCORE, 1);
   }
 
-  override applyRandomItemBlacklist(randomItem: WeightedModifierType, isValid: BooleanHolder): boolean {
-    isValid.value = !this.itemBlackList.includes(randomItem.modifierType.localeKey);
+  override applyRandomItemPoolModifier(pool: ModifierPool): boolean {
+    for (let i = 0; i < 5; i++) {
+      pool[i].filter((modifierType: WeightedModifierType) => !this.itemBlackList.includes(modifierType.modifierType.localeKey));
+    }
     return true;
   }
 
@@ -1057,12 +1058,11 @@ export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType
 /**
  * Apply all challenges that modify if this random item can be generated.
  * @param gameMode The current {@linkcode GameMode}
- * @param challengeType {@linkcode ChallengeType.RANDOM_ITEM_BLACKLIS}
- * @param randomItem {@linkcode ModifierTypeOption} The random item.
- * @param isValid {@linkcode BooleanHolder} Whether this item is valid for this challenge.
+ * @param challengeType {@linkcode ChallengeType.RANDOM_ITEM_POOL_MODIFIER}
+ * @param pool {@linkcode ModifierPool} The random item pool.
  * @returns `true` if any challenge was successfully applied.
  */
-export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType.RANDOM_ITEM_BLACKLIST, randomItem: WeightedModifierType, isValid: BooleanHolder): boolean;
+export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType.RANDOM_ITEM_POOL_MODIFIER, pool: ModifierPool): boolean;
 /**
  * Apply all challenges that modify if that pokemon can be added to the party.
  * @param gameMode The current {@linkcode GameMode}
@@ -1141,8 +1141,8 @@ export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType
       case ChallengeType.SHOP_ITEM_BLACKLIST:
         ret ||= c.applyShopItemBlacklist(args[0], args[1]);
         break;
-      case ChallengeType.RANDOM_ITEM_BLACKLIST:
-        ret ||= c.applyRandomItemBlacklist(args[0], args[1]);
+      case ChallengeType.RANDOM_ITEM_POOL_MODIFIER:
+        ret ||= c.applyRandomItemPoolModifier(args[0]);
         break;
       case ChallengeType.ADD_POKEMON_TO_PARTY:
         ret ||= c.applyAddPokemonToParty(args[0], args[1], args[2]);

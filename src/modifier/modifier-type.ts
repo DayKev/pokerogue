@@ -29,7 +29,6 @@ import { Moves } from "#enums/moves";
 import { Species } from "#enums/species";
 import i18next from "i18next";
 import { SpeciesFormKey } from "#enums/species-form-key";
-import { BooleanHolder } from "#app/utils";
 
 const outputModifierData = false;
 const useMaxWeightForOutput = false;
@@ -1601,7 +1600,7 @@ export const modifierTypes = {
   MYSTERY_ENCOUNTER_GOLDEN_BUG_NET: () => new ModifierType("modifierType:ModifierType.MYSTERY_ENCOUNTER_GOLDEN_BUG_NET", "golden_net", (type, _args) => new Modifiers.BoostBugSpawnModifier(type)),
 };
 
-interface ModifierPool {
+export interface ModifierPool {
   [tier: string]: WeightedModifierType[]
 }
 
@@ -2327,24 +2326,8 @@ export function getDailyRunStarterModifiers(party: PlayerPokemon[]): Modifiers.P
  */
 function getNewModifierTypeOption(party: Pokemon[], poolType: ModifierPoolType, tier?: ModifierTier, upgradeCount?: integer, retryCount: integer = 0, allowLuckUpgrades: boolean = true): ModifierTypeOption | null {
   const player = poolType === ModifierPoolType.PLAYER;
-  const _pool = getModifierPoolForType(poolType);
-  const pool: ModifierPool = {
-    [ModifierTier.COMMON]: [],
-    [ModifierTier.GREAT]: [],
-    [ModifierTier.ULTRA]: [],
-    [ModifierTier.ROGUE]: [],
-    [ModifierTier.MASTER]: [],
-  };
-  const isValidForChallenge = new BooleanHolder(true);
-  for (let i = 0; i < 5; i++) {
-    for (let j = 0; j < _pool[i].length; j++) {
-      isValidForChallenge.value = true;
-      applyChallenges(party[0].scene.gameMode, ChallengeType.RANDOM_ITEM_BLACKLIST, _pool[i][j], isValidForChallenge);
-      if (isValidForChallenge.value) {
-        pool[i].push(_pool[i][j]);
-      }
-    }
-  }
+  const pool = getModifierPoolForType(poolType);
+  applyChallenges(party[0].scene.gameMode, ChallengeType.RANDOM_ITEM_POOL_MODIFIER, pool);
   let thresholds: object;
   switch (poolType) {
   case ModifierPoolType.PLAYER:
