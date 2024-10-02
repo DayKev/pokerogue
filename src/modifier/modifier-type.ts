@@ -6,7 +6,6 @@ import { getNatureName, getNatureStatMultiplier, Nature } from "#app/data/nature
 import { getPokeballCatchMultiplier, getPokeballName, MAX_PER_TYPE_POKEBALLS, PokeballType } from "#app/data/pokeball";
 import { EvolutionItem, pokemonEvolutions } from "#app/data/pokemon-evolutions";
 import { FormChangeItem, pokemonFormChanges, SpeciesFormChangeCondition, SpeciesFormChangeItemTrigger } from "#app/data/pokemon-forms";
-import { SpeciesFormKey } from "#app/data/pokemon-species";
 import { getStatusEffectDescriptor, StatusEffect } from "#app/data/status-effect";
 import { tmPoolTiers, tmSpecies } from "#app/data/tms";
 import { Type } from "#app/data/type";
@@ -29,6 +28,7 @@ import { BerryType } from "#enums/berry-type";
 import { Moves } from "#enums/moves";
 import { Species } from "#enums/species";
 import i18next from "i18next";
+import { SpeciesFormKey } from "#enums/species-form-key";
 
 const outputModifierData = false;
 const useMaxWeightForOutput = false;
