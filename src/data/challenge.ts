@@ -9,7 +9,7 @@ import { Moves } from "#app/enums/moves";
 import Pokemon, { EnemyPokemon, PlayerPokemon, PokemonMove } from "#app/field/pokemon";
 import Trainer, { TrainerVariant } from "#app/field/trainer";
 import { GameMode } from "#app/game-mode";
-import { ModifierTypeOption } from "#app/modifier/modifier-type";
+import { ModifierTypeOption, WeightedModifierType } from "#app/modifier/modifier-type";
 import { defaultStarterSpecies, DexAttrProps, GameData } from "#app/system/game-data";
 import { BooleanHolder, NumberHolder, randSeedItem } from "#app/utils";
 import { Challenges } from "#enums/challenges";
@@ -461,7 +461,7 @@ export abstract class Challenge {
    * @param isValid {@linkcode BooleanHolder} Whether this item is valid for this challenge.
    * @returns `true` if this function did anything.
    */
-  applyRandomItemBlacklist(randomItem: ModifierTypeOption, isValid: BooleanHolder): boolean {
+  applyRandomItemBlacklist(randomItem: WeightedModifierType, isValid: BooleanHolder): boolean {
     return false;
   }
 
@@ -867,8 +867,8 @@ export class HardcoreChallenge extends Challenge {
     super(Challenges.HARDCORE, 1);
   }
 
-  override applyRandomItemBlacklist(randomItem: ModifierTypeOption, isValid: BooleanHolder): boolean {
-    isValid.value = !this.itemBlackList.includes(randomItem.type.localeKey);
+  override applyRandomItemBlacklist(randomItem: WeightedModifierType, isValid: BooleanHolder): boolean {
+    isValid.value = !this.itemBlackList.includes(randomItem.modifierType.localeKey);
     return true;
   }
 
@@ -1062,7 +1062,7 @@ export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType
  * @param isValid {@linkcode BooleanHolder} Whether this item is valid for this challenge.
  * @returns `true` if any challenge was successfully applied.
  */
-export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType.RANDOM_ITEM_BLACKLIST, randomItem: ModifierTypeOption, isValid: BooleanHolder): boolean;
+export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType.RANDOM_ITEM_BLACKLIST, randomItem: WeightedModifierType, isValid: BooleanHolder): boolean;
 /**
  * Apply all challenges that modify if that pokemon can be added to the party.
  * @param gameMode The current {@linkcode GameMode}
@@ -1142,7 +1142,7 @@ export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType
         ret ||= c.applyShopItemBlacklist(args[0], args[1]);
         break;
       case ChallengeType.RANDOM_ITEM_BLACKLIST:
-        ret ||= c.applyShopItemBlacklist(args[0], args[1]);
+        ret ||= c.applyRandomItemBlacklist(args[0], args[1]);
         break;
       case ChallengeType.ADD_POKEMON_TO_PARTY:
         ret ||= c.applyAddPokemonToParty(args[0], args[1], args[2]);

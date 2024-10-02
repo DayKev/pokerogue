@@ -29,6 +29,7 @@ import { Moves } from "#enums/moves";
 import { Species } from "#enums/species";
 import i18next from "i18next";
 import { SpeciesFormKey } from "#enums/species-form-key";
+import { BooleanHolder } from "#app/utils";
 
 const outputModifierData = false;
 const useMaxWeightForOutput = false;
@@ -1305,7 +1306,7 @@ function lureWeightFunc(maxBattles: number, weight: number): WeightedModifierTyp
   };
 }
 
-class WeightedModifierType {
+export class WeightedModifierType {
   public modifierType: ModifierType;
   public weight: integer | WeightedModifierTypeWeightFunc;
   public maxWeight: integer;
@@ -2030,8 +2031,8 @@ export function regenerateModifierPoolThresholds(party: Pokemon[], poolType: Mod
         || itemModifierType instanceof FormChangeItemModifierType
         || existingModifiers.find(m => m.stackCount < m.getMaxStackCount(party[0].scene, true))
         ? weightedModifierType.weight instanceof Function
-          ? (weightedModifierType.weight as Function)(party, rerollCount)
-          : weightedModifierType.weight as integer
+          ? weightedModifierType.weight(party, rerollCount)
+          : weightedModifierType.weight
         : 0;
       if (weightedModifierType.maxWeight) {
         const modifierId = weightedModifierType.modifierType.id;
@@ -2180,12 +2181,8 @@ function getModifierTypeOptionWithRetry(existingOptions: ModifierTypeOption[], r
   allowLuckUpgrades = allowLuckUpgrades ?? true;
   let candidate = getNewModifierTypeOption(party, ModifierPoolType.PLAYER, tier, undefined, 0, allowLuckUpgrades);
   let r = 0;
-  let isValidForChallenge = new Utils.BooleanHolder(true);
-  applyChallenges(party[0].scene.gameMode, ChallengeType.RANDOM_ITEM_BLACKLIST, candidate!, isValidForChallenge);
-  while (existingOptions.length && ++r < retryCount && existingOptions.filter(o => o.type.name === candidate?.type.name || o.type.group === candidate?.type.group).length || !isValidForChallenge.value) {
+  while (existingOptions.length && ++r < retryCount && existingOptions.filter(o => o.type.name === candidate?.type.name || o.type.group === candidate?.type.group).length) {
     candidate = getNewModifierTypeOption(party, ModifierPoolType.PLAYER, candidate?.type.tier ?? tier, candidate?.upgradeCount, 0, allowLuckUpgrades);
-    isValidForChallenge = new Utils.BooleanHolder(true);
-    applyChallenges(party[0].scene.gameMode, ChallengeType.RANDOM_ITEM_BLACKLIST, candidate!, isValidForChallenge);
   }
   return candidate!;
 }
@@ -2249,9 +2246,9 @@ export function getPlayerShopModifierTypeOptionsForWave(waveIndex: integer, base
       new ModifierTypeOption(modifierTypes.SACRED_ASH(), 0, baseCost * 10)
     ]
   ];
-  return options.slice(0, Math.ceil(Math.max(waveIndex + 10, 0) / 30)).flat().filter(x => {
+  return options.slice(0, Math.ceil(Math.max(waveIndex + 10, 0) / 30)).flat().filter(item => {
     const isValidForChallenge = new Utils.BooleanHolder(true);
-    applyChallenges(gameMode, ChallengeType.SHOP_ITEM_BLACKLIST, x, isValidForChallenge);
+    applyChallenges(gameMode, ChallengeType.SHOP_ITEM_BLACKLIST, item, isValidForChallenge);
     return isValidForChallenge.value;
   });
 }
@@ -2329,8 +2326,25 @@ export function getDailyRunStarterModifiers(party: PlayerPokemon[]): Modifiers.P
  * @param allowLuckUpgrades Default true. If false, will not allow ModifierType to randomly upgrade to next tier
  */
 function getNewModifierTypeOption(party: Pokemon[], poolType: ModifierPoolType, tier?: ModifierTier, upgradeCount?: integer, retryCount: integer = 0, allowLuckUpgrades: boolean = true): ModifierTypeOption | null {
-  const player = !poolType;
-  const pool = getModifierPoolForType(poolType);
+  const player = poolType === ModifierPoolType.PLAYER;
+  const _pool = getModifierPoolForType(poolType);
+  const pool: ModifierPool = {
+    [ModifierTier.COMMON]: [],
+    [ModifierTier.GREAT]: [],
+    [ModifierTier.ULTRA]: [],
+    [ModifierTier.ROGUE]: [],
+    [ModifierTier.MASTER]: [],
+  };
+  const isValidForChallenge = new BooleanHolder(true);
+  for (let i = 0; i < 5; i++) {
+    for (let j = 0; j < _pool[i].length; j++) {
+      isValidForChallenge.value = true;
+      applyChallenges(party[0].scene.gameMode, ChallengeType.RANDOM_ITEM_BLACKLIST, _pool[i][j], isValidForChallenge);
+      if (isValidForChallenge.value) {
+        pool[i].push(_pool[i][j]);
+      }
+    }
+  }
   let thresholds: object;
   switch (poolType) {
   case ModifierPoolType.PLAYER:
@@ -2379,7 +2393,7 @@ function getNewModifierTypeOption(party: Pokemon[], poolType: ModifierPoolType, 
     }
 
     tier += upgradeCount;
-    while (tier && (!modifierPool.hasOwnProperty(tier) || !modifierPool[tier].length)) {
+    while (tier && (!pool.hasOwnProperty(tier) || !pool[tier].length)) {
       tier--;
       if (upgradeCount) {
         upgradeCount--;
@@ -2390,7 +2404,7 @@ function getNewModifierTypeOption(party: Pokemon[], poolType: ModifierPoolType, 
     if (tier < ModifierTier.MASTER && allowLuckUpgrades) {
       const partyShinyCount = party.filter(p => p.isShiny() && !p.isFainted()).length;
       const upgradeOdds = Math.floor(32 / ((partyShinyCount + 2) / 2));
-      while (modifierPool.hasOwnProperty(tier + upgradeCount + 1) && modifierPool[tier + upgradeCount + 1].length) {
+      while (pool.hasOwnProperty(tier + upgradeCount + 1) && pool[tier + upgradeCount + 1].length) {
         if (!Utils.randSeedInt(upgradeOdds)) {
           upgradeCount++;
         } else {
