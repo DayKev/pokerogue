@@ -53,9 +53,9 @@ export class ModifierType {
   protected newModifierFunc: NewModifierFunc | null;
 
   constructor(localeKey: string | null, iconImage: string | null, newModifierFunc: NewModifierFunc | null, group?: string, soundName?: string) {
-    this.localeKey = localeKey!; // TODO: is this bang correct?
-    this.iconImage = iconImage!; // TODO: is this bang correct?
-    this.group = group!; // TODO: is this bang correct?
+    this.localeKey = localeKey ?? "";
+    this.iconImage = iconImage ?? "";
+    this.group = group ?? "";
     this.soundName = soundName ?? "se/restore";
     this.newModifierFunc = newModifierFunc;
   }
