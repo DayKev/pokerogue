@@ -100,7 +100,7 @@ export enum ChallengeType {
   */
   RANDOM_ITEM_BLACKLIST,
   /**
-   * Checks if the cought pokemon can be add to the team
+   * Checks if the caught pokemon can be add to the team
    * @see {@linkcode Challenge.applyAddPokemonToParty}
   */
   ADD_POKEMON_TO_PARTY,
@@ -467,7 +467,7 @@ export abstract class Challenge {
 
   /**
    * An apply function for {@linkcode ChallengeType.ADD_POKEMON_TO_PARTY} challenges. Derived classes should alter this.
-   * @param pokemon {@linkcode EnemyPokemon} The pokemon cought.
+   * @param pokemon {@linkcode EnemyPokemon} The pokemon caught.
    * @param waveIndex Current wave index.
    * @param canAddToParty {@linkcode BooleanHolder} Whether this pokemon can be added to the party.
    * @returns `true` if this function did anything.
@@ -1067,7 +1067,7 @@ export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType
  * Apply all challenges that modify if that pokemon can be added to the party.
  * @param gameMode The current {@linkcode GameMode}
  * @param challengeType {@linkcode ChallengeType.ADD_POKEMON_TO_PARTY}
- * @param pokemon {@linkcode EnemyPokemon} The pokemon cought.
+ * @param pokemon {@linkcode EnemyPokemon} The pokemon caught.
  * @param waveIndex Current wave index.
  * @param canBeAddToParty {@linkcode BooleanHolder} Whether this pokemon can be added to the party.
  * @returns `true` if any challenge was successfully applied.
