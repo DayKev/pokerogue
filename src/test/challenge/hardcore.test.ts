@@ -5,7 +5,6 @@ import { Species } from "#enums/species";
 import GameManager from "#test/utils/gameManager";
 import Phaser from "phaser";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-//import { itemPoolChecks } from "#app/modifier/modifier-type"; // waiting for #3776
 
 describe("Challenge - Hardcore", () => {
   let phaserGame: Phaser.Game;
@@ -34,10 +33,9 @@ describe("Challenge - Hardcore", () => {
       .enemySpecies(Species.MAGIKARP)
       .enemyAbility(Abilities.BALL_FETCH)
       .enemyMoveset(Moves.SPLASH);
-
-    //itemPoolChecks.set("REVIVE", false);
   });
 
+  // TODO: Find a way to make this test
   it.todo("prevents revival items from showing up in the shop", async () => {
     game.override
       .startingWave(191)
