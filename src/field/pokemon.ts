@@ -361,9 +361,9 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
   }
 
   /**
-   * Checks if the pokemon is allowed in battle (ie: not fainted, and allowed under any active challenges)
+   * Checks if the pokemon is allowed in battle (ie: not fainted, and allowed under any active challenges).
    * @param onField `true` to also check if the pokemon is currently on the field, defaults to `false`
-   * @returns `true` if the pokemon is active
+   * @returns `true` if the pokemon is "active". Returns `false` if there is no active {@linkcode BattleScene}
    */
   public isActive(onField: boolean = false): boolean {
     if (!this.scene) {
