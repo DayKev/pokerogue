@@ -1668,7 +1668,7 @@ export class SacrificialFullRestoreAttr extends SacrificialAttr {
   }
 
   getCondition(): MoveConditionFunc {
-    return (user, target, move) => user.scene.getPlayerParty().filter(p => p.isActive()).length > user.scene.currentBattle.getBattlerCount();
+    return (user, _target, _move) => user.scene.getPlayerParty().filter(p => p.isActive()).length > user.scene.currentBattle.getBattlerCount();
   }
 }
 
@@ -5163,7 +5163,7 @@ export class RevivalBlessingAttr extends MoveEffectAttr {
     return new Promise(resolve => {
       // If user is player, checks if the user has fainted pokemon
       if (user instanceof PlayerPokemon
-        && user.scene.getPlayerParty().findIndex(p => p.isFainted())>-1) {
+        && user.scene.getPlayerParty().findIndex(p => p.isFainted()) >- 1) {
         (user as PlayerPokemon).revivalBlessing().then(() => {
           resolve(true);
         });

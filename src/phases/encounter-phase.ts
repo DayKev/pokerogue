@@ -439,7 +439,7 @@ export class EncounterPhase extends BattlePhase {
     if (![BattleType.TRAINER, BattleType.MYSTERY_ENCOUNTER].includes(this.scene.currentBattle.battleType)) {
       enemyField.map(p => this.scene.pushConditionalPhase(new PostSummonPhase(this.scene, p.getBattlerIndex()), () => {
         // if there is not a player party, we can't continue
-        if (!this.scene.getPlayerParty()?.length) {
+        if (!this.scene.getPlayerParty().length) {
           return false;
         }
         // how many player pokemon are on the field ?
