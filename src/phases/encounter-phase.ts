@@ -1,40 +1,40 @@
-import BattleScene from "#app/battle-scene";
 import { BattlerIndex, BattleType } from "#app/battle";
+import BattleScene from "#app/battle-scene";
+import { PLAYER_PARTY_MAX_SIZE } from "#app/constants";
 import { applyAbAttrs, SyncEncounterNatureAbAttr } from "#app/data/ability";
+import { initEncounterAnims, loadEncounterAnimAssets } from "#app/data/battle-anims";
 import { getCharVariantFromDialogue } from "#app/data/dialogue";
+import { getEncounterText } from "#app/data/mystery-encounters/utils/encounter-dialogue-utils";
+import { doTrainerExclamation } from "#app/data/mystery-encounters/utils/encounter-phase-utils";
+import { getGoldenBugNetSpecies } from "#app/data/mystery-encounters/utils/encounter-pokemon-utils";
 import { TrainerSlot } from "#app/data/trainer-config";
 import { getRandomWeatherType } from "#app/data/weather";
-import { BattleSpec } from "#app/enums/battle-spec";
-import { PlayerGender } from "#app/enums/player-gender";
-import { Species } from "#app/enums/species";
 import { EncounterPhaseEvent } from "#app/events/battle-scene";
 import Pokemon, { FieldPosition } from "#app/field/pokemon";
 import { getPokemonNameWithAffix } from "#app/messages";
-import { ModifierPoolType, regenerateModifierPoolThresholds } from "#app/modifier/modifier-type";
 import { BoostBugSpawnModifier, IvScannerModifier, TurnHeldItemTransferModifier } from "#app/modifier/modifier";
+import { ModifierPoolType, regenerateModifierPoolThresholds } from "#app/modifier/modifier-type";
+import Overrides from "#app/overrides";
+import { BattlePhase } from "#app/phases/battle-phase";
+import { CheckSwitchPhase } from "#app/phases/check-switch-phase";
+import { GameOverPhase } from "#app/phases/game-over-phase";
+import { MysteryEncounterPhase } from "#app/phases/mystery-encounter-phases";
+import { PostSummonPhase } from "#app/phases/post-summon-phase";
+import { ReturnPhase } from "#app/phases/return-phase";
+import { ScanIvsPhase } from "#app/phases/scan-ivs-phase";
+import { ShinySparklePhase } from "#app/phases/shiny-sparkle-phase";
+import { SummonPhase } from "#app/phases/summon-phase";
+import { ToggleDoublePositionPhase } from "#app/phases/toggle-double-position-phase";
 import { achvs } from "#app/system/achv";
 import { handleTutorial, Tutorial } from "#app/tutorial";
 import { Mode } from "#app/ui/ui";
-import i18next from "i18next";
-import { BattlePhase } from "./battle-phase";
-import * as Utils from "#app/utils";
-import { randSeedInt } from "#app/utils";
-import { CheckSwitchPhase } from "./check-switch-phase";
-import { GameOverPhase } from "./game-over-phase";
-import { PostSummonPhase } from "./post-summon-phase";
-import { ReturnPhase } from "./return-phase";
-import { ScanIvsPhase } from "./scan-ivs-phase";
-import { ShinySparklePhase } from "./shiny-sparkle-phase";
-import { SummonPhase } from "./summon-phase";
-import { ToggleDoublePositionPhase } from "./toggle-double-position-phase";
-import Overrides from "#app/overrides";
-import { initEncounterAnims, loadEncounterAnimAssets } from "#app/data/battle-anims";
-import { MysteryEncounterMode } from "#enums/mystery-encounter-mode";
-import { doTrainerExclamation } from "#app/data/mystery-encounters/utils/encounter-phase-utils";
-import { getEncounterText } from "#app/data/mystery-encounters/utils/encounter-dialogue-utils";
-import { MysteryEncounterPhase } from "#app/phases/mystery-encounter-phases";
-import { getGoldenBugNetSpecies } from "#app/data/mystery-encounters/utils/encounter-pokemon-utils";
+import { randSeedInt, randSeedItem } from "#app/utils";
+import { BattleSpec } from "#enums/battle-spec";
 import { Biome } from "#enums/biome";
+import { MysteryEncounterMode } from "#enums/mystery-encounter-mode";
+import { PlayerGender } from "#enums/player-gender";
+import { Species } from "#enums/species";
+import i18next from "i18next";
 
 export class EncounterPhase extends BattlePhase {
   private loaded: boolean;
@@ -155,7 +155,7 @@ export class EncounterPhase extends BattlePhase {
       return true;
     });
 
-    if (this.scene.getPlayerParty().filter(p => p.isShiny()).length === 6) {
+    if (this.scene.getPlayerParty().filter(p => p.isShiny()).length === PLAYER_PARTY_MAX_SIZE) {
       this.scene.validateAchv(achvs.SHINY_PARTY);
     }
 
@@ -354,7 +354,7 @@ export class EncounterPhase extends BattlePhase {
         doSummon();
       } else {
         let message: string;
-        this.scene.executeWithSeedOffset(() => message = Utils.randSeedItem(encounterMessages), this.scene.currentBattle.waveIndex);
+        this.scene.executeWithSeedOffset(() => message = randSeedItem(encounterMessages), this.scene.currentBattle.waveIndex);
         message = message!; // tell TS compiler it's defined now
         const showDialogueAndSummon = () => {
           this.scene.ui.showDialogue(message, trainer?.getName(TrainerSlot.NONE, true), null, () => {

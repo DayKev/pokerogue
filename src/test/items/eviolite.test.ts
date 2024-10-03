@@ -1,10 +1,10 @@
-import { Stat } from "#enums/stat";
+import { StatBoosterModifier } from "#app/modifier/modifier";
+import { NumberHolder, randItem } from "#app/utils";
 import { Species } from "#enums/species";
+import { Stat } from "#enums/stat";
 import GameManager from "#test/utils/gameManager";
 import Phase from "phaser";
-import * as Utils from "#app/utils";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { StatBoosterModifier } from "#app/modifier/modifier";
 
 describe("Items - Eviolite", () => {
   let phaserGame: Phaser.Game;
@@ -28,14 +28,12 @@ describe("Items - Eviolite", () => {
   });
 
   it("should provide 50% boost to DEF and SPDEF for unevolved, unfused pokemon", async() => {
-    await game.classicMode.startBattle([
-      Species.PICHU
-    ]);
+    await game.classicMode.startBattle([Species.PICHU]);
 
     const partyMember = game.scene.getPlayerPokemon()!;
 
     vi.spyOn(partyMember, "getEffectiveStat").mockImplementation((stat, _opponent?, _move?, _isCritical?) => {
-      const statValue = new Utils.NumberHolder(partyMember.getStat(stat, false));
+      const statValue = new NumberHolder(partyMember.getStat(stat, false));
       game.scene.applyModifiers(StatBoosterModifier, partyMember.isPlayer(), partyMember, stat, statValue);
 
       // Ignore other calculations for simplicity
@@ -51,14 +49,12 @@ describe("Items - Eviolite", () => {
   });
 
   it("should not provide a boost for fully evolved, unfused pokemon", async() => {
-    await game.classicMode.startBattle([
-      Species.RAICHU,
-    ]);
+    await game.classicMode.startBattle([Species.RAICHU]);
 
-    const partyMember = game.scene.getPlayerParty()[0];
+    const partyMember = game.scene.getPlayerPokemon()!;
 
     vi.spyOn(partyMember, "getEffectiveStat").mockImplementation((stat, _opponent?, _move?, _isCritical?) => {
-      const statValue = new Utils.NumberHolder(partyMember.getStat(stat, false));
+      const statValue = new NumberHolder(partyMember.getStat(stat, false));
       game.scene.applyModifiers(StatBoosterModifier, partyMember.isPlayer(), partyMember, stat, statValue);
 
       // Ignore other calculations for simplicity
@@ -75,10 +71,7 @@ describe("Items - Eviolite", () => {
   });
 
   it("should provide 50% boost to DEF and SPDEF for completely unevolved, fused pokemon", async() => {
-    await game.classicMode.startBattle([
-      Species.PICHU,
-      Species.CLEFFA
-    ]);
+    await game.classicMode.startBattle([Species.PICHU, Species.CLEFFA]);
 
     const [ partyMember, ally ] = game.scene.getPlayerParty();
 
@@ -92,7 +85,7 @@ describe("Items - Eviolite", () => {
     partyMember.fusionLuck = ally.luck;
 
     vi.spyOn(partyMember, "getEffectiveStat").mockImplementation((stat, _opponent?, _move?, _isCritical?) => {
-      const statValue = new Utils.NumberHolder(partyMember.getStat(stat, false));
+      const statValue = new NumberHolder(partyMember.getStat(stat, false));
       game.scene.applyModifiers(StatBoosterModifier, partyMember.isPlayer(), partyMember, stat, statValue);
 
       // Ignore other calculations for simplicity
@@ -108,10 +101,7 @@ describe("Items - Eviolite", () => {
   });
 
   it("should provide 25% boost to DEF and SPDEF for partially unevolved (base), fused pokemon", async() => {
-    await game.classicMode.startBattle([
-      Species.PICHU,
-      Species.CLEFABLE
-    ]);
+    await game.classicMode.startBattle([Species.PICHU, Species.CLEFABLE]);
 
     const [ partyMember, ally ] = game.scene.getPlayerParty();
 
@@ -125,7 +115,7 @@ describe("Items - Eviolite", () => {
     partyMember.fusionLuck = ally.luck;
 
     vi.spyOn(partyMember, "getEffectiveStat").mockImplementation((stat, _opponent?, _move?, _isCritical?) => {
-      const statValue = new Utils.NumberHolder(partyMember.getStat(stat, false));
+      const statValue = new NumberHolder(partyMember.getStat(stat, false));
       game.scene.applyModifiers(StatBoosterModifier, partyMember.isPlayer(), partyMember, stat, statValue);
 
       // Ignore other calculations for simplicity
@@ -141,10 +131,7 @@ describe("Items - Eviolite", () => {
   });
 
   it("should provide 25% boost to DEF and SPDEF for partially unevolved (fusion), fused pokemon", async() => {
-    await game.classicMode.startBattle([
-      Species.RAICHU,
-      Species.CLEFFA
-    ]);
+    await game.classicMode.startBattle([Species.RAICHU, Species.CLEFFA]);
 
     const [ partyMember, ally ] = game.scene.getPlayerParty();
 
@@ -158,7 +145,7 @@ describe("Items - Eviolite", () => {
     partyMember.fusionLuck = ally.luck;
 
     vi.spyOn(partyMember, "getEffectiveStat").mockImplementation((stat, _opponent?, _move?, _isCritical?) => {
-      const statValue = new Utils.NumberHolder(partyMember.getStat(stat, false));
+      const statValue = new NumberHolder(partyMember.getStat(stat, false));
       game.scene.applyModifiers(StatBoosterModifier, partyMember.isPlayer(), partyMember, stat, statValue);
 
       // Ignore other calculations for simplicity
@@ -174,10 +161,7 @@ describe("Items - Eviolite", () => {
   });
 
   it("should not provide a boost for fully evolved, fused pokemon", async() => {
-    await game.classicMode.startBattle([
-      Species.RAICHU,
-      Species.CLEFABLE
-    ]);
+    await game.classicMode.startBattle([Species.RAICHU, Species.CLEFABLE]);
 
     const [ partyMember, ally ] = game.scene.getPlayerParty();
 
@@ -191,7 +175,7 @@ describe("Items - Eviolite", () => {
     partyMember.fusionLuck = ally.luck;
 
     vi.spyOn(partyMember, "getEffectiveStat").mockImplementation((stat, _opponent?, _move?, _isCritical?) => {
-      const statValue = new Utils.NumberHolder(partyMember.getStat(stat, false));
+      const statValue = new NumberHolder(partyMember.getStat(stat, false));
       game.scene.applyModifiers(StatBoosterModifier, partyMember.isPlayer(), partyMember, stat, statValue);
 
       // Ignore other calculations for simplicity
@@ -216,14 +200,12 @@ describe("Items - Eviolite", () => {
 
     const gMaxablePokemon = [ Species.PIKACHU, Species.EEVEE, Species.DURALUDON, Species.MEOWTH ];
 
-    await game.classicMode.startBattle([
-      Utils.randItem(gMaxablePokemon)
-    ]);
+    await game.classicMode.startBattle([randItem(gMaxablePokemon)]);
 
     const partyMember = game.scene.getPlayerPokemon()!;
 
     vi.spyOn(partyMember, "getEffectiveStat").mockImplementation((stat, _opponent?, _move?, _isCritical?) => {
-      const statValue = new Utils.NumberHolder(partyMember.getStat(stat, false));
+      const statValue = new NumberHolder(partyMember.getStat(stat, false));
       game.scene.applyModifiers(StatBoosterModifier, partyMember.isPlayer(), partyMember, stat, statValue);
 
       // Ignore other calculations for simplicity
