@@ -1,20 +1,20 @@
-import { PlayerPokemon } from "#app/field/pokemon";
 import BattleScene from "#app/battle-scene";
-import { isNullOrUndefined } from "#app/utils";
-import { Abilities } from "#enums/abilities";
-import { Moves } from "#enums/moves";
-import { Species } from "#enums/species";
-import { TimeOfDay } from "#enums/time-of-day";
-import { Nature } from "#app/data/nature";
 import { EvolutionItem, pokemonEvolutions } from "#app/data/balance/pokemon-evolutions";
+import { Nature } from "#app/data/nature";
 import { FormChangeItem, pokemonFormChanges, SpeciesFormChangeItemTrigger } from "#app/data/pokemon-forms";
 import { StatusEffect } from "#app/data/status-effect";
 import { Type } from "#app/data/type";
 import { WeatherType } from "#app/data/weather";
-import { MysteryEncounterType } from "#enums/mystery-encounter-type";
+import { PlayerPokemon } from "#app/field/pokemon";
 import { AttackTypeBoosterModifier } from "#app/modifier/modifier";
 import { AttackTypeBoosterModifierType } from "#app/modifier/modifier-type";
+import { isNullOrUndefined } from "#app/utils";
+import { Abilities } from "#enums/abilities";
+import { Moves } from "#enums/moves";
+import { MysteryEncounterType } from "#enums/mystery-encounter-type";
+import { Species } from "#enums/species";
 import { SpeciesFormKey } from "#enums/species-form-key";
+import { TimeOfDay } from "#enums/time-of-day";
 
 export interface EncounterRequirement {
   meetsRequirement(scene: BattleScene): boolean; // Boolean to see if a requirement is met
@@ -275,7 +275,7 @@ export class PartySizeRequirement extends EncounterSceneRequirement {
 
   override meetsRequirement(scene: BattleScene): boolean {
     if (!isNullOrUndefined(this.partySizeRange) && this.partySizeRange[0] <= this.partySizeRange[1]) {
-      const partySize = this.excludeDisallowedPokemon ? scene.getPlayerParty().filter(p => p.isAllowedInBattle()).length : scene.getPlayerParty().length;
+      const partySize = this.excludeDisallowedPokemon ? scene.getPokemonAllowedInBattle().length : scene.getPlayerParty().length;
       if (partySize >= 0 && (this.partySizeRange[0] >= 0 && this.partySizeRange[0] > partySize) || (this.partySizeRange[1] >= 0 && this.partySizeRange[1] < partySize)) {
         return false;
       }

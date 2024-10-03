@@ -1,8 +1,8 @@
 import { clientSessionId } from "#app/account";
 import { BattleType } from "#app/battle";
 import BattleScene from "#app/battle-scene";
-import { getCharVariantFromDialogue } from "#app/data/dialogue";
 import { pokemonEvolutions } from "#app/data/balance/pokemon-evolutions";
+import { getCharVariantFromDialogue } from "#app/data/dialogue";
 import PokemonSpecies, { getPokemonSpecies } from "#app/data/pokemon-species";
 import { trainerConfigs } from "#app/data/trainer-config";
 import Pokemon from "#app/field/pokemon";
@@ -65,7 +65,7 @@ export class GameOverPhase extends BattlePhase {
             this.scene.gameData.loadSession(this.scene, this.scene.sessionSlotId).then(() => {
               this.scene.pushPhase(new EncounterPhase(this.scene, true));
 
-              const availablePartyMembers = this.scene.getPlayerParty().filter(p => p.isAllowedInBattle()).length;
+              const availablePartyMembers = this.scene.getPokemonAllowedInBattle().length;
 
               this.scene.pushPhase(new SummonPhase(this.scene, 0));
               if (this.scene.currentBattle.double && availablePartyMembers > 1) {

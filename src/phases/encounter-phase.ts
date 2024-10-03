@@ -459,7 +459,7 @@ export class EncounterPhase extends BattlePhase {
     }
 
     if (!this.loaded) {
-      const availablePartyMembers = this.scene.getPlayerParty().filter(p => p.isAllowedInBattle());
+      const availablePartyMembers = this.scene.getPokemonAllowedInBattle();
 
       if (!availablePartyMembers[0].isOnField()) {
         this.scene.pushPhase(new SummonPhase(this.scene, 0));

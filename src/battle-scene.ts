@@ -768,6 +768,14 @@ export default class BattleScene extends SceneBase {
   }
 
   /**
+   * @returns An array of {@linkcode PlayerPokemon} filtered from the player's party
+   * that are {@linkcode PlayerPokemon.isAllowedInBattle | allowed in battle}.
+   */
+  public getPokemonAllowedInBattle(): PlayerPokemon[] {
+    return this.getPlayerParty().filter(p => p.isAllowedInBattle());
+  }
+
+  /**
    * @returns The first {@linkcode PlayerPokemon} that is {@linkcode getPlayerField on the field}
    * and {@linkcode PlayerPokemon.isActive is active}
    * (aka {@linkcode PlayerPokemon.isAllowedInBattle is allowed in battle}),
