@@ -44,9 +44,11 @@ describe("Abilities - ZEN MODE", () => {
     "not enough damage to change form",
     async () => {
       await game.classicMode.startBattle([Species.DARMANITAN]);
-      game.scene.getPlayerPokemon()!.stats[Stat.HP] = 100;
-      game.scene.getPlayerPokemon()!.hp = 100;
-      expect(game.scene.getPlayerPokemon()!.formIndex).toBe(0);
+
+      const player = game.scene.getPlayerPokemon()!;
+      player.stats[Stat.HP] = 100;
+      player.hp = 100;
+      expect(player.formIndex).toBe(0);
 
       game.move.select(Moves.SPLASH);
       await game.setTurnOrder([BattlerIndex.ENEMY, BattlerIndex.PLAYER]);
@@ -55,8 +57,8 @@ describe("Abilities - ZEN MODE", () => {
       damagePhase.updateAmount(40);
       await game.phaseInterceptor.to("BerryPhase");
 
-      expect(game.scene.getPlayerPokemon()!.hp).toBeLessThan(100);
-      expect(game.scene.getPlayerPokemon()!.formIndex).toBe(0);
+      expect(player.hp).toBeLessThan(100);
+      expect(player.formIndex).toBe(0);
     },
   );
 
@@ -65,17 +67,18 @@ describe("Abilities - ZEN MODE", () => {
     async () => {
       await game.classicMode.startBattle([Species.DARMANITAN]);
 
-      game.scene.getPlayerPokemon()!.stats[Stat.HP] = 1000;
-      game.scene.getPlayerPokemon()!.hp = 100;
-      expect(game.scene.getPlayerPokemon()!.formIndex).toBe(0);
+      const player = game.scene.getPlayerPokemon()!;
+      player.stats[Stat.HP] = 1000;
+      player.hp = 100;
+      expect(player.formIndex).toBe(0);
 
       game.move.select(Moves.SPLASH);
       await game.setTurnOrder([BattlerIndex.ENEMY, BattlerIndex.PLAYER]);
       await game.phaseInterceptor.to("QuietFormChangePhase");
       await game.phaseInterceptor.to("TurnInitPhase", false);
 
-      expect(game.scene.getPlayerPokemon()!.hp).not.toBe(100);
-      expect(game.scene.getPlayerPokemon()!.formIndex).not.toBe(0);
+      expect(player.hp).not.toBe(100);
+      expect(player.formIndex).not.toBe(0);
     },
   );
 
@@ -83,9 +86,10 @@ describe("Abilities - ZEN MODE", () => {
     "kill pokemon while on zen mode",
     async () => {
       await game.classicMode.startBattle([Species.DARMANITAN, Species.CHARIZARD]);
-      game.scene.getPlayerPokemon()!.stats[Stat.HP] = 1000;
-      game.scene.getPlayerPokemon()!.hp = 100;
-      expect(game.scene.getPlayerPokemon()!.formIndex).toBe(0);
+      const player = game.scene.getPlayerPokemon()!;
+      player.stats[Stat.HP] = 1000;
+      player.hp = 100;
+      expect(player.formIndex).toBe(0);
 
       game.move.select(Moves.SPLASH);
 
@@ -95,11 +99,11 @@ describe("Abilities - ZEN MODE", () => {
       damagePhase.updateAmount(80);
       await game.phaseInterceptor.to("QuietFormChangePhase");
 
-      expect(game.scene.getPlayerPokemon()!.hp).not.toBe(100);
-      expect(game.scene.getPlayerPokemon()!.formIndex).not.toBe(0);
+      expect(player.hp).not.toBe(100);
+      expect(player.formIndex).not.toBe(0);
 
-      await game.killPokemon(game.scene.getPlayerPokemon()!);
-      expect(game.scene.getPlayerPokemon()!.isFainted()).toBe(true);
+      await game.killPokemon(player);
+      expect(player.isFainted()).toBe(true);
 
       await game.phaseInterceptor.to("TurnStartPhase");
       game.onNextPrompt("SwitchPhase", Mode.PARTY, () => {
