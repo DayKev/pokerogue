@@ -13,7 +13,6 @@ import Phaser from "phaser";
 import { afterEach, beforeAll, beforeEach, describe, expect, test } from "vitest";
 
 
-
 describe("Abilities - ZEN MODE", () => {
   let phaserGame: Phaser.Game;
   let game: GameManager;
@@ -51,7 +50,7 @@ describe("Abilities - ZEN MODE", () => {
       expect(player.formIndex).toBe(0);
 
       game.move.select(Moves.SPLASH);
-      await game.setTurnOrder([BattlerIndex.ENEMY, BattlerIndex.PLAYER]);
+      await game.setTurnOrder([ BattlerIndex.ENEMY, BattlerIndex.PLAYER ]);
       await game.phaseInterceptor.to(DamagePhase, false);
       const damagePhase = game.scene.getCurrentPhase() as DamagePhase;
       damagePhase.updateAmount(40);
@@ -73,7 +72,7 @@ describe("Abilities - ZEN MODE", () => {
       expect(player.formIndex).toBe(0);
 
       game.move.select(Moves.SPLASH);
-      await game.setTurnOrder([BattlerIndex.ENEMY, BattlerIndex.PLAYER]);
+      await game.setTurnOrder([ BattlerIndex.ENEMY, BattlerIndex.PLAYER ]);
       await game.phaseInterceptor.to("QuietFormChangePhase");
       await game.phaseInterceptor.to("TurnInitPhase", false);
 
@@ -85,7 +84,7 @@ describe("Abilities - ZEN MODE", () => {
   test(
     "kill pokemon while on zen mode",
     async () => {
-      await game.classicMode.startBattle([Species.DARMANITAN, Species.CHARIZARD]);
+      await game.classicMode.startBattle([ Species.DARMANITAN, Species.CHARIZARD ]);
       const player = game.scene.getPlayerPokemon()!;
       player.stats[Stat.HP] = 1000;
       player.hp = 100;
@@ -93,7 +92,7 @@ describe("Abilities - ZEN MODE", () => {
 
       game.move.select(Moves.SPLASH);
 
-      await game.setTurnOrder([BattlerIndex.ENEMY, BattlerIndex.PLAYER]);
+      await game.setTurnOrder([ BattlerIndex.ENEMY, BattlerIndex.PLAYER ]);
       await game.phaseInterceptor.to(DamagePhase, false);
       const damagePhase = game.scene.getCurrentPhase() as DamagePhase;
       damagePhase.updateAmount(80);
@@ -129,7 +128,7 @@ describe("Abilities - ZEN MODE", () => {
         [Species.DARMANITAN]: zenForm,
       });
 
-      await game.classicMode.startBattle([Species.MAGIKARP, Species.DARMANITAN]);
+      await game.classicMode.startBattle([ Species.MAGIKARP, Species.DARMANITAN ]);
 
       const darmanitan = game.scene.getPlayerParty().find((p) => p.species.speciesId === Species.DARMANITAN)!;
       expect(darmanitan.formIndex).toBe(zenForm);

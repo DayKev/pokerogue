@@ -303,7 +303,7 @@ export default class GameManager {
     vi.spyOn(enemy, "getNextMove").mockReturnValueOnce({
       move: moveId,
       targets: (target !== undefined && !legalTargets.multiple && legalTargets.targets.includes(target))
-        ? [target]
+        ? [ target ]
         : enemy.getNextTargets(moveId)
     });
 
@@ -319,7 +319,7 @@ export default class GameManager {
     const originalMatchupScore = Trainer.prototype.getPartyMemberMatchupScores;
     Trainer.prototype.getPartyMemberMatchupScores = () => {
       Trainer.prototype.getPartyMemberMatchupScores = originalMatchupScore;
-      return [[1, 100], [1, 100]];
+      return [[ 1, 100 ], [ 1, 100 ]];
     };
   }
 

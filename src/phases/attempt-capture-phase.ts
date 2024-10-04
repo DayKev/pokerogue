@@ -249,7 +249,7 @@ export class AttemptCapturePhase extends PokemonPhase {
           }
         });
       };
-      Promise.all([pokemon.hideInfo(), this.scene.gameData.setPokemonCaught(pokemon)]).then(() => {
+      Promise.all([ pokemon.hideInfo(), this.scene.gameData.setPokemonCaught(pokemon) ]).then(() => {
         if (this.scene.getPlayerParty().length === PLAYER_PARTY_MAX_SIZE) {
           const promptRelease = () => {
             this.scene.ui.showText(i18next.t("battle:partyFull", { pokemonName: pokemon.getNameToRender() }), null, () => {
