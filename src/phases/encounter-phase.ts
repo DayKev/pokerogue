@@ -247,7 +247,7 @@ export class EncounterPhase extends BattlePhase {
 
     /*if (startingWave > 10) {
         for (let m = 0; m < Math.min(Math.floor(startingWave / 10), 99); m++)
-          this.scene.addModifier(getPlayerModifierTypeOptionsForWave((m + 1) * 10, 1, this.scene.getParty())[0].type.newModifier(), true);
+          this.scene.addModifier(getPlayerModifierTypeOptionsForWave((m + 1) * 10, 1, this.scene.getPlayerParty())[0].type.newModifier(), true);
         this.scene.updateModifiers(true);
       }*/
 

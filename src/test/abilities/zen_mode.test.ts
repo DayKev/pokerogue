@@ -42,7 +42,7 @@ describe("Abilities - ZEN MODE", () => {
   test(
     "not enough damage to change form",
     async () => {
-      await game.classicMode.startBattle([Species.DARMANITAN]);
+      await game.classicMode.startBattle([ Species.DARMANITAN ]);
 
       const player = game.scene.getPlayerPokemon()!;
       player.stats[Stat.HP] = 100;
@@ -64,7 +64,7 @@ describe("Abilities - ZEN MODE", () => {
   test(
     "enough damage to change form",
     async () => {
-      await game.classicMode.startBattle([Species.DARMANITAN]);
+      await game.classicMode.startBattle([ Species.DARMANITAN ]);
 
       const player = game.scene.getPlayerPokemon()!;
       player.stats[Stat.HP] = 1000;
