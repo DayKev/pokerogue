@@ -7,8 +7,6 @@ import GameManager from "#test/utils/gameManager";
 import Phaser from "phaser";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-const TIMEOUT = 20 * 1000;
-
 describe("Items - Toxic orb", () => {
   let phaserGame: Phaser.Game;
   let game: GameManager;
@@ -56,5 +54,5 @@ describe("Items - Toxic orb", () => {
     expect(player.status?.effect).toBe(StatusEffect.TOXIC);
     // Damage should not have ticked yet.
     expect(player.status?.turnCount).toBe(0);
-  }, TIMEOUT);
+  });
 });
