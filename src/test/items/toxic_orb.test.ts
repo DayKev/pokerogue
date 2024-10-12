@@ -35,8 +35,6 @@ describe("Items - Toxic orb", () => {
       }]);
 
     vi.spyOn(i18next, "t");
-
-    vi.spyOn(i18next, "t");
   });
 
   it("badly poisons the holder", async () => {
@@ -56,5 +54,5 @@ describe("Items - Toxic orb", () => {
     expect(player.status?.effect).toBe(StatusEffect.TOXIC);
     // Damage should not have ticked yet.
     expect(player.status?.turnCount).toBe(0);
-  }, TIMEOUT);
+  });
 });

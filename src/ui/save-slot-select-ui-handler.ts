@@ -183,7 +183,7 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
     return success || error;
   }
 
-  async populateSessionSlots() {
+  populateSessionSlots() {
     for (let s = 0; s < SESSION_SLOTS_COUNT; s++) {
       const sessionSlot = new SessionSlot(this.scene, s);
       this.scene.add.existing(sessionSlot);
