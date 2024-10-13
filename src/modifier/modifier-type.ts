@@ -2020,7 +2020,7 @@ export function regenerateModifierPoolThresholds(party: Pokemon[], poolType: Mod
     let tierMaxWeight = 0;
     let i = 0;
     pool[t].reduce((total: integer, modifierType: WeightedModifierType) => {
-      const weightedModifierType = modifierType as WeightedModifierType;
+      const weightedModifierType = modifierType;
       const existingModifiers = party[0].scene.findModifiers(m => m.type.id === weightedModifierType.modifierType.id, poolType === ModifierPoolType.PLAYER);
       const itemModifierType = weightedModifierType.modifierType instanceof ModifierTypeGenerator
         ? weightedModifierType.modifierType.generateType(party)
@@ -2040,7 +2040,9 @@ export function regenerateModifierPoolThresholds(party: Pokemon[], poolType: Mod
         modifierTableData[modifierId] = { weight: outputWeight, tier: parseInt(t), tierPercent: 0, totalPercent: 0 };
         tierMaxWeight += outputWeight;
       }
-      if (weight) {
+      const isValidForChallenge = new Utils.BooleanHolder(true);
+      applyChallenges(party[0].scene.gameMode, ChallengeType.RANDOM_ITEM_POOL_MODIFIER, modifierType, isValidForChallenge);
+      if (weight && isValidForChallenge) {
         total += weight;
       } else {
         ignoredIndexes[t].push(i++);
@@ -2327,7 +2329,6 @@ export function getDailyRunStarterModifiers(party: PlayerPokemon[]): Modifiers.P
 function getNewModifierTypeOption(party: Pokemon[], poolType: ModifierPoolType, tier?: ModifierTier, upgradeCount?: integer, retryCount: integer = 0, allowLuckUpgrades: boolean = true): ModifierTypeOption | null {
   const player = poolType === ModifierPoolType.PLAYER;
   const pool = getModifierPoolForType(poolType);
-  applyChallenges(party[0].scene.gameMode, ChallengeType.RANDOM_ITEM_POOL_MODIFIER, pool);
   let thresholds: object;
   switch (poolType) {
   case ModifierPoolType.PLAYER:

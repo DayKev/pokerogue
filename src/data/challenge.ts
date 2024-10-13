@@ -9,7 +9,7 @@ import { Moves } from "#app/enums/moves";
 import Pokemon, { EnemyPokemon, PlayerPokemon, PokemonMove } from "#app/field/pokemon";
 import Trainer, { TrainerVariant } from "#app/field/trainer";
 import { GameMode } from "#app/game-mode";
-import { ModifierPool, ModifierTypeOption, WeightedModifierType } from "#app/modifier/modifier-type";
+import { ModifierTypeOption, WeightedModifierType } from "#app/modifier/modifier-type";
 import { defaultStarterSpecies, DexAttrProps, GameData } from "#app/system/game-data";
 import { BooleanHolder, NumberHolder, randSeedItem } from "#app/utils";
 import { Challenges } from "#enums/challenges";
@@ -457,10 +457,11 @@ export abstract class Challenge {
 
   /**
    * An apply function for {@linkcode ChallengeType.RANDOM_ITEM_POOL_MODIFIER} challenges. Derived classes should alter this.
-   * @param pool {@linkcode ModifierPool} The random item pool.
+   * @param modifierType
+   * @param isValid
    * @returns `true` if this function did anything.
    */
-  applyRandomItemPoolModifier(pool: ModifierPool): boolean {
+  applyRandomItemPoolModifier(modifierType: WeightedModifierType, isValid: BooleanHolder): boolean {
     return false;
   }
 
@@ -866,10 +867,8 @@ export class HardcoreChallenge extends Challenge {
     super(Challenges.HARDCORE, 1);
   }
 
-  override applyRandomItemPoolModifier(pool: ModifierPool): boolean {
-    for (let i = 0; i < 5; i++) {
-      pool[i].filter((modifierType: WeightedModifierType) => !this.itemBlackList.includes(modifierType.modifierType.localeKey));
-    }
+  override applyRandomItemPoolModifier(modifierType: WeightedModifierType, isValid: BooleanHolder): boolean {
+    isValid.value = !this.itemBlackList.includes(modifierType.modifierType.localeKey);
     return true;
   }
 
@@ -1059,10 +1058,11 @@ export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType
  * Apply all challenges that modify if this random item can be generated.
  * @param gameMode The current {@linkcode GameMode}
  * @param challengeType {@linkcode ChallengeType.RANDOM_ITEM_POOL_MODIFIER}
- * @param pool {@linkcode ModifierPool} The random item pool.
+ * @param modifierType
+ * @param isValid
  * @returns `true` if any challenge was successfully applied.
  */
-export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType.RANDOM_ITEM_POOL_MODIFIER, pool: ModifierPool): boolean;
+export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType.RANDOM_ITEM_POOL_MODIFIER, modifierType: WeightedModifierType, isValid: BooleanHolder): boolean;
 /**
  * Apply all challenges that modify if that pokemon can be added to the party.
  * @param gameMode The current {@linkcode GameMode}
@@ -1142,7 +1142,7 @@ export function applyChallenges(gameMode: GameMode, challengeType: ChallengeType
         ret ||= c.applyShopItemBlacklist(args[0], args[1]);
         break;
       case ChallengeType.RANDOM_ITEM_POOL_MODIFIER:
-        ret ||= c.applyRandomItemPoolModifier(args[0]);
+        ret ||= c.applyRandomItemPoolModifier(args[0], args[1]);
         break;
       case ChallengeType.ADD_POKEMON_TO_PARTY:
         ret ||= c.applyAddPokemonToParty(args[0], args[1], args[2]);
