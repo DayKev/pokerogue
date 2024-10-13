@@ -576,7 +576,7 @@ export class SingleGenerationChallenge extends Challenge {
    * @param overrideValue The value to check for. If `undefined`, gets the current value.
    * @returns The localised name for the current value.
    */
-  getValue(overrideValue?: number): string {
+  override getValue(overrideValue?: number): string {
     const value = overrideValue ?? this.value;
     if (value === 0) {
       return i18next.t("settings:off");
@@ -589,7 +589,7 @@ export class SingleGenerationChallenge extends Challenge {
    * @param overrideValue The value to check for. If `undefined`, gets the current value.
    * @returns The localised description for the current value.
    */
-  getDescription(overrideValue?: number): string {
+  override getDescription(overrideValue?: number): string {
     const value = overrideValue ?? this.value;
     if (value === 0) {
       return i18next.t(`challenges:${this.geti18nKey()}.desc_default`);

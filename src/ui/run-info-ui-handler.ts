@@ -591,8 +591,16 @@ export default class RunInfoUiHandler extends UiHandler {
           rules.push(i18next.t("challenges:freshStart.name"));
           break;
         case Challenges.INVERSE_BATTLE:
-          //
           rules.push(i18next.t("challenges:inverseBattle.shortName"));
+          break;
+        case Challenges.HARDCORE:
+          rules.push(i18next.t("challenges:hardcore.name"));
+          break;
+        case Challenges.LIMITED_CATCH:
+          rules.push(i18next.t("challenges:limitedCatch.name"));
+          break;
+        case Challenges.NO_AUTO_HEAL:
+          rules.push(i18next.t("challenges:noAutoHeal.name"));
           break;
         }
       }
