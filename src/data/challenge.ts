@@ -1,11 +1,10 @@
 import { BattleType, FixedBattleConfig } from "#app/battle";
+import { pokemonEvolutions } from "#app/data/balance/pokemon-evolutions";
+import { speciesStarterCosts } from "#app/data/balance/starters";
 import { Nature } from "#app/data/nature";
-import { pokemonEvolutions } from "#app/data/pokemon-evolutions";
 import { pokemonFormChanges } from "#app/data/pokemon-forms";
-import PokemonSpecies, { getPokemonSpecies, getPokemonSpeciesForm, speciesStarters } from "#app/data/pokemon-species";
+import PokemonSpecies, { getPokemonSpecies, getPokemonSpeciesForm } from "#app/data/pokemon-species";
 import { Type } from "#app/data/type";
-import { TypeColor, TypeShadow } from "#app/enums/color";
-import { Moves } from "#app/enums/moves";
 import Pokemon, { EnemyPokemon, PlayerPokemon, PokemonMove } from "#app/field/pokemon";
 import Trainer, { TrainerVariant } from "#app/field/trainer";
 import { GameMode } from "#app/game-mode";
@@ -13,6 +12,8 @@ import { ModifierTypeOption, WeightedModifierType } from "#app/modifier/modifier
 import { defaultStarterSpecies, DexAttrProps, GameData } from "#app/system/game-data";
 import { BooleanHolder, NumberHolder, randSeedItem } from "#app/utils";
 import { Challenges } from "#enums/challenges";
+import { TypeColor, TypeShadow } from "#enums/color";
+import { Moves } from "#enums/moves";
 import { Species } from "#enums/species";
 import { TrainerType } from "#enums/trainer-type";
 import i18next from "i18next";
@@ -219,7 +220,7 @@ export abstract class Challenge {
    */
   getDescription(overrideValue?: number): string {
     const value = overrideValue ?? this.value;
-    return `${i18next.t([`challenges:${this.geti18nKey()}.desc.${value}`, `challenges:${this.geti18nKey()}.desc`])}`;
+    return `${i18next.t([ `challenges:${this.geti18nKey()}.desc.${value}`, `challenges:${this.geti18nKey()}.desc` ])}`;
   }
 
   /**
@@ -508,9 +509,9 @@ export class SingleGenerationChallenge extends Challenge {
   }
 
   override applyStarterChoice(pokemon: PokemonSpecies, valid: BooleanHolder, dexAttr: DexAttrProps, soft: boolean = false): boolean {
-    const generations = [pokemon.generation];
+    const generations = [ pokemon.generation ];
     if (soft) {
-      const speciesToCheck = [pokemon.speciesId];
+      const speciesToCheck = [ pokemon.speciesId ];
       while (speciesToCheck.length) {
         const checking = speciesToCheck.pop();
         if (checking && pokemonEvolutions.hasOwnProperty(checking)) {
@@ -549,7 +550,7 @@ export class SingleGenerationChallenge extends Challenge {
       trainerTypes = [ TrainerType.BRUNO, TrainerType.KOGA, TrainerType.PHOEBE, TrainerType.BERTHA, TrainerType.MARSHAL, TrainerType.SIEBOLD, TrainerType.OLIVIA, TrainerType.NESSA_ELITE, TrainerType.POPPY ];
       break;
     case 186:
-      trainerTypes = [ TrainerType.AGATHA, TrainerType.BRUNO, TrainerType.GLACIA, TrainerType.FLINT, TrainerType.GRIMSLEY, TrainerType.WIKSTROM, TrainerType.ACEROLA, randSeedItem([TrainerType.BEA_ELITE, TrainerType.ALLISTER_ELITE]), TrainerType.LARRY_ELITE ];
+      trainerTypes = [ TrainerType.AGATHA, TrainerType.BRUNO, TrainerType.GLACIA, TrainerType.FLINT, TrainerType.GRIMSLEY, TrainerType.WIKSTROM, TrainerType.ACEROLA, randSeedItem([ TrainerType.BEA_ELITE, TrainerType.ALLISTER_ELITE ]), TrainerType.LARRY_ELITE ];
       break;
     case 188:
       trainerTypes = [ TrainerType.LANCE, TrainerType.KAREN, TrainerType.DRAKE, TrainerType.LUCIAN, TrainerType.CAITLIN, TrainerType.DRASNA, TrainerType.KAHILI, TrainerType.RAIHAN_ELITE, TrainerType.HASSEL ];
@@ -619,10 +620,10 @@ interface monotypeOverride {
  */
 export class SingleTypeChallenge extends Challenge {
   private static TYPE_OVERRIDES: monotypeOverride[] = [
-    {species: Species.CASTFORM, type: Type.NORMAL, fusion: false},
+    { species: Species.CASTFORM, type: Type.NORMAL, fusion: false },
   ];
   // TODO: Find a solution for all Pokemon with this ssui issue, including Basculin and Burmy
-  private static SPECIES_OVERRIDES: Species[] = [Species.MELOETTA];
+  private static SPECIES_OVERRIDES: Species[] = [ Species.MELOETTA ];
 
   constructor() {
     super(Challenges.SINGLE_TYPE, 18);
@@ -630,9 +631,9 @@ export class SingleTypeChallenge extends Challenge {
 
   override applyStarterChoice(pokemon: PokemonSpecies, valid: BooleanHolder, dexAttr: DexAttrProps, soft: boolean = false): boolean {
     const speciesForm = getPokemonSpeciesForm(pokemon.speciesId, dexAttr.formIndex);
-    const types = [speciesForm.type1, speciesForm.type2];
+    const types = [ speciesForm.type1, speciesForm.type2 ];
     if (soft && !SingleTypeChallenge.SPECIES_OVERRIDES.includes(pokemon.speciesId)) {
-      const speciesToCheck = [pokemon.speciesId];
+      const speciesToCheck = [ pokemon.speciesId ];
       while (speciesToCheck.length) {
         const checking = speciesToCheck.pop();
         if (checking && pokemonEvolutions.hasOwnProperty(checking)) {
@@ -690,9 +691,9 @@ export class SingleTypeChallenge extends Challenge {
   override getDescription(overrideValue?: number): string {
     const value = overrideValue ?? this.value;
     const type = i18next.t(`pokemonInfo:Type.${Type[value - 1]}`);
-    const typeColor = `[color=${TypeColor[Type[value-1]]}][shadow=${TypeShadow[Type[value-1]]}]${type}[/shadow][/color]`;
+    const typeColor = `[color=${TypeColor[Type[value - 1]]}][shadow=${TypeShadow[Type[value - 1]]}]${type}[/shadow][/color]`;
     const defaultDesc = i18next.t(`challenges:${this.geti18nKey()}.desc_default`);
-    const typeDesc = i18next.t(`challenges:${this.geti18nKey()}.desc`, {type: typeColor});
+    const typeDesc = i18next.t(`challenges:${this.geti18nKey()}.desc`, { type: typeColor });
     return value === 0 ? defaultDesc : typeDesc;
   }
 
@@ -722,7 +723,7 @@ export class FreshStartChallenge extends Challenge {
 
   override applyStarterCost(species: Species, cost: NumberHolder): boolean {
     if (defaultStarterSpecies.includes(species)) {
-      cost.value = speciesStarters[species];
+      cost.value = speciesStarterCosts[species];
       return true;
     }
     return false;
@@ -737,7 +738,7 @@ export class FreshStartChallenge extends Challenge {
     pokemon.shiny = false; // Not shiny
     pokemon.variant = 0; // Not shiny
     pokemon.formIndex = 0; // Froakie should be base form
-    pokemon.ivs = [10, 10, 10, 10, 10, 10]; // Default IVs of 10 for all stats
+    pokemon.ivs = [ 10, 10, 10, 10, 10, 10 ]; // Default IVs of 10 for all stats
     return true;
   }
 
@@ -799,7 +800,7 @@ export class LowerStarterMaxCostChallenge extends Challenge {
   }
 
   override applyStarterChoice(pokemon: PokemonSpecies, valid: BooleanHolder): boolean {
-    if (speciesStarters[pokemon.speciesId] > DEFAULT_PARTY_MAX_COST - this.value) {
+    if (speciesStarterCosts[pokemon.speciesId] > DEFAULT_PARTY_MAX_COST - this.value) {
       valid.value = false;
       return true;
     }
@@ -861,7 +862,7 @@ export class NoAutomaticHealChallenge extends Challenge {
 
 /** Challenge that removes the ability to revive fallen pokemon */
 export class HardcoreChallenge extends Challenge {
-  private itemBlackList = ["modifierType:ModifierType.REVIVE", "modifierType:ModifierType.MAX_REVIVE", "modifierType:ModifierType.SACRED_ASH", "modifierType:ModifierType.REVIVER_SEED"];
+  private itemBlackList = [ "modifierType:ModifierType.REVIVE", "modifierType:ModifierType.MAX_REVIVE", "modifierType:ModifierType.SACRED_ASH", "modifierType:ModifierType.REVIVER_SEED" ];
 
   constructor() {
     super(Challenges.HARDCORE, 1);
@@ -878,7 +879,7 @@ export class HardcoreChallenge extends Challenge {
   }
 
   override applyMoveBlacklist(move: PokemonMove, moveCanBeUsed: BooleanHolder): boolean {
-    const moveBlacklist = [Moves.REVIVAL_BLESSING];
+    const moveBlacklist = [ Moves.REVIVAL_BLESSING ];
     moveCanBeUsed.value = !moveBlacklist.includes(move.moveId);
     return true;
   }

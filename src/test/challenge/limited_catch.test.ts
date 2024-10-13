@@ -31,8 +31,8 @@ describe("Challenge - Limited Catch", () => {
   it("prevents catching pokemon outside of the first wave of the biome", async () => {
     game.override
       .startingWave(3)
-      .pokeballs([0, 0, 0, 0, 100]);
-    await game.challengeMode.startBattle([Species.FEEBAS]);
+      .pokeballs([ 0, 0, 0, 0, 100 ]);
+    await game.challengeMode.startBattle([ Species.FEEBAS ]);
 
     //await game.phaseInterceptor.to("CommandPhase");
     const phase = game.scene.getCurrentPhase() as CommandPhase;
