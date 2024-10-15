@@ -30,7 +30,7 @@
 - [ ] The PR is self-contained and cannot be split into smaller PRs?
 - [ ] Have I provided a clear explanation of the changes?
 - [ ] Have I considered writing automated tests for the issue?
-- [ ] If I have text, did I make it translatable and add a key in the English locale file(s)?
+- [ ] If I have new/updated text, did I contact the translation team to get it added?
 - [ ] Have I tested the changes (manually)?
     - [ ] Are all unit tests still passing? (`npm run test`)
 - [ ] Are the changes visual?
