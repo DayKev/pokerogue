@@ -602,11 +602,36 @@ export default class PokemonSpecies extends PokemonSpeciesForm implements Locali
   public canChangeForm: boolean;
   public forms: PokemonForm[];
 
-  constructor(id: Species, generation: integer, subLegendary: boolean, legendary: boolean, mythical: boolean, species: string,
-    type1: Type, type2: Type | null, height: number, weight: number, ability1: Abilities, ability2: Abilities, abilityHidden: Abilities,
-    baseTotal: integer, baseHp: integer, baseAtk: integer, baseDef: integer, baseSpatk: integer, baseSpdef: integer, baseSpd: integer,
-    catchRate: integer, baseFriendship: integer, baseExp: integer, growthRate: GrowthRate, malePercent: number | null,
-    genderDiffs: boolean, canChangeForm?: boolean, ...forms: PokemonForm[]) {
+  constructor(
+    id: Species,
+    generation: integer,
+    subLegendary: boolean,
+    legendary: boolean,
+    mythical: boolean,
+    species: string,
+    type1: Type,
+    type2: Type | null,
+    height: number,
+    weight: number,
+    ability1: Abilities,
+    ability2: Abilities,
+    abilityHidden: Abilities,
+    baseTotal: integer,
+    baseHp: integer,
+    baseAtk: integer,
+    baseDef: integer,
+    baseSpatk: integer,
+    baseSpdef: integer,
+    baseSpd: integer,
+    catchRate: integer,
+    baseFriendship: integer,
+    baseExp: integer,
+    growthRate: GrowthRate,
+    malePercent: number | null,
+    genderDiffs: boolean,
+    canChangeForm?: boolean,
+    ...forms: PokemonForm[]
+  ) {
     super(type1, type2, height, weight, ability1, ability2, abilityHidden, baseTotal, baseHp, baseAtk, baseDef, baseSpatk, baseSpdef, baseSpd,
       catchRate, baseFriendship, baseExp, genderDiffs, false);
     this.speciesId = id;
@@ -922,7 +947,7 @@ export class PokemonForm extends PokemonSpeciesForm {
     baseTotal: integer, baseHp: integer, baseAtk: integer, baseDef: integer, baseSpatk: integer, baseSpdef: integer, baseSpd: integer,
     catchRate: integer, baseFriendship: integer, baseExp: integer, genderDiffs?: boolean, formSpriteKey?: string | null, isStarterSelectable?: boolean, ) {
     super(type1, type2, height, weight, ability1, ability2, abilityHidden, baseTotal, baseHp, baseAtk, baseDef, baseSpatk, baseSpdef, baseSpd,
-      catchRate, baseFriendship, baseExp, !!genderDiffs, (!!isStarterSelectable || !formKey));
+      catchRate, baseFriendship, baseExp, !!genderDiffs, (isStarterSelectable || !formKey));
     this.formName = formName;
     this.formKey = formKey;
     this.formSpriteKey = formSpriteKey !== undefined ? formSpriteKey : null;
