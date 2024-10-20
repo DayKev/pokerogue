@@ -1,7 +1,6 @@
 import BattleScene from "#app/battle-scene";
 import { applyChallenges, ChallengeType } from "#app/data/challenge";
 import { BattlePhase } from "#app/phases/battle-phase";
-import { SelectModifierPhase } from "#app/phases/select-modifier-phase";
 import { BooleanHolder, fixedInt } from "#app/utils";
 
 export class PartyHealPhase extends BattlePhase {
@@ -19,7 +18,6 @@ export class PartyHealPhase extends BattlePhase {
     const isHealPhaseActive = new BooleanHolder(true);
     applyChallenges(this.scene.gameMode, ChallengeType.NO_HEAL_PHASE, isHealPhaseActive);
     if (!isHealPhaseActive.value) {
-      this.scene.unshiftPhase(new SelectModifierPhase(this.scene));
       return this.end();
     }
 
