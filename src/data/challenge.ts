@@ -101,7 +101,7 @@ export enum ChallengeType {
   */
   RANDOM_ITEM_BLACKLIST,
   /**
-   * Checks if the caught pokemon can be add to the team
+   * Checks if the caught pokemon can be added to the team
    * @see {@linkcode Challenge.applyAddPokemonToParty}
   */
   ADD_POKEMON_TO_PARTY,
