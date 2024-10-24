@@ -4,7 +4,8 @@ import { getBerryEffectFunc, getBerryPredicate } from "#app/data/berry";
 import { getLevelTotalExp } from "#app/data/exp";
 import { allMoves } from "#app/data/move";
 import { MAX_PER_TYPE_POKEBALLS } from "#app/data/pokeball";
-import { type FormChangeItem, SpeciesFormChangeItemTrigger, SpeciesFormChangeLapseTeraTrigger, SpeciesFormChangeTeraTrigger } from "#app/data/pokemon-forms";
+import { SpeciesFormChangeItemTrigger, SpeciesFormChangeLapseTeraTrigger, SpeciesFormChangeTeraTrigger } from "#app/data/pokemon-forms";
+import { type FormChangeItem } from "#app/data/balance/form-change-items";
 import { getStatusEffectHealText } from "#app/data/status-effect";
 import { Type } from "#app/data/type";
 import Pokemon, { type PlayerPokemon } from "#app/field/pokemon";
@@ -28,7 +29,25 @@ import { Species } from "#enums/species";
 import { type PermanentStat, type TempBattleStat, BATTLE_STATS, Stat, TEMP_BATTLE_STATS } from "#enums/stat";
 import { StatusEffect } from "#enums/status-effect";
 import i18next from "i18next";
-import { type DoubleBattleChanceBoosterModifierType, type EvolutionItemModifierType, type FormChangeItemModifierType, type ModifierOverride, type ModifierType, type PokemonBaseStatTotalModifierType, type PokemonExpBoosterModifierType, type PokemonFriendshipBoosterModifierType, type PokemonMoveAccuracyBoosterModifierType, type PokemonMultiHitModifierType, type TerastallizeModifierType, type TmModifierType, getModifierType, ModifierPoolType, ModifierTypeGenerator, modifierTypes, PokemonHeldItemModifierType } from "./modifier-type";
+import {
+  type DoubleBattleChanceBoosterModifierType,
+  type EvolutionItemModifierType,
+  type FormChangeItemModifierType,
+  type ModifierOverride,
+  type ModifierType,
+  type PokemonBaseStatTotalModifierType,
+  type PokemonExpBoosterModifierType,
+  type PokemonFriendshipBoosterModifierType,
+  type PokemonMoveAccuracyBoosterModifierType,
+  type PokemonMultiHitModifierType,
+  type TerastallizeModifierType,
+  type TmModifierType,
+  getModifierType,
+  ModifierPoolType,
+  ModifierTypeGenerator,
+  modifierTypes,
+  PokemonHeldItemModifierType,
+} from "#app/modifier/modifier-type";
 import { Color, ShadowColor } from "#enums/color";
 import { FRIENDSHIP_GAIN_FROM_RARE_CANDY } from "#app/data/balance/starters";
 
@@ -402,6 +421,14 @@ export abstract class LapsingPersistentModifier extends PersistentModifier {
 
   resetBattleCount(): void {
     this.battleCount = this.maxBattles;
+  }
+
+  /**
+   * Updates an existing modifier with a new `maxBattles` and `battleCount`.
+   */
+  setNewBattleCount(count: number): void {
+    this.maxBattles = count;
+    this.battleCount = count;
   }
 
   getMaxBattles(): number {
@@ -960,7 +987,7 @@ export class EvoTrackerModifier extends PokemonHeldItemModifier {
 
     this.stackCount = pokemon
       ? pokemon.evoCounter + pokemon.getHeldItems().filter(m => m instanceof DamageMoneyRewardModifier).length
-        + pokemon.scene.findModifiers(m => m instanceof MoneyMultiplierModifier || m instanceof ExtraModifierModifier).length
+        + pokemon.scene.findModifiers(m => m instanceof MoneyMultiplierModifier || m instanceof ExtraModifierModifier || m instanceof TempExtraModifierModifier).length
       : this.stackCount;
 
     const text = scene.add.bitmapText(10, 15, "item-count", this.stackCount.toString(), 11);
@@ -975,7 +1002,7 @@ export class EvoTrackerModifier extends PokemonHeldItemModifier {
 
   getMaxHeldItemCount(pokemon: Pokemon): number {
     this.stackCount = pokemon.evoCounter + pokemon.getHeldItems().filter(m => m instanceof DamageMoneyRewardModifier).length
-      + pokemon.scene.findModifiers(m => m instanceof MoneyMultiplierModifier || m instanceof ExtraModifierModifier).length;
+      + pokemon.scene.findModifiers(m => m instanceof MoneyMultiplierModifier || m instanceof ExtraModifierModifier || m instanceof TempExtraModifierModifier).length;
     return 999;
   }
 }
@@ -3285,6 +3312,60 @@ export class ExtraModifierModifier extends PersistentModifier {
 
   getMaxStackCount(scene: BattleScene): number {
     return 3;
+  }
+}
+
+/**
+ * Modifier used for timed boosts to the player's shop item rewards.
+ * @extends LapsingPersistentModifier
+ * @see {@linkcode apply}
+ */
+export class TempExtraModifierModifier extends LapsingPersistentModifier {
+  constructor(type: ModifierType, maxBattles: number, battleCount?: number, stackCount?: number) {
+    super(type, maxBattles, battleCount, stackCount);
+  }
+
+  /**
+   * Goes through existing modifiers for any that match Silver Pokeball,
+   * which will then add the max count of the new item to the existing count of the current item.
+   * If no existing Silver Pokeballs are found, will add a new one.
+   * @param modifiers {@linkcode PersistentModifier} array of the player's modifiers
+   * @param _virtual N/A
+   * @param scene
+   * @returns true if the modifier was successfully added or applied, false otherwise
+   */
+  add(modifiers: PersistentModifier[], _virtual: boolean, scene: BattleScene): boolean {
+    for (const modifier of modifiers) {
+      if (this.match(modifier)) {
+        const modifierInstance = modifier as TempExtraModifierModifier;
+        const newBattleCount = this.getMaxBattles() + modifierInstance.getBattleCount();
+
+        modifierInstance.setNewBattleCount(newBattleCount);
+        scene.playSound("se/restore");
+        return true;
+      }
+    }
+
+    modifiers.push(this);
+    return true;
+  }
+
+  clone() {
+    return new TempExtraModifierModifier(this.type, this.getMaxBattles(), this.getBattleCount(), this.stackCount);
+  }
+
+  match(modifier: Modifier): boolean {
+    return (modifier instanceof TempExtraModifierModifier);
+  }
+
+  /**
+   * Increases the current rewards in the battle by the `stackCount`.
+   * @returns `true` if the shop reward number modifier applies successfully
+   * @param count {@linkcode NumberHolder} that holds the resulting shop item reward count
+   */
+  apply(count: NumberHolder): boolean {
+    count.value += this.getStackCount();
+    return true;
   }
 }
 
