@@ -227,7 +227,7 @@ export default class BattleScene extends SceneBase {
   public phaseQueue: Phase[];
   public conditionalQueue: Array<[() => boolean, Phase]>;
   /** PhaseQueuePrepend: is a temp storage of what will be added to PhaseQueue */
-  private phaseQueuePrepend: Phase[];
+  public phaseQueuePrepend: Phase[];
 
   /** overrides default of inserting phases to end of phaseQueuePrepend array, useful or inserting Phases "out of order" */
   private phaseQueuePrependSpliceIndex: integer;
@@ -2290,21 +2290,25 @@ export default class BattleScene extends SceneBase {
    */
   shiftPhase(): void {
     if (this.standbyPhase) {
+      console.log("Standby Phase:", this.standbyPhase);
       this.currentPhase = this.standbyPhase;
       this.standbyPhase = null;
       return;
     }
+    console.log("Phase Queue:", this.phaseQueue);
 
     if (this.phaseQueuePrependSpliceIndex > -1) {
       this.clearPhaseQueueSplice();
     }
     if (this.phaseQueuePrepend.length) {
+      console.log("Phase Queue Prepend:", this.phaseQueuePrepend);
       while (this.phaseQueuePrepend.length) {
         const poppedPhase = this.phaseQueuePrepend.pop();
         if (poppedPhase) {
           this.phaseQueue.unshift(poppedPhase);
         }
       }
+      console.log("New Phase Queue:", this.phaseQueue);
     }
     if (!this.phaseQueue.length) {
       this.populatePhaseQueue();

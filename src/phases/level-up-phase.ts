@@ -1,13 +1,13 @@
 import BattleScene from "#app/battle-scene";
-import { ExpNotification } from "#app/enums/exp-notification";
-import { EvolutionPhase } from "#app/phases/evolution-phase";
 import { PlayerPokemon } from "#app/field/pokemon";
 import { getPokemonNameWithAffix } from "#app/messages";
+import { EvolutionPhase } from "#app/phases/evolution-phase";
+import { LearnMovePhase } from "#app/phases/learn-move-phase";
+import { PlayerPartyMemberPokemonPhase } from "#app/phases/player-party-member-pokemon-phase";
 import { LevelAchv } from "#app/system/achv";
+import { NumberHolder } from "#app/utils";
+import { ExpNotification } from "#enums/exp-notification";
 import i18next from "i18next";
-import * as Utils from "#app/utils";
-import { PlayerPartyMemberPokemonPhase } from "./player-party-member-pokemon-phase";
-import { LearnMovePhase } from "./learn-move-phase";
 
 export class LevelUpPhase extends PlayerPartyMemberPokemonPhase {
   private lastLevel: integer;
@@ -28,7 +28,7 @@ export class LevelUpPhase extends PlayerPartyMemberPokemonPhase {
       this.scene.gameData.gameStats.highestLevel = this.level;
     }
 
-    this.scene.validateAchvs(LevelAchv, new Utils.NumberHolder(this.level));
+    this.scene.validateAchvs(LevelAchv, new NumberHolder(this.level));
 
     const pokemon = this.getPokemon();
     const prevStats = pokemon.stats.slice(0);
@@ -53,6 +53,8 @@ export class LevelUpPhase extends PlayerPartyMemberPokemonPhase {
       const evolution = pokemon.getEvolution();
       if (evolution) {
         this.scene.unshiftPhase(new EvolutionPhase(this.scene, pokemon as PlayerPokemon, evolution, this.lastLevel));
+        console.log("Phase Queue during Level Up Phase:", this.scene.phaseQueue);
+        console.log("Phase Queue Prepend during Level Up Phase:", this.scene.phaseQueuePrepend);
       }
     }
   }
