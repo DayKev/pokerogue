@@ -692,20 +692,18 @@ export class DestinyBondTag extends BattlerTag {
    * or after receiving fatal damage. When the damage is fatal,
    * the attacking Pokemon is taken down as well, unless it's a boss.
    *
-   * @param {Pokemon} pokemon Pokemon that is attacking the Destiny Bond user.
-   * @param {BattlerTagLapseType} lapseType CUSTOM or PRE_MOVE
-   * @returns false if the tag source fainted or one turn has passed since the application
+   * @param pokemon Pokemon that is attacking the Destiny Bond user.
+   * @param lapseType CUSTOM or PRE_MOVE
+   * @returns `false` if the tag source fainted or one turn has passed since the application
    */
   lapse(pokemon: Pokemon, lapseType: BattlerTagLapseType): boolean {
     if (lapseType !== BattlerTagLapseType.CUSTOM) {
       return super.lapse(pokemon, lapseType);
     }
-    const source = this.sourceId ? pokemon.scene.getPokemonById(this.sourceId) : null;
-    if (!source?.isFainted()) {
-      return true;
-    }
 
-    if (source?.getAlly() === pokemon) {
+    const source = this.sourceId ? pokemon.scene.getPokemonById(this.sourceId) : null;
+
+    if (!source || !source.isFainted() || !pokemon.isOnField() || source.getAlly() === pokemon) {
       return false;
     }
 
