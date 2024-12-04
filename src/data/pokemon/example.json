@@ -1,0 +1,67 @@
+{
+  "pokemon": {
+    "id": 0,
+    "name": "Pokemon Name",
+    "generation": 0,
+    "legendType": "Mythical",
+    "speciesText": "Example Pokémon",
+    "type1": "Normal",
+    "type2": "Normal",
+    "height": 12,
+    "weight": 34,
+    "ability1": "Some Ability",
+    "ability2": "Another Ability",
+    "abilityHidden": "Third Ability",
+    "baseHP": 10,
+    "baseAtk": 20,
+    "baseDef": 30,
+    "baseSpatk": 40,
+    "baseSpdef": 50,
+    "baseSpd": 60,
+    "catchRate": 255,
+    "baseFriendship": 50,
+    "baseExp": 50,
+    "growthRate": "Medium Fast",
+    "malePercent": 50,
+    "genderDiffs": true,
+    "canChangeForm": true,
+    "forms": ["one", "two", "three"],
+    "evolutions": {
+      "from": {
+        "name": "unevolvedpokemon",
+        "form": "form-name"
+      },
+      "to": {
+        "evolvedspecies": {
+          "conditions": {
+            "item": "Linking Cord",
+            "move": "Extreme Speed",
+            "moveOfType": "Normal",
+            "timeOfDay": ["Dawn", "Dusk"],
+            "gender": "Female",
+            "caughtPokemon": "arceus",
+            "typeInParty": "Normal",
+            "activeWeather": ["Snow", "Hail"],
+            "nature": ["Hardy", "Serious"],
+            "friendship": 200,
+            "biome": ["Island", "Lake", "Sea"]
+          },
+          "form": "another-form-name",
+          "expectedEnemyEvolveLevel": 25
+        },
+        "alternatespecies": {
+          "conditions": {
+            "level": 20
+          },
+            "form": null
+        }
+      }
+    },
+    "isStarterSelectable": true
+  },
+  "pokemon_one": {
+    "formName": "First Form",
+    "baseAtk": 40,
+    "baseSpatk": 20
+  }
+}

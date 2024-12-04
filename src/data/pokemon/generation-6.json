@@ -1,0 +1,44 @@
+{
+  "scatterbug": {
+    "id": 664,
+    "name": "Scatterbug",
+    "generation": 6,
+    "speciesText": "Scatterdust Pokémon",
+    "type1": "Bug",
+    "height": 0.3,
+    "weight": 2.5,
+    "ability1": "Shield Dust",
+    "ability2": "Compound Eyes",
+    "abilityHidden": "Friend Guard",
+    "baseHP": 38,
+    "baseAtk": 35,
+    "baseDef": 40,
+    "baseSpatk": 27,
+    "baseSpdef": 25,
+    "baseSpd": 35,
+    "catchRate": 255,
+    "baseFriendship": 70,
+    "baseExp": 40,
+    "growthRate": "Medium Fast",
+    "malePercent": 50,
+    "forms": ["meadow", "icy-snow", "..."],
+    "evolutions": {
+      "to": {
+        "spewpa": {
+          "conditions": {
+            "level": 9
+          }
+        }
+      }
+    },
+    "isStarterSelectable": true
+  },
+  "scatterbug_meadow": {
+    "formName": "Meadow Pattern",
+    "spriteFormKey": ""
+  },
+  "scatterbug_icy-snow": {
+    "formName": "Icy Snow Pattern",
+    "spriteFormKey": ""
+  }
+}

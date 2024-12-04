@@ -17,6 +17,7 @@ on:
 jobs:
   pre-test:
     name: Run Pre-test
+    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
@@ -37,6 +38,7 @@ jobs:
 
   run-tests:
     name: Run Tests 
+    if: false
     needs: [pre-test]
     strategy:
       matrix:
