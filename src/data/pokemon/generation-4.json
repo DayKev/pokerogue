@@ -1,0 +1,132 @@
+{
+  "burmy": {
+    "id": 412,
+    "name": "Burmy",
+    "generation": 4,
+    "speciesText": "Bagworm Pokémon",
+    "type1": "Bug",
+    "height": 0.2,
+    "weight": 3.4,
+    "ability1": "Shed Skin",
+    "abilityHidden": "Overcoat",
+    "baseHP": 40,
+    "baseAtk": 29,
+    "baseDef": 45,
+    "baseSpatk": 29,
+    "baseSpdef": 45,
+    "baseSpd": 36,
+    "catchRate": 120,
+    "baseFriendship": 70,
+    "baseExp": 45,
+    "growthRate": "Medium Fast",
+    "malePercent": 50,
+    "genderDiffs": true,
+    "canChangeForm": true,
+    "forms": ["plant", "sandy", "trash"],
+    "evolutions": {
+      "to": {
+        "wormadam": {
+          "conditions": {
+            "level": 20,
+            "gender": "Female"
+          }
+        },
+        "mothim": {
+          "conditions": {
+            "level": 20,
+            "gender": "Male"
+          },
+          "form": null
+        }
+      }
+    },
+    "isStarterSelectable": true
+  },
+  "burmy_plant": {
+    "formName": "Plant Cloak"
+  },
+  "burmy_sandy": {
+    "formName": "Sandy Cloak"
+  },
+  "burmy_trash": {
+    "formName": "Trash Cloak"
+  },
+
+  "wormadam": {
+    "id": 413,
+    "name": "Wormadam",
+    "generation": 4,
+    "speciesText": "Bagworm Pokémon",
+    "type1": "Bug",
+    "type2": "Grass",
+    "height": 0.5,
+    "weight": 6.5,
+    "ability1": "Anticipation",
+    "abilityHidden": "Overcoat",
+    "baseHP": 60,
+    "baseAtk": 59,
+    "baseDef": 85,
+    "baseSpatk": 79,
+    "baseSpdef": 105,
+    "baseSpd": 36,
+    "catchRate": 45,
+    "baseFriendship": 70,
+    "baseExp": 148,
+    "growthRate": "Medium Fast",
+    "malePercent": 0,
+    "forms": ["plant", "sandy", "trash"],
+    "evolutions": {
+      "from": "burmy"
+    }
+  },
+  "wormadam_plant": {
+    "formName":"Plant Cloak"
+  },
+  "wormadam_sandy": {
+    "formName": "Sandy Cloak",
+    "type2": "Ground",
+    "baseAtk": 79,
+    "baseDef": 105,
+    "baseSpatk": 59,
+    "baseSpdef": 85
+  },
+  "wormadam_trash": {
+    "formName": "Trash Cloak",
+    "type2": "Steel",
+    "baseAtk": 69,
+    "baseDef": 95,
+    "baseSpatk": 69,
+    "baseSpdef": 95
+  },
+
+  "mothim": {
+    "id": 414,
+    "name": "Mothim",
+    "generation": 4,
+    "legendType": "None",
+    "speciesText": "Moth Pokémon",
+    "type1": "Bug",
+    "type2": "Flying",
+    "height": 0.9,
+    "weight": 23.3,
+    "ability1": "Swarm",
+    "ability2": "None",
+    "abilityHidden": "Tinted Lens",
+    "baseHP": 60,
+    "baseAtk": 59,
+    "baseDef": 85,
+    "baseSpatk": 79,
+    "baseSpdef": 105,
+    "baseSpd": 36,
+    "catchRate": 45,
+    "baseFriendship": 70,
+    "baseExp": 148,
+    "growthRate": "Medium Fast",
+    "malePercent": 0,
+    "evolutions": {
+      "from": {
+        "burmy": ["plant", "sandy", "trash"]
+      }
+    }
+  }
+}
