@@ -246,17 +246,15 @@ export default class MenuUiHandler extends MessageUiHandler {
       },
       keepOpen: true
     });
-    if (Utils.isLocal || Utils.isBeta) {
-      manageDataOptions.push({
-        label: i18next.t("menuUiHandler:importData"),
-        handler: () => {
-          ui.revertMode();
-          globalScene.gameData.importData(GameDataType.SYSTEM);
-          return true;
-        },
-        keepOpen: true
-      });
-    }
+    manageDataOptions.push({
+      label: i18next.t("menuUiHandler:importData"),
+      handler: () => {
+        ui.revertMode();
+        globalScene.gameData.importData(GameDataType.SYSTEM);
+        return true;
+      },
+      keepOpen: true
+    });
     manageDataOptions.push({
       label: i18next.t("menuUiHandler:exportData"),
       handler: () => {
