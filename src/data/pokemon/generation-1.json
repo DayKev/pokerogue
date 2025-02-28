@@ -1,0 +1,68 @@
+{
+  "bulbasaur": {
+    "id": 1,
+    "name": "Bulbasaur",
+    "generation": 1,
+    "speciesText": "Seed Pokémon",
+    "type1": "Grass",
+    "type2": "Poison",
+    "height": 0.7,
+    "weight": 6.9,
+    "ability1": "Overgrow",
+    "abilityHidden": "Chlorophyll",
+    "baseHP": 45,
+    "baseAtk": 49,
+    "baseDef": 49,
+    "baseSpatk": 65,
+    "baseSpdef": 65,
+    "baseSpd": 45,
+    "catchRate": 45,
+    "baseFriendship": 50,
+    "baseExp": 64,
+    "growthRate": "Medium Slow",
+    "malePercent": 87.5,
+    "evolutions": {
+      "to": {
+        "ivysaur": {
+          "conditions": {
+            "level": 16
+          }
+        }
+      }
+    },
+    "isStarterSelectable": true
+  },
+  "ivysaur": {
+    "id": 2,
+    "name": "Ivysaur",
+    "generation": 1,
+    "speciesText": "Seed Pokémon",
+    "type1": "Grass",
+    "type2": "Poison",
+    "height": 1,
+    "weight": 13,
+    "ability1": "Overgrow",
+    "abilityHidden": "Chlorophyll",
+    "baseHP": 60,
+    "baseAtk": 62,
+    "baseDef": 63,
+    "baseSpatk": 80,
+    "baseSpdef": 80,
+    "baseSpd": 60,
+    "catchRate": 45,
+    "baseFriendship": 50,
+    "baseExp": 142,
+    "growthRate": "Medium Slow",
+    "malePercent": 87.5,
+    "evolutions": {
+      "from": "ivysaur",
+      "to": {
+        "venasaur": {
+          "conditions": {
+            "level": 32
+          }
+        }
+      }
+    }
+  }
+}
