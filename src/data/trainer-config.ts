@@ -4728,6 +4728,13 @@ export const trainerConfigs: TrainerConfigs = {
         p.setBoss(true, 3);
         p.pokeball = PokeballType.MASTER_BALL;
         p.shiny = true;
+
+        // TODO: replace with actual event condition
+        const aprilFirstShinyEvent = true;
+        if (aprilFirstShinyEvent) {
+          p.shiny = false;
+        }
+
         p.variant = 1;
       }),
     )
@@ -4825,6 +4832,13 @@ export const trainerConfigs: TrainerConfigs = {
         p.generateAndPopulateMoveset();
         p.pokeball = PokeballType.MASTER_BALL;
         p.shiny = true;
+
+        // TODO: replace with actual event condition
+        const aprilFirstShinyEvent = true;
+        if (aprilFirstShinyEvent) {
+          p.shiny = false;
+        }
+
         p.variant = 1;
         p.formIndex = 1; // Mega Rayquaza
         p.generateName();

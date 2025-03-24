@@ -6930,13 +6930,22 @@ export class EnemyPokemon extends Pokemon {
     if (!dataSource) {
       this.generateAndPopulateMoveset();
 
+      let aprilFirstShinyOverride = false;
+      if (/* aprilFirstShinyEvent === */ true) { // TODO: replace with actual event condition
+        if (this.species.speciesId === Species.RAYQUAZA && this.hasTrainer()) {
+          shinyLock = true;
+        } else {
+          aprilFirstShinyOverride = !Utils.randInt(5) ? true : false;
+        }
+      }
+
       if (shinyLock || Overrides.OPP_SHINY_OVERRIDE === false) {
         this.shiny = false;
       } else {
         this.trySetShiny();
       }
 
-      if (!this.shiny && Overrides.OPP_SHINY_OVERRIDE) {
+      if (!this.shiny && (Overrides.OPP_SHINY_OVERRIDE || aprilFirstShinyOverride)) {
         this.shiny = true;
         this.initShinySparkle();
       }
