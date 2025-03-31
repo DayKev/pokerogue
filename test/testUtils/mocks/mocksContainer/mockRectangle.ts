@@ -72,6 +72,4 @@ export default class MockRectangle implements MockGameObject {
   setScale(_scale) {
     // return this.phaserText.setScale(scale);
   }
-
-  off() {}
 }

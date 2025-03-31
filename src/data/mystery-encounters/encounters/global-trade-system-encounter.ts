@@ -3,7 +3,7 @@ import {
   selectPokemonForOption,
   setEncounterRewards,
 } from "#app/data/mystery-encounters/utils/encounter-phase-utils";
-import { TrainerSlot } from "#enums/trainer-slot";
+import { TrainerSlot } from "#app/data/trainer-config";
 import { ModifierTier } from "#app/modifier/modifier-tier";
 import { MusicPreference } from "#app/system/settings/settings";
 import type { ModifierTypeOption } from "#app/modifier/modifier-type";
@@ -23,7 +23,7 @@ import { allSpecies, getPokemonSpecies } from "#app/data/pokemon-species";
 import { getTypeRgb } from "#app/data/type";
 import { MysteryEncounterOptionBuilder } from "#app/data/mystery-encounters/mystery-encounter-option";
 import { MysteryEncounterOptionMode } from "#enums/mystery-encounter-option-mode";
-import { NumberHolder, isNullOrUndefined, randInt, randSeedInt, randSeedShuffle, randSeedItem } from "#app/utils";
+import { NumberHolder, isNullOrUndefined, randInt, randSeedInt, randSeedShuffle } from "#app/utils";
 import type { PlayerPokemon } from "#app/field/pokemon";
 import type Pokemon from "#app/field/pokemon";
 import { EnemyPokemon, PokemonMove } from "#app/field/pokemon";
@@ -41,11 +41,11 @@ import { Gender, getGenderSymbol } from "#app/data/gender";
 import { getNatureName } from "#app/data/nature";
 import { getPokeballAtlasKey, getPokeballTintColor } from "#app/data/pokeball";
 import { getEncounterText, showEncounterText } from "#app/data/mystery-encounters/utils/encounter-dialogue-utils";
+import { trainerNamePools } from "#app/data/trainer-names";
 import { CLASSIC_MODE_MYSTERY_ENCOUNTER_WAVES } from "#app/game-mode";
 import { addPokemonDataToDexAndValidateAchievements } from "#app/data/mystery-encounters/utils/encounter-pokemon-utils";
 import type { PokeballType } from "#enums/pokeball";
 import { doShinySparkleAnim } from "#app/field/anims";
-import { TrainerType } from "#enums/trainer-type";
 import { timedEventManager } from "#app/global-event-manager";
 
 /** the i18n namespace for the encounter */
@@ -983,14 +983,15 @@ function doTradeReceivedSequence(
 }
 
 function generateRandomTraderName() {
-  const length = TrainerType.YOUNGSTER - TrainerType.ACE_TRAINER + 1;
+  const length = Object.keys(trainerNamePools).length;
   // +1 avoids TrainerType.UNKNOWN
-  const trainerTypePool = i18next.t("trainersCommon:" + TrainerType[randInt(length) + 1], { returnObjects: true });
+  let trainerTypePool = trainerNamePools[randInt(length) + 1];
+  while (!trainerTypePool) {
+    trainerTypePool = trainerNamePools[randInt(length) + 1];
+  }
   // Some trainers have 2 gendered pools, some do not
-  const gender = randInt(2) === 0 ? "MALE" : "FEMALE";
-  const trainerNameString = randSeedItem(
-    Object.values(trainerTypePool.hasOwnProperty(gender) ? trainerTypePool[gender] : trainerTypePool),
-  ) as string;
+  const genderedPool = trainerTypePool[randInt(trainerTypePool.length)];
+  const trainerNameString = Array.isArray(genderedPool) ? genderedPool[randInt(genderedPool.length)] : genderedPool;
   // Some names have an '&' symbol and need to be trimmed to a single name instead of a double name
   const trainerNames = trainerNameString.split(" & ");
   return trainerNames[randInt(trainerNames.length)];

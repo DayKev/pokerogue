@@ -13,12 +13,17 @@ import { Species } from "#enums/species";
 import { StatusEffect } from "#enums/status-effect";
 import GameManager from "#test/testUtils/gameManager";
 import { mockI18next } from "#test/testUtils/testUtils";
+import i18next from "i18next";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 const pokemonName = "PKM";
 const sourceText = "SOURCE";
 
 describe("Status Effect Messages", () => {
+  beforeAll(async () => {
+    await i18next.init();
+  });
+
   describe("NONE", () => {
     const statusEffect = StatusEffect.NONE;
 
@@ -26,6 +31,7 @@ describe("Status Effect Messages", () => {
       mockI18next();
 
       const text = getStatusEffectObtainText(statusEffect, pokemonName);
+      console.log("text:", text);
       expect(text).toBe("");
 
       const emptySourceText = getStatusEffectObtainText(statusEffect, pokemonName, "");

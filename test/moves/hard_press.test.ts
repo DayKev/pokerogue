@@ -6,13 +6,12 @@ import { Species } from "#enums/species";
 import GameManager from "#test/testUtils/gameManager";
 import Phaser from "phaser";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type Move from "#app/data/moves/move";
 
 describe("Moves - Hard Press", () => {
   let phaserGame: Phaser.Game;
   let game: GameManager;
 
-  let moveToCheck: Move;
+  const moveToCheck = allMoves[Moves.HARD_PRESS];
 
   beforeAll(() => {
     phaserGame = new Phaser.Game({
@@ -25,7 +24,6 @@ describe("Moves - Hard Press", () => {
   });
 
   beforeEach(() => {
-    moveToCheck = allMoves[Moves.HARD_PRESS];
     game = new GameManager(phaserGame);
     game.override.battleType("single");
     game.override.ability(Abilities.BALL_FETCH);

@@ -4,7 +4,6 @@ import { Species } from "#enums/species";
 import { Abilities } from "#enums/abilities";
 import GameManager from "#test/testUtils/gameManager";
 import { allMoves } from "#app/data/moves/move";
-import type Move from "#app/data/moves/move";
 import { MoveEffectPhase } from "#app/phases/move-effect-phase";
 import Phaser from "phaser";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -13,8 +12,8 @@ describe("Moves - Last Respects", () => {
   let phaserGame: Phaser.Game;
   let game: GameManager;
 
-  let move: Move;
-  let basePower: number;
+  const move = allMoves[Moves.LAST_RESPECTS];
+  const basePower = move.power;
 
   beforeAll(() => {
     phaserGame = new Phaser.Game({
@@ -28,8 +27,6 @@ describe("Moves - Last Respects", () => {
 
   beforeEach(() => {
     game = new GameManager(phaserGame);
-    move = allMoves[Moves.LAST_RESPECTS];
-    basePower = move.power;
     game.override
       .battleType("single")
       .disableCrits()

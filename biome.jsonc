@@ -50,8 +50,7 @@
         "noUndeclaredVariables": "off",
         "noUnusedVariables": "error",
         "noSwitchDeclarations": "warn", // TODO: refactor and make this an error
-        "noVoidTypeReturn": "warn", // TODO: Refactor and make this an error
-        "noUnusedImports": "error"
+        "noVoidTypeReturn": "warn" // TODO: Refactor and make this an error
       },
       "style": {
         "noVar": "error",

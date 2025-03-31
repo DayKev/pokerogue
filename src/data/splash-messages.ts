@@ -214,7 +214,7 @@ const commonSplashMessages = [
   "bornToBeAWinner",
   "onARollout",
   "itsAlwaysNightDeepInTheAbyss",
-  "folksThisIsInsane",
+  "folksThisIsInsane"
 ];
 
 //#region Seasonal Messages
@@ -224,7 +224,10 @@ const seasonalSplashMessages: Season[] = [
     name: "New Year's",
     start: "01-01",
     end: "01-15",
-    messages: ["newYears.happyNewYear", "newYears.andAHappyNewYear"],
+    messages: [
+      "newYears.happyNewYear",
+      "newYears.andAHappyNewYear"
+    ],
   },
   {
     name: "Valentines",
@@ -236,7 +239,7 @@ const seasonalSplashMessages: Season[] = [
       "valentines.applinForYou",
       "valentines.thePowerOfLoveIsThreeThirtyBST",
       "valentines.haveAHeartScale",
-      "valentines.i<3You",
+      "valentines.i<3You"
     ],
   },
   {
@@ -276,7 +279,7 @@ const seasonalSplashMessages: Season[] = [
       "aprilFools.nowWithQuickTimeEncounters",
       "aprilFools.timeYourInputsForHigherCatchrate",
       "aprilFools.certifiedButtonSimulator",
-      "aprilFools.iHopeYouGetSuckerPunched",
+      "aprilFools.iHopeYouGetSuckerPunched"
     ],
   },
   {
@@ -290,7 +293,7 @@ const seasonalSplashMessages: Season[] = [
       "halloween.mayContainSpiders",
       "halloween.spookyScarySkeledirge",
       "halloween.gourgeistUsedTrickOrTreat",
-      "halloween.letsSnuggleForever",
+      "halloween.letsSnuggleForever"
     ],
   },
   {
@@ -313,7 +316,7 @@ const seasonalSplashMessages: Season[] = [
       "winterHoliday.tisTheSeasonToBeSpeSpa",
       "winterHoliday.deckTheHalls",
       "winterHoliday.saveScummingGetsYouOnTheNaughtyList",
-      "winterHoliday.badTrainersGetRolycoly",
+      "winterHoliday.badTrainersGetRolycoly"
     ],
   },
 ];
