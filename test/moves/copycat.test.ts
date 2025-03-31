@@ -13,7 +13,7 @@ describe("Moves - Copycat", () => {
   let phaserGame: Phaser.Game;
   let game: GameManager;
 
-  let randomMoveAttr: RandomMoveAttr;
+  const randomMoveAttr = allMoves[Moves.METRONOME].getAttrs(RandomMoveAttr)[0];
 
   beforeAll(() => {
     phaserGame = new Phaser.Game({
@@ -26,7 +26,6 @@ describe("Moves - Copycat", () => {
   });
 
   beforeEach(() => {
-    randomMoveAttr = allMoves[Moves.METRONOME].getAttrs(RandomMoveAttr)[0];
     game = new GameManager(phaserGame);
     game.override
       .moveset([Moves.COPYCAT, Moves.SPIKY_SHIELD, Moves.SWORDS_DANCE, Moves.SPLASH])

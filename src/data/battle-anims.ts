@@ -4,6 +4,7 @@ import { MoveFlags } from "#enums/MoveFlags";
 import type Pokemon from "../field/pokemon";
 import { type nil, getFrameMs, getEnumKeys, getEnumValues, animationFileName } from "../utils";
 import type { BattlerIndex } from "../battle";
+import type { Element } from "json-stable-stringify";
 import { Moves } from "#enums/moves";
 import { SubstituteTag } from "./battler-tags";
 import { isNullOrUndefined } from "../utils";
@@ -1730,12 +1731,10 @@ export async function populateAnims() {
     let props: string[];
     for (let p = 0; p < propSets.length; p++) {
       props = propSets[p];
-      // @ts-ignore TODO
       const ai = props.indexOf(a.key);
       if (ai === -1) {
         continue;
       }
-      // @ts-ignore TODO
       const bi = props.indexOf(b.key);
 
       return ai < bi ? -1 : ai > bi ? 1 : 0;

@@ -1,6 +1,5 @@
 import { BattlerIndex } from "#app/battle";
 import { allMoves, ShellSideArmCategoryAttr } from "#app/data/moves/move";
-import type Move from "#app/data/moves/move";
 import { Abilities } from "#enums/abilities";
 import { Moves } from "#enums/moves";
 import { Species } from "#enums/species";
@@ -11,8 +10,8 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vite
 describe("Moves - Shell Side Arm", () => {
   let phaserGame: Phaser.Game;
   let game: GameManager;
-  let shellSideArm: Move;
-  let shellSideArmAttr: ShellSideArmCategoryAttr;
+  const shellSideArm = allMoves[Moves.SHELL_SIDE_ARM];
+  const shellSideArmAttr = shellSideArm.getAttrs(ShellSideArmCategoryAttr)[0];
 
   beforeAll(() => {
     phaserGame = new Phaser.Game({
@@ -25,8 +24,6 @@ describe("Moves - Shell Side Arm", () => {
   });
 
   beforeEach(() => {
-    shellSideArm = allMoves[Moves.SHELL_SIDE_ARM];
-    shellSideArmAttr = shellSideArm.getAttrs(ShellSideArmCategoryAttr)[0];
     game = new GameManager(phaserGame);
     game.override
       .moveset([Moves.SHELL_SIDE_ARM, Moves.SPLASH])

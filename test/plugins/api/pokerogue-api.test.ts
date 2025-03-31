@@ -2,16 +2,10 @@ import type { TitleStatsResponse } from "#app/@types/PokerogueApi";
 import { pokerogueApi } from "#app/plugins/api/pokerogue-api";
 import { getApiBaseUrl } from "#test/testUtils/testUtils";
 import { http, HttpResponse } from "msw";
-import { beforeAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { initServerForApiTests } from "#test/testUtils/testFileInitialization";
-import type { SetupServerApi } from "msw/node";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const apiBase = getApiBaseUrl();
-let server: SetupServerApi;
-
-beforeAll(async () => {
-  server = await initServerForApiTests();
-});
+const { server } = global;
 
 afterEach(() => {
   server.resetHandlers();

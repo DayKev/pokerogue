@@ -1,31 +1,20 @@
 import { defineProject } from "vitest/config";
 import { defaultConfig } from "./vite.config";
-import { BaseSequencer, type TestSpecification } from "vitest/node";
-
-function getTestOrder(testName: string): number {
-  if (testName.includes("battle-scene.test.ts")) {
-    return 1;
-  }
-  if (testName.includes("inputs.test.ts")) {
-    return 2;
-  }
-  return 3;
-}
 
 export default defineProject(({ mode }) => ({
   ...defaultConfig,
   test: {
     testTimeout: 20000,
     setupFiles: ["./test/fontFace.setup.ts", "./test/vitest.setup.ts"],
-    sequence: {
-      sequencer: class CustomSequencer extends BaseSequencer {
-        async sort(files: TestSpecification[]) {
-          // use default sorting at first.
-          files = await super.sort(files);
-          // Except, forcibly reorder
-
-          return files.sort((a, b) => getTestOrder(a.moduleId) - getTestOrder(b.moduleId));
-        }
+    server: {
+      deps: {
+        inline: ["vitest-canvas-mock"],
+        //@ts-ignore
+        optimizer: {
+          web: {
+            include: ["vitest-canvas-mock"],
+          },
+        },
       },
     },
     environment: "jsdom" as const,
@@ -45,6 +34,7 @@ export default defineProject(({ mode }) => ({
     },
     name: "main",
     include: ["./test/**/*.{test,spec}.ts"],
+    exclude: ["./test/pre.test.ts"],
   },
   esbuild: {
     pure: mode === "production" ? ["console.log"] : [],

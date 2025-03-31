@@ -27,7 +27,6 @@ import { Moves } from "#enums/moves";
 import { BattlerIndex } from "#app/battle";
 import { PokemonMove } from "#app/field/pokemon";
 import { CLASSIC_MODE_MYSTERY_ENCOUNTER_WAVES } from "#app/game-mode";
-import { randSeedInt } from "#app/utils";
 
 /** the i18n namespace for this encounter */
 const namespace = "mysteryEncounters/trashToTreasure";
@@ -81,43 +80,7 @@ export const TrashToTreasureEncounter: MysteryEncounter = MysteryEncounterBuilde
       shiny: false, // Shiny lock because of custom intro sprite
       formIndex: 1, // Gmax
       bossSegmentModifier: 1, // +1 Segment from normal
-      moveSet: [Moves.GUNK_SHOT, Moves.STOMPING_TANTRUM, Moves.HAMMER_ARM, Moves.PAYBACK],
-      modifierConfigs: [
-        {
-          modifier: generateModifierType(modifierTypes.BERRY) as PokemonHeldItemModifierType,
-        },
-        {
-          modifier: generateModifierType(modifierTypes.BERRY) as PokemonHeldItemModifierType,
-        },
-        {
-          modifier: generateModifierType(modifierTypes.BERRY) as PokemonHeldItemModifierType,
-        },
-        {
-          modifier: generateModifierType(modifierTypes.BERRY) as PokemonHeldItemModifierType,
-        },
-        {
-          modifier: generateModifierType(modifierTypes.BASE_STAT_BOOSTER) as PokemonHeldItemModifierType,
-        },
-        {
-          modifier: generateModifierType(modifierTypes.BASE_STAT_BOOSTER) as PokemonHeldItemModifierType,
-        },
-        {
-          modifier: generateModifierType(modifierTypes.TOXIC_ORB) as PokemonHeldItemModifierType,
-          stackCount: randSeedInt(2, 0),
-        },
-        {
-          modifier: generateModifierType(modifierTypes.SOOTHE_BELL) as PokemonHeldItemModifierType,
-          stackCount: randSeedInt(2, 1),
-        },
-        {
-          modifier: generateModifierType(modifierTypes.LUCKY_EGG) as PokemonHeldItemModifierType,
-          stackCount: randSeedInt(3, 1),
-        },
-        {
-          modifier: generateModifierType(modifierTypes.GOLDEN_EGG) as PokemonHeldItemModifierType,
-          stackCount: randSeedInt(2, 0),
-        },
-      ],
+      moveSet: [Moves.PAYBACK, Moves.GUNK_SHOT, Moves.STOMPING_TANTRUM, Moves.DRAIN_PUNCH],
     };
     const config: EnemyPartyConfig = {
       levelAdditiveModifier: 0.5,
@@ -127,7 +90,7 @@ export const TrashToTreasureEncounter: MysteryEncounter = MysteryEncounterBuilde
     encounter.enemyPartyConfigs = [config];
 
     // Load animations/sfx for Garbodor fight start moves
-    loadCustomMovesForEncounter([Moves.TOXIC, Moves.STOCKPILE]);
+    loadCustomMovesForEncounter([Moves.TOXIC, Moves.AMNESIA]);
 
     globalScene.loadSe("PRSFX- Dig2", "battle_anims", "PRSFX- Dig2.wav");
     globalScene.loadSe("PRSFX- Venom Drench", "battle_anims", "PRSFX- Venom Drench.wav");
@@ -152,7 +115,7 @@ export const TrashToTreasureEncounter: MysteryEncounter = MysteryEncounterBuilde
         doGarbageDig();
       })
       .withOptionPhase(async () => {
-        // Gain 2 Leftovers and 1 Shell Bell
+        // Gain 2 Leftovers and 2 Shell Bell
         await transitionMysteryEncounterIntroVisuals();
         await tryApplyDigRewardItems();
 
@@ -212,7 +175,7 @@ export const TrashToTreasureEncounter: MysteryEncounter = MysteryEncounterBuilde
           {
             sourceBattlerIndex: BattlerIndex.ENEMY,
             targets: [BattlerIndex.ENEMY],
-            move: new PokemonMove(Moves.STOCKPILE),
+            move: new PokemonMove(Moves.AMNESIA),
             ignorePp: true,
           },
         );
@@ -268,7 +231,21 @@ async function tryApplyDigRewardItems() {
     true,
   );
 
-  // Only Shell bell
+  // First Shell bell
+  for (const pokemon of party) {
+    const heldItems = globalScene.findModifiers(
+      m => m instanceof PokemonHeldItemModifier && m.pokemonId === pokemon.id,
+      true,
+    ) as PokemonHeldItemModifier[];
+    const existingShellBell = heldItems.find(m => m instanceof HitHealModifier) as HitHealModifier;
+
+    if (!existingShellBell || existingShellBell.getStackCount() < existingShellBell.getMaxStackCount()) {
+      await applyModifierTypeToPlayerPokemon(pokemon, shellBell);
+      break;
+    }
+  }
+
+  // Second Shell bell
   for (const pokemon of party) {
     const heldItems = globalScene.findModifiers(
       m => m instanceof PokemonHeldItemModifier && m.pokemonId === pokemon.id,
@@ -286,7 +263,7 @@ async function tryApplyDigRewardItems() {
   await showEncounterText(
     i18next.t("battle:rewardGainCount", {
       modifierName: shellBell.name,
-      count: 1,
+      count: 2,
     }),
     null,
     undefined,

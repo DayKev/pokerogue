@@ -4,13 +4,12 @@ import GameManager from "#test/testUtils/gameManager";
 import { Species } from "#enums/species";
 import { Moves } from "#enums/moves";
 import { allMoves } from "#app/data/moves/move";
-import type Move from "#app/data/moves/move";
 
 describe("Moves - Retaliate", () => {
   let phaserGame: Phaser.Game;
   let game: GameManager;
 
-  let retaliate: Move;
+  const retaliate = allMoves[Moves.RETALIATE];
 
   beforeAll(() => {
     phaserGame = new Phaser.Game({
@@ -23,7 +22,6 @@ describe("Moves - Retaliate", () => {
   });
 
   beforeEach(() => {
-    retaliate = allMoves[Moves.RETALIATE];
     game = new GameManager(phaserGame);
     game.override
       .battleType("single")

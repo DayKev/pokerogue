@@ -7,7 +7,6 @@ import { MoveResult } from "#app/field/pokemon";
 import GameManager from "#test/testUtils/gameManager";
 import { Abilities } from "#enums/abilities";
 import { Moves } from "#enums/moves";
-import type Move from "#app/data/moves/move";
 import { Species } from "#enums/species";
 import Phaser from "phaser";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -18,7 +17,7 @@ describe("Moves - Spit Up", () => {
   let phaserGame: Phaser.Game;
   let game: GameManager;
 
-  let spitUp: Move;
+  const spitUp = allMoves[Moves.SPIT_UP];
 
   beforeAll(() => {
     phaserGame = new Phaser.Game({ type: Phaser.HEADLESS });
@@ -29,7 +28,6 @@ describe("Moves - Spit Up", () => {
   });
 
   beforeEach(() => {
-    spitUp = allMoves[Moves.SPIT_UP];
     game = new GameManager(phaserGame);
 
     game.override.battleType("single");

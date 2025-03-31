@@ -3,7 +3,6 @@ import { allMoves } from "#app/data/moves/move";
 import { DamageAnimPhase } from "#app/phases/damage-anim-phase";
 import { MoveEffectPhase } from "#app/phases/move-effect-phase";
 import { Moves } from "#enums/moves";
-import type Move from "#app/data/moves/move";
 import { Species } from "#enums/species";
 import GameManager from "#test/testUtils/gameManager";
 import Phaser from "phaser";
@@ -13,7 +12,7 @@ describe("Moves - Dynamax Cannon", () => {
   let phaserGame: Phaser.Game;
   let game: GameManager;
 
-  let dynamaxCannon: Move;
+  const dynamaxCannon = allMoves[Moves.DYNAMAX_CANNON];
 
   beforeAll(() => {
     phaserGame = new Phaser.Game({
@@ -26,7 +25,6 @@ describe("Moves - Dynamax Cannon", () => {
   });
 
   beforeEach(() => {
-    dynamaxCannon = allMoves[Moves.DYNAMAX_CANNON];
     game = new GameManager(phaserGame);
 
     game.override.moveset([dynamaxCannon.id]);
