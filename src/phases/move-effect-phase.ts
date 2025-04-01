@@ -57,6 +57,7 @@ import {
   EnemyAttackStatusEffectChanceModifier,
   FlinchChanceModifier,
   HitHealModifier,
+  PokemonMoveAccuracyBoosterModifier,
   PokemonMultiHitModifier,
 } from "#app/modifier/modifier";
 import { PokemonPhase } from "#app/phases/pokemon-phase";
@@ -690,8 +691,10 @@ export class MoveEffectPhase extends PokemonPhase {
    * @returns `true` if the move hits the target
    */
   public hitCheck(target: Pokemon): boolean {
+    const move = this.move.getMove();
+
     // Moves targeting the user and entry hazards can't miss
-    if ([MoveTarget.USER, MoveTarget.ENEMY_SIDE].includes(this.move.getMove().moveTarget)) {
+    if ([MoveTarget.USER, MoveTarget.ENEMY_SIDE].includes(move.moveTarget)) {
       return true;
     }
 
@@ -705,7 +708,7 @@ export class MoveEffectPhase extends PokemonPhase {
     // However, if an ability with the MaxMultiHitAbAttr, namely Skill Link, is present, act as a normal
     // multi-hit move and proceed with all hits
     if (user.turnData.hitsLeft < user.turnData.hitCount) {
-      if (!this.move.getMove().hasFlag(MoveFlags.CHECK_ALL_HITS) || user.hasAbilityWithAttr(MaxMultiHitAbAttr)) {
+      if (!move.hasFlag(MoveFlags.CHECK_ALL_HITS) || user.hasAbilityWithAttr(MaxMultiHitAbAttr)) {
         return true;
       }
     }
@@ -719,11 +722,7 @@ export class MoveEffectPhase extends PokemonPhase {
     }
 
     const semiInvulnerableTag = target.getTag(SemiInvulnerableTag);
-    if (
-      target.getTag(BattlerTagType.TELEKINESIS) &&
-      !semiInvulnerableTag &&
-      !this.move.getMove().hasAttr(OneHitKOAttr)
-    ) {
+    if (target.getTag(BattlerTagType.TELEKINESIS) && !semiInvulnerableTag && !move.hasAttr(OneHitKOAttr)) {
       return true;
     }
 
@@ -731,16 +730,23 @@ export class MoveEffectPhase extends PokemonPhase {
       return false;
     }
 
-    const moveAccuracy = this.move.getMove().calculateBattleAccuracy(user, target);
+    const moveAccuracy = new NumberHolder(move.calculateBattleAccuracy(user, target));
 
-    if (moveAccuracy === -1) {
+    if (moveAccuracy.value === -1) {
       return true;
     }
 
     const accuracyMultiplier = user.getAccuracyMultiplier(target, this.move.getMove());
+
+    const calculatedAccuracy = new NumberHolder(moveAccuracy.value * accuracyMultiplier);
+
+    if (!move.hasAttr(OneHitKOAttr)) {
+      globalScene.applyModifiers(PokemonMoveAccuracyBoosterModifier, user.isPlayer(), user, calculatedAccuracy);
+    }
+
     const rand = user.randSeedInt(100);
 
-    return rand < moveAccuracy * accuracyMultiplier;
+    return rand < calculatedAccuracy.value;
   }
 
   /**
