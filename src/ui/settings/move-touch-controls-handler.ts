@@ -95,7 +95,7 @@ export default class MoveTouchControlsHandler {
       <div class="button-row">
         <div id="resetButton" class="button">${i18next.t("settings:touchReset")}</div>
         <div id="saveButton" class="button">${i18next.t("settings:touchSaveClose")}</div>
-        <div id="cancelButton" class="button">${i18next.t("settings:touchCancel")}</div>
+        <div id="cancelButton" class="button">${i18next.t("menu:cancel")}</div>
       </div>
       <div class="info-row">
         <div class="orientation-label"> 

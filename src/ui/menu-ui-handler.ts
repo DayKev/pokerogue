@@ -226,7 +226,7 @@ export default class MenuUiHandler extends MessageUiHandler {
             })
             .concat([
               {
-                label: i18next.t("menuUiHandler:cancel"),
+                label: i18next.t("menu:cancel"),
                 handler: () => {
                   ui.revertMode();
                   ui.showText("", 0);
@@ -386,7 +386,7 @@ export default class MenuUiHandler extends MessageUiHandler {
       });
     }
     manageDataOptions.push({
-      label: i18next.t("menuUiHandler:cancel"),
+      label: i18next.t("menu:cancel"),
       handler: () => {
         globalScene.ui.revertMode();
         return true;
@@ -495,7 +495,7 @@ export default class MenuUiHandler extends MessageUiHandler {
       });
     }
     communityOptions.push({
-      label: i18next.t("menuUiHandler:cancel"),
+      label: i18next.t("menu:cancel"),
       handler: () => {
         globalScene.ui.revertMode();
         return true;

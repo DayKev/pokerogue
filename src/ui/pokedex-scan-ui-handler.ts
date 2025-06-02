@@ -41,7 +41,7 @@ export default class PokedexScanUiHandler extends FormModalUiHandler {
   }
 
   getButtonLabels(_config?: ModalConfig): string[] {
-    return [i18next.t("pokedexUiHandler:scanSelect"), i18next.t("pokedexUiHandler:scanCancel")];
+    return [i18next.t("pokedexUiHandler:scanSelect"), i18next.t("menu:cancel")];
   }
 
   getReadableErrorMessage(error: string): string {

@@ -1115,7 +1115,7 @@ export default class SummaryUiHandler extends UiHandler {
           0,
           this.summaryUiMode === SummaryUiMode.LEARN_MOVE && this.newMove
             ? this.newMove.name
-            : i18next.t("pokemonSummary:cancel"),
+            : i18next.t("menu:cancel"),
           this.summaryUiMode === SummaryUiMode.LEARN_MOVE ? TextStyle.SUMMARY_PINK : TextStyle.SUMMARY,
         );
         extraRowText.setOrigin(0, 1);
