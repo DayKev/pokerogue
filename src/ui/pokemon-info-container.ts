@@ -75,8 +75,8 @@ export class PokemonInfoContainer extends Phaser.GameObjects.Container {
 
   setup(): void {
     this.setName("pkmn-info");
-    const currentLanguage = i18next.resolvedLanguage!; // TODO: is this bang correct?
-    const langSettingKey = Object.keys(languageSettings).find(lang => currentLanguage?.includes(lang))!; // TODO: is this bang correct?
+    const currentLanguage = i18next.resolvedLanguage;
+    const langSettingKey = Object.keys(languageSettings).find(lang => currentLanguage.includes(lang))!; // TODO: is this bang correct?
     const textSettings = languageSettings[langSettingKey];
     this.infoBg = addWindow(0, 0, this.infoWindowWidth, 132);
     this.infoBg.setOrigin(0.5, 0.5);
@@ -440,8 +440,8 @@ export class PokemonInfoContainer extends Phaser.GameObjects.Container {
 
   changeToEggSummaryLayout() {
     // The position should be set per language (and shifted for new layout)
-    const currentLanguage = i18next.resolvedLanguage!; // TODO: is this bang correct?
-    const langSettingKey = Object.keys(languageSettings).find(lang => currentLanguage?.includes(lang))!; // TODO: is this bang correct?
+    const currentLanguage = i18next.resolvedLanguage;
+    const langSettingKey = Object.keys(languageSettings).find(lang => currentLanguage.includes(lang))!; // TODO: is this bang correct?
     const textSettings = languageSettings[langSettingKey];
 
     const eggLabelTextOffset = 43;

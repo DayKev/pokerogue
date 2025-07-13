@@ -77,14 +77,14 @@ export class RegistrationFormUiHandler extends FormModalUiHandler {
 
     this.modalContainer.list.forEach((child: Phaser.GameObjects.GameObject) => {
       if (child instanceof Phaser.GameObjects.Text && child !== this.titleText) {
-        const inputFieldFontSize = languageSettings[i18next.resolvedLanguage!]?.inputFieldFontSize;
+        const inputFieldFontSize = languageSettings[i18next.resolvedLanguage]?.inputFieldFontSize;
         if (inputFieldFontSize) {
           child.setFontSize(inputFieldFontSize);
         }
       }
     });
 
-    const warningMessageFontSize = languageSettings[i18next.resolvedLanguage!]?.warningMessageFontSize ?? "42px";
+    const warningMessageFontSize = languageSettings[i18next.resolvedLanguage]?.warningMessageFontSize ?? "42px";
     const label = addTextObject(10, 87, i18next.t("menu:registrationAgeWarning"), TextStyle.TOOLTIP_CONTENT, {
       fontSize: warningMessageFontSize,
     });
@@ -106,7 +106,7 @@ export class RegistrationFormUiHandler extends FormModalUiHandler {
           const onFail = error => {
             globalScene.ui.setMode(UiMode.REGISTRATION_FORM, Object.assign(config, { errorMessage: error?.trim() }));
             globalScene.ui.playError();
-            const errorMessageFontSize = languageSettings[i18next.resolvedLanguage!]?.errorMessageFontSize;
+            const errorMessageFontSize = languageSettings[i18next.resolvedLanguage]?.errorMessageFontSize;
             if (errorMessageFontSize) {
               this.errorMessage.setFontSize(errorMessageFontSize);
             }

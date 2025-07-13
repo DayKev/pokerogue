@@ -1675,7 +1675,7 @@ class PartySlot extends Phaser.GameObjects.Container {
   }
 
   setup(partyUiMode: PartyUiMode, tmMoveId: MoveId) {
-    const currentLanguage = i18next.resolvedLanguage ?? "en";
+    const currentLanguage = i18next.resolvedLanguage;
     const offsetJa = currentLanguage === "ja";
 
     const battlerCount = globalScene.currentBattle.getBattlerCount();

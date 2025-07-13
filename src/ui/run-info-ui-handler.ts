@@ -721,7 +721,7 @@ export class RunInfoUiHandler extends UiHandler {
    */
   private parsePartyInfo(): void {
     const party = this.runInfo.party;
-    const currentLanguage = i18next.resolvedLanguage ?? "en";
+    const currentLanguage = i18next.resolvedLanguage;
     const windowHeight = (globalScene.game.canvas.height / 6 - 23) / 6;
 
     party.forEach((p: PokemonData, i: number) => {

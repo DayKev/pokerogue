@@ -315,6 +315,10 @@ export async function initI18n(): Promise<void> {
   }
 
   await initFonts(localStorage.getItem("prLang") ?? undefined);
+
+  if (i18next.resolvedLanguage === undefined) {
+    i18next.resolvedLanguage = "en";
+  }
 }
 
 export function getIsInitialized(): boolean {

@@ -72,7 +72,7 @@ export class EggGachaUiHandler extends MessageUiHandler {
 
     const gachaInfoContainer = globalScene.add.container(160, 46);
 
-    const currentLanguage = i18next.resolvedLanguage ?? "en";
+    const currentLanguage = i18next.resolvedLanguage;
     let gachaTextStyle = TextStyle.WINDOW_ALT;
     let gachaX = 4;
     let gachaY = 0;
@@ -244,7 +244,7 @@ export class EggGachaUiHandler extends MessageUiHandler {
       },
     ];
 
-    const resolvedLanguage = i18next.resolvedLanguage ?? "en";
+    const resolvedLanguage = i18next.resolvedLanguage;
     const pullOptionsText = pullOptions
       .map(option => {
         const desc = option.description.split(" ");

@@ -37,9 +37,7 @@ export class TestDialogueUiHandler extends FormModalUiHandler {
         .filter(t => t);
     };
 
-    const keysInArrays = flattenKeys(i18next.getDataByLanguage(String(i18next.resolvedLanguage))).filter(
-      t => t.length > 0,
-    ); // Array of arrays
+    const keysInArrays = flattenKeys(i18next.getDataByLanguage(i18next.resolvedLanguage)).filter(t => t.length > 0); // Array of arrays
     const keys = keysInArrays.flat(Number.POSITIVE_INFINITY).map(String); // One array of string
     this.keys = keys;
   }
