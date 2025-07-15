@@ -5,7 +5,7 @@ import type { NewArenaEvent } from "#events/battle-scene";
 import type { BattleStyle, RandomTrainerOverride } from "#app/overrides";
 import Overrides, { defaultOverrides } from "#app/overrides";
 import { AbilityId } from "#enums/ability-id";
-import type { BattleType } from "#enums/battle-type";
+import { BattleType } from "#enums/battle-type";
 import { BiomeId } from "#enums/biome-id";
 import { MoveId } from "#enums/move-id";
 import type { MysteryEncounterTier } from "#enums/mystery-encounter-tier";
@@ -13,6 +13,7 @@ import type { MysteryEncounterType } from "#enums/mystery-encounter-type";
 import { Nature } from "#enums/nature";
 import { SpeciesId } from "#enums/species-id";
 import { StatusEffect } from "#enums/status-effect";
+import { TrainerType } from "#enums/trainer-type";
 import type { Unlockables } from "#enums/unlockables";
 import { WeatherType } from "#enums/weather-type";
 import type { ModifierOverride } from "#modifiers/modifier-type";
@@ -386,6 +387,10 @@ export class OverridesHelper extends GameManagerHelper {
 
   /**
    * Override the battle type (e.g., WILD, or Trainer) for non-scripted battles.
+   * @remarks
+   * In order to prevent random double battles from overruling a pre-set single battle override,
+   * the trainer type is set to {@linkcode TrainerType.YOUNGSTER}
+   * if the battle style is set to "single" and the trainer type override isn't already set.
    * @see {@linkcode Overrides.BATTLE_TYPE_OVERRIDE}
    * @param battleType - The battle type to set
    * @returns `this`
@@ -397,6 +402,13 @@ export class OverridesHelper extends GameManagerHelper {
         ? "Battle type override disabled!"
         : `Battle type set to ${battleType[battleType]} (=${battleType})!`,
     );
+    if (
+      battleType === BattleType.TRAINER &&
+      Overrides.RANDOM_TRAINER_OVERRIDE === null &&
+      Overrides.BATTLE_STYLE_OVERRIDE === "single"
+    ) {
+      this.randomTrainer({ trainerType: TrainerType.YOUNGSTER });
+    }
     return this;
   }
 
