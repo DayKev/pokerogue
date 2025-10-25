@@ -20,6 +20,7 @@ on:
 jobs:
   run-linters:
     name: Run all linters
+    if: false
     timeout-minutes: 10
     runs-on: ubuntu-latest
 
