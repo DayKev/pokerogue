@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 #v6.0.1
         with:
           submodules: "recursive"
 
@@ -56,5 +56,5 @@ jobs:
 
       - name: Check for REUSE compliance
         id: reuse-lint
-        uses: fsfe/reuse-action@v5
+        uses: fsfe/reuse-action@bb774aa972c2a89ff34781233d275075cbddf542 #v5.0.0
         if: ${{ !cancelled() }}
