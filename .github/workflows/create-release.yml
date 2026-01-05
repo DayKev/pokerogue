@@ -28,15 +28,18 @@ jobs:
       - name: Validate provided version
         # Ensure version matches confirmation and conforms to expected pattern.
         run: |
-          if [[ "${{ github.event.inputs.versionName }}" != "${{ github.event.inputs.confirmVersion }}" ]]; then
+          if [[ "${GITHUB_EVENT_INPUTS_VERSIONNAME}" != "${GITHUB_EVENT_INPUTS_CONFIRMVERSION}" ]]; then
             echo "Version name does not match confirmation. Exiting."
             exit 1
           fi
-          if [[ ! "${{ github.event.inputs.versionName }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          if [[ ! "${GITHUB_EVENT_INPUTS_VERSIONNAME}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "Version name must follow the format X.Y.Z where X, Y, and Z are all numbers. Exiting..."
             exit 1
           fi
         shell: bash
+        env:
+          GITHUB_EVENT_INPUTS_VERSIONNAME: ${{ github.event.inputs.versionName }}
+          GITHUB_EVENT_INPUTS_CONFIRMVERSION: ${{ github.event.inputs.confirmVersion }}
 
       - uses: actions/create-github-app-token@v2
         id: app-token
@@ -61,28 +64,38 @@ jobs:
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          pnpm --no-git-tag-version version ${{ github.events.inputs.versionName }}
-          git commit -am "Stage release for v${{ github.events.inputs.versionName }}"
+          pnpm --no-git-tag-version version ${GITHUB_EVENT_INPUTS_VERSIONNAME}
+          git commit -am "Stage release for v${GITHUB_EVENT_INPUTS_VERSIONNAME}"
+        env:
+          GITHUB_EVENT_INPUTS_VERSIONNAME: ${{ github.event.inputs.versionName }}
  
       - name: Push new branch
         run: git push origin release
 
       # The repository variable is used by the deploy-beta workflow to determine whether to deploy from beta or release.
       - name: Set repository variable
-        run: GITHUB_TOKEN="${{ steps.app-token.outputs.token }}" gh variable set BETA_DEPLOY_BRANCH --body "release"
+        run: GITHUB_TOKEN="${STEPS_APP_TOKEN_OUTPUTS_TOKEN}" gh variable set BETA_DEPLOY_BRANCH --body "release"
+        env:
+          STEPS_APP_TOKEN_OUTPUTS_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Create pull request to main
         run: |
           gh pr create --base main \
                        --head release \
-                       --title "Release v${{ github.event.inputs.versionName }} to main" \
-                       --body "This PR is for the release of v${{ github.event.inputs.versionName }}, and was created automatically by the GitHub Actions workflow invoked by ${{ github.actor }}" \
+                       --title "Release v${GITHUB_EVENT_INPUTS_VERSIONNAME} to main" \
+                       --body "This PR is for the release of v${GITHUB_EVENT_INPUTS_VERSIONNAME}, and was created automatically by the GitHub Actions workflow invoked by ${GITHUB_ACTOR}" \
                        --draft
+        env:
+          GITHUB_EVENT_INPUTS_VERSIONNAME: ${{ github.event.inputs.versionName }}
+          GITHUB_ACTOR: ${{ github.actor }}
 
       - name: Create pull request to beta
         run: |
           gh pr create --base beta \
                        --head release \
-                       --title "Release v${{ github.event.inputs.versionName }} to beta" \
-                       --body "This PR is for the release of v${{ github.event.inputs.versionName }}, and was created automatically by the GitHub Actions workflow invoked by ${{ github.actor }}" \
+                       --title "Release v${GITHUB_EVENT_INPUTS_VERSIONNAME} to beta" \
+                       --body "This PR is for the release of v${GITHUB_EVENT_INPUTS_VERSIONNAME}, and was created automatically by the GitHub Actions workflow invoked by ${GITHUB_ACTOR}" \
                        --draft
+        env:
+          GITHUB_EVENT_INPUTS_VERSIONNAME: ${{ github.event.inputs.versionName }}
+          GITHUB_ACTOR: ${{ github.actor }}

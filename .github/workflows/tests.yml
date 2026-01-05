@@ -67,7 +67,6 @@ jobs:
             test/setup
             test/test-utils/reporters/custom-default-reporter.ts
 
-
       - uses: ./.github/actions/setup-deps
 
       - name: Download blob artifacts

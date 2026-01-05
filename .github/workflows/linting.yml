@@ -29,7 +29,6 @@ jobs:
         with:
           submodules: "recursive"
 
-
       - uses: ./.github/actions/setup-deps
 
       # Lint files with Biome-Lint - https://biomejs.dev/linter/
