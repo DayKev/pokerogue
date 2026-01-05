@@ -1,0 +1,35 @@
+# Pinning actions to a commit SHA instead of `@version`
+# causes Dependabot to be unable to scan for known vulnerabilities.
+#
+# This workflow forces Dependabot to recognize the action versions.
+#
+# cf https://jessehouwing.net/github-actions-improved-dependency-submission/
+name: Submit and validate dependencies of GitHub Actions
+
+on:
+  push:
+    branches:
+      - main
+      - beta
+  pull_request:
+  schedule:
+    - cron: '35 0 * * *'
+
+permissions: {}
+
+jobs:
+  submit-actions-dependencies:
+    runs-on: ubuntu-latest
+    permissions:
+      # submitting dependencies requires 'contents: write'
+      contents: write
+
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: jessehouwing/actions-dependency-submission@e848a29fd84b874cce3e45ceb00619bc72dbeca3 # 1.0.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/dependency-review-action@3c4e3dcb1aa7874d2c16be7d79418e9b7efd6261 # 4.8.2
+        if: github.event_name == 'pull_request'
+        with:
+          retry-on-snapshot-warnings: true
