@@ -16,6 +16,8 @@ on:
   merge_group:
     types: [checks_requested]
 
+permissions: {}
+
 jobs:
   pages:
     name: Github Pages
