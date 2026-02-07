@@ -26,7 +26,7 @@ export default defineConfig(async config => {
       env: {
         TZ: "UTC",
       },
-      isolate: true,
+      isolate: false,
       testTimeout: 20_000,
       slowTestThreshold: 10_000,
       // TODO: Vitest's current framework produces spurious errors for type tests with this option enabled.
