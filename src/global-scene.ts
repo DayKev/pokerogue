@@ -5,3 +5,5 @@ export let globalScene: BattleScene;
 export function initGlobalScene(scene: BattleScene): void {
   globalScene = scene;
 }
+
+// test
