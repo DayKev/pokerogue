@@ -1,4 +1,4 @@
-name: Update Submodule
+name: Update Submodules
 
 on:
   workflow_run:
@@ -17,52 +17,46 @@ jobs:
     if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
-      - name: "Download artifact"
-        uses: actions/github-script@v8
+      - name: Check out Git repository
+        uses: actions/checkout@v7
         with:
-          script: |
-            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: context.payload.workflow_run.id,
-            });
-            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
-              return artifact.name == "pr-data"
-            })[0];
-            let download = await github.rest.actions.downloadArtifact({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              artifact_id: matchArtifact.id,
-              archive_format: 'zip',
-            });
-            const fs = require('fs');
-            const path = require('path');
-            const temp = '${{ runner.temp }}/artifacts';
-            if (!fs.existsSync(temp)){
-              fs.mkdirSync(temp);
-            }
-            fs.writeFileSync(path.join(temp, 'pr-data.zip'), Buffer.from(download.data));
+          submodules: false
+          sparse-checkout: |
+            pnpm-lock.yaml
+            .nvmrc
+            .github/scripts/update-submodule/download-artifact.mts
+            .github/scripts/update-submodule/read-label-data.mts
+          sparse-checkout-cone-mode: false
 
-      - name: "Unzip artifact"
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
+      - name: Install Node.js dependencies
+        run: pnpm add @actions/core @actions/github
+
+      - name: Download artifact
+        run: node .github/scripts/update-submodule/download-artifact.mts
+        env:
+          INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_RUNNER_TEMP: ${{ runner.temp }}
+
+      - name: Unzip artifact
         run: unzip "${{ runner.temp }}/artifacts/pr-data.zip" -d "${{ runner.temp }}/artifacts"
 
-      - name: "Read label data"
+      - name: Read label data
         id: read-label-data
-        uses: actions/github-script@v8
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const fs = require('fs');
-            const path = require('path');
-            const temp = '${{ runner.temp }}/artifacts';
-            const prNumber = Number(fs.readFileSync(path.join(temp, 'NR')));
-            const label = fs.readFileSync(path.join(temp, 'LABEL')).toString().trim();
-            const ref = fs.readFileSync(path.join(temp, 'REF')).toString().trim();
-            const repo = fs.readFileSync(path.join(temp, 'REPO')).toString().trim();
-            core.setOutput('label', label);
-            core.setOutput('prNumber', prNumber);
-            core.setOutput('ref', ref);
-            core.setOutput('repo', repo);
+        run: node .github/scripts/update-submodule/read-label-data.mts
+        env:
+          INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_RUNNER_TEMP: ${{ runner.temp }}
 
     outputs:
       label: ${{ steps.read-label-data.outputs.label }}
