@@ -1640,6 +1640,7 @@ export class BattleScene extends SceneBase {
    * @returns A promise that resolves when the assets have finished loading
    */
   public async loadBiomeAssets(biome: BiomeId): Promise<void> {
+    console.log("start loading biome assets");
     const { promise, resolve } = Promise.withResolvers<void>();
     const btKey = getBiomeKey(biome);
 
@@ -1675,7 +1676,10 @@ export class BattleScene extends SceneBase {
       }
     }
 
-    this.load.once(Phaser.Loader.Events.COMPLETE, resolve);
+    this.load.once(Phaser.Loader.Events.COMPLETE, () => {
+      console.log("finish loading biome assets");
+      resolve();
+    });
     this.load.start();
 
     return promise;
