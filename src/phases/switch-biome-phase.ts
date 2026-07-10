@@ -2,6 +2,7 @@ import { globalScene } from "#app/global-scene";
 import type { BiomeId } from "#enums/biome-id";
 import { getBiomeKey } from "#field/arena";
 import { BattlePhase } from "#phases/battle-phase";
+import { fixedInt } from "#utils/common";
 
 export class SwitchBiomePhase extends BattlePhase {
   public readonly phaseName = "SwitchBiomePhase";
@@ -70,7 +71,11 @@ export class SwitchBiomePhase extends BattlePhase {
               globalScene.lastEnemyTrainer.destroy();
             }
             // Clear previous biome textures now that the transition is complete
-            globalScene.clearBiomeAssets(previousBiome);
+            // Delay to hopefully prevent race conditions
+            globalScene.time.delayedCall(fixedInt(3000), () => {
+              console.log("clearing biome assets");
+              globalScene.clearBiomeAssets(previousBiome);
+            });
             this.end();
           },
         });
