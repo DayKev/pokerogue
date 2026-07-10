@@ -30,7 +30,7 @@ export class ArenaBase extends Phaser.GameObjects.Container {
     }
   }
 
-  setBiome(biome: BiomeId, propValue?: number): void {
+  setBiome(biome: BiomeId, propValue?: number, before?: string): void {
     const hasProps = getBiomeHasProps(biome);
     const biomeKey = getBiomeKey(biome);
     const baseKey = `${biomeKey}_${this.player ? "a" : "b"}`;
@@ -53,6 +53,7 @@ export class ArenaBase extends Phaser.GameObjects.Container {
             repeat: -1,
           });
         }
+        console.log("playing anim (%s)", before ?? "after");
         this.base.play(baseKey);
       } else {
         this.base.stop();

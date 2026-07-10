@@ -48,7 +48,7 @@ export class SwitchBiomePhase extends BattlePhase {
         globalScene.arenaBgTransition.setTexture(bgTexture);
         globalScene.arenaBgTransition.setAlpha(0);
         globalScene.arenaBgTransition.setVisible(true);
-        globalScene.arenaPlayerTransition.setBiome(this.nextBiome);
+        globalScene.arenaPlayerTransition.setBiome(this.nextBiome, undefined, "arenaPlayerTransition - previous biome");
         globalScene.arenaPlayerTransition.setAlpha(0);
         globalScene.arenaPlayerTransition.setVisible(true);
 
@@ -60,11 +60,11 @@ export class SwitchBiomePhase extends BattlePhase {
           alpha: (target: any) => (target === globalScene.arenaPlayer ? 0 : 1),
           onComplete: () => {
             globalScene.arenaBg.setTexture(bgTexture);
-            globalScene.arenaPlayer.setBiome(this.nextBiome);
+            globalScene.arenaPlayer.setBiome(this.nextBiome, undefined, "arenaPlayer - next biome");
             globalScene.arenaPlayer.setAlpha(1);
-            globalScene.arenaEnemy.setBiome(this.nextBiome);
+            globalScene.arenaEnemy.setBiome(this.nextBiome, undefined, "arenaEnemy - next biome");
             globalScene.arenaEnemy.setAlpha(1);
-            globalScene.arenaNextEnemy.setBiome(this.nextBiome);
+            globalScene.arenaNextEnemy.setBiome(this.nextBiome, undefined, "arenaNextEnemy - next biome");
             globalScene.arenaBgTransition.setVisible(false);
             globalScene.arenaPlayerTransition.setVisible(false);
             if (globalScene.lastEnemyTrainer) {
