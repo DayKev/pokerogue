@@ -15,8 +15,9 @@ import { fixedInt } from "#utils/common";
 
 export class FormChangePhase extends EvolutionPhase {
   public readonly phaseName = "FormChangePhase";
-  private formChange: SpeciesFormChange;
-  private modal: boolean;
+
+  private readonly formChange: SpeciesFormChange;
+  private readonly modal: boolean;
 
   constructor(pokemon: PlayerPokemon, formChange: SpeciesFormChange, modal: boolean) {
     super(pokemon, null, 0);
@@ -89,12 +90,8 @@ export class FormChangePhase extends EvolutionPhase {
         audioManager.replaceBgmUntilEnd(playEvolutionFanfare ? "bw/evolution_fanfare" : "bw/minor_fanfare");
         transformedPokemon.destroy();
         globalScene.ui.showText(
-          getSpeciesFormChangeMessage(this.pokemon, this.formChange, preName),
-          null,
-          () => this.end(),
-          null,
-          true,
-          fixedInt(delay),
+          getSpeciesFormChangeMessage(this.pokemon, this.formChange, preName), //
+          { callback: () => this.end(), prompt: true, promptDelay: fixedInt(delay) },
         );
         globalScene.time.delayedCall(fixedInt(delay + 250), () => audioManager.playBgm());
       },
