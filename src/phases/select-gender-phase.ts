@@ -38,8 +38,10 @@ export class SelectGenderPhase extends Phase {
       yOffset: 48,
     };
 
-    ui.showText(i18next.t("menu:boyOrGirl"), null, () => {
-      ui.setMode(UiMode.OPTION_SELECT, genderSelectConfig);
+    ui.showText(i18next.t("menu:boyOrGirl"), {
+      callback: () => {
+        ui.setMode(UiMode.OPTION_SELECT, genderSelectConfig);
+      },
     });
   }
 

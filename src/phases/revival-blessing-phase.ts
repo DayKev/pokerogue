@@ -15,8 +15,13 @@ import i18next from "i18next";
  */
 export class RevivalBlessingPhase extends BattlePhase {
   public readonly phaseName = "RevivalBlessingPhase";
-  constructor(protected user: PlayerPokemon) {
+
+  protected user: PlayerPokemon;
+
+  constructor(user: PlayerPokemon) {
     super();
+
+    this.user = user;
   }
 
   public override start(): void {
@@ -27,7 +32,7 @@ export class RevivalBlessingPhase extends BattlePhase {
       (slotIndex: number, _option: PartyOption) => {
         if (slotIndex >= 0 && slotIndex < 6) {
           const pokemon = globalScene.getPlayerParty()[slotIndex];
-          if (!pokemon || !pokemon.isFainted()) {
+          if (!pokemon?.isFainted()) {
             return this.end();
           }
 
@@ -35,11 +40,8 @@ export class RevivalBlessingPhase extends BattlePhase {
           pokemon.resetStatus(true, false, false, false);
           pokemon.heal(Math.min(toDmgValue(0.5 * pokemon.getMaxHp()), pokemon.getMaxHp()));
           globalScene.phaseManager.queueMessage(
-            i18next.t("moveTriggers:revivalBlessing", {
-              pokemonName: pokemon.name,
-            }),
-            0,
-            true,
+            i18next.t("moveTriggers:revivalBlessing", { pokemonName: pokemon.name }),
+            { prompt: true },
           );
 
           const allyPokemon = this.user.getAlly();

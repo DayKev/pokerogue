@@ -14,7 +14,8 @@ import i18next from "i18next";
 
 export class TrainerVictoryPhase extends BattlePhase {
   public readonly phaseName = "TrainerVictoryPhase";
-  start() {
+
+  public override start(): void {
     globalScene.disableMenu = true;
 
     audioManager.playBgm(globalScene.currentBattle.trainer?.config.victoryBgm);
@@ -60,57 +61,57 @@ export class TrainerVictoryPhase extends BattlePhase {
       globalScene.validateAchv(achvs.BREEDERS_IN_SPACE);
     }
 
+    const callback = () => {
+      const victoryMessages = globalScene.currentBattle.trainer?.getVictoryMessages()!; // TODO: is this bang correct?
+      let message!: string;
+      globalScene.executeWithSeedOffset(
+        () => (message = randSeedItem(victoryMessages)),
+        globalScene.currentBattle.waveIndex,
+      );
+
+      const showMessage = () => {
+        const originalFunc = showMessageOrEnd;
+        showMessageOrEnd = () =>
+          globalScene.ui.showDialogue(
+            message,
+            globalScene.currentBattle.trainer?.getName(TrainerSlot.TRAINER, true) ?? "",
+            originalFunc,
+          );
+
+        showMessageOrEnd();
+      };
+      let showMessageOrEnd = () => this.end();
+      if (victoryMessages?.length > 0) {
+        if (globalScene.currentBattle.trainer?.config.hasCharSprite && !globalScene.ui.shouldSkipDialogue(message)) {
+          const originalFunc = showMessageOrEnd;
+          showMessageOrEnd = () =>
+            globalScene.charSprite
+              .hide()
+              .then(() => globalScene.hideFieldOverlay(250))
+              .then(() => originalFunc());
+
+          globalScene
+            .showFieldOverlay(500)
+            .then(() =>
+              globalScene.charSprite.showCharacter(
+                globalScene.currentBattle.trainer?.getKey()!, // TODO: is this bang correct?
+                getCharVariantFromDialogue(victoryMessages[0]),
+              ),
+            )
+            .then(() => showMessage());
+        } else {
+          showMessage();
+        }
+      } else {
+        showMessageOrEnd();
+      }
+    };
+
     globalScene.ui.showText(
       i18next.t("battle:trainerDefeated", {
         trainerName: globalScene.currentBattle.trainer?.getName(TrainerSlot.NONE, true),
       }),
-      null,
-      () => {
-        const victoryMessages = globalScene.currentBattle.trainer?.getVictoryMessages()!; // TODO: is this bang correct?
-        let message: string;
-        globalScene.executeWithSeedOffset(
-          () => (message = randSeedItem(victoryMessages)),
-          globalScene.currentBattle.waveIndex,
-        );
-        message = message!; // tell TS compiler it's defined now
-
-        const showMessage = () => {
-          const originalFunc = showMessageOrEnd;
-          showMessageOrEnd = () =>
-            globalScene.ui.showDialogue(
-              message,
-              globalScene.currentBattle.trainer?.getName(TrainerSlot.TRAINER, true),
-              null,
-              originalFunc,
-            );
-
-          showMessageOrEnd();
-        };
-        let showMessageOrEnd = () => this.end();
-        if (victoryMessages?.length > 0) {
-          if (globalScene.currentBattle.trainer?.config.hasCharSprite && !globalScene.ui.shouldSkipDialogue(message)) {
-            const originalFunc = showMessageOrEnd;
-            showMessageOrEnd = () =>
-              globalScene.charSprite.hide().then(() => globalScene.hideFieldOverlay(250).then(() => originalFunc()));
-            globalScene
-              .showFieldOverlay(500)
-              .then(() =>
-                globalScene.charSprite
-                  .showCharacter(
-                    globalScene.currentBattle.trainer?.getKey()!,
-                    getCharVariantFromDialogue(victoryMessages[0]),
-                  )
-                  .then(() => showMessage()),
-              ); // TODO: is this bang correct?
-          } else {
-            showMessage();
-          }
-        } else {
-          showMessageOrEnd();
-        }
-      },
-      null,
-      true,
+      { callback, prompt: true },
     );
 
     this.showEnemyTrainer();
