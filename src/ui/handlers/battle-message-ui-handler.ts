@@ -4,6 +4,7 @@ import { Button } from "#enums/buttons";
 import { getStatKey, PERMANENT_STATS } from "#enums/stat";
 import { TextStyle } from "#enums/text-style";
 import { UiMode } from "#enums/ui-mode";
+import type { ShowDialogueOptions, ShowTextOptions } from "#types/ui-types";
 import { MessageUiHandler } from "#ui/message-ui-handler";
 import { addBBCodeTextObject, addTextObject, getTextColor } from "#ui/text";
 import { addWindow } from "#ui/ui-theme";
@@ -173,31 +174,23 @@ export class BattleMessageUiHandler extends MessageUiHandler {
     super.clear();
   }
 
-  showText(
+  public override showText(
     text: string,
-    delay?: number | null,
-    callback?: (() => void) | null,
-    callbackDelay?: number | null,
-    prompt?: boolean | null,
-    promptDelay?: number | null,
-  ) {
+    { delay, callback, callbackDelay, prompt, promptDelay }: ShowTextOptions = {},
+  ): void {
     this.hideNameText();
-    super.showText(text, delay, callback, callbackDelay, prompt, promptDelay);
+    super.showText(text, { delay, callback, callbackDelay, prompt, promptDelay });
   }
 
-  showDialogue(
+  public override showDialogue(
     text: string,
-    name?: string,
-    delay?: number | null,
-    callback?: () => void,
-    callbackDelay?: number,
-    prompt?: boolean,
-    promptDelay?: number,
+    callback: () => void,
+    { name, delay, callbackDelay, promptDelay }: ShowDialogueOptions = {},
   ) {
     if (name) {
       this.showNameText(name);
     }
-    super.showDialogue(text, name, delay, callback, callbackDelay, prompt, promptDelay);
+    super.showDialogue(text, callback, { delay, callbackDelay, promptDelay });
   }
 
   promptLevelUpStats(partyMemberIndex: number, prevStats: number[], showTotals: boolean): Promise<void> {

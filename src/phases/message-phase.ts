@@ -1,23 +1,25 @@
 import { globalScene } from "#app/global-scene";
 import { settings } from "#app/global-settings-manager";
 import { Phase } from "#app/phase";
+import type { ShowTextOptions } from "#types/ui-types";
+
+export interface MessagePhaseOptions extends Omit<ShowTextOptions, "delay" | "callback"> {
+  readonly speaker?: string | undefined;
+}
 
 export class MessagePhase extends Phase {
   public readonly phaseName = "MessagePhase";
-  private text: string;
-  // TODO: Remove null from signatures
-  private readonly callbackDelay?: number | null | undefined;
-  private readonly prompt?: boolean | null | undefined;
-  private readonly promptDelay?: number | null | undefined;
-  private readonly speaker?: string | undefined;
 
-  constructor(
-    text: string,
-    callbackDelay?: number | null,
-    prompt?: boolean | null,
-    promptDelay?: number | null,
-    speaker?: string,
-  ) {
+  private text: string;
+
+  // biome-ignore-start lint/correctness/noUnusedPrivateClassMembers: bug in lint rule (doesn't recognize object destructuring)
+  private readonly callbackDelay?: number | undefined;
+  private readonly prompt?: boolean | undefined;
+  private readonly promptDelay: number;
+  private readonly speaker?: string | undefined;
+  // biome-ignore-end lint/correctness/noUnusedPrivateClassMembers: bug in lint rule (doesn't recognize object destructuring)
+
+  constructor(text: string, { callbackDelay, prompt, promptDelay = 0, speaker }: MessagePhaseOptions = {}) {
     super();
 
     this.text = text;
@@ -34,13 +36,17 @@ export class MessagePhase extends Phase {
   public override start(): void {
     super.start();
 
-    if (this.text.indexOf("$") > -1) {
+    const { callbackDelay, prompt, promptDelay, speaker } = this;
+
+    if (this.text.includes("$")) {
       const pokename: string[] = [];
       const repname = ["#POKEMON1", "#POKEMON2"];
+
       for (let p = 0; p < globalScene.getPlayerField().length; p++) {
         pokename.push(globalScene.getPlayerField()[p].getNameToRender());
         this.text = this.text.split(pokename[p]).join(repname[p]);
       }
+
       const pageIndex = this.text.indexOf("$");
       if (pageIndex === -1) {
         for (let p = 0; p < globalScene.getPlayerField().length; p++) {
@@ -54,36 +60,23 @@ export class MessagePhase extends Phase {
           page0 = page0.split(repname[p]).join(pokename[p]);
           page1 = page1.split(repname[p]).join(pokename[p]);
         }
-        globalScene.phaseManager.unshiftNew(
-          "MessagePhase",
-          page1,
-          this.callbackDelay,
-          this.prompt,
-          this.promptDelay,
-          this.speaker,
-        );
+        globalScene.phaseManager.unshiftNew("MessagePhase", page1, { callbackDelay, prompt, promptDelay, speaker });
         this.text = page0.trim();
       }
     }
 
-    if (this.speaker) {
-      globalScene.ui.showDialogue(
-        this.text,
-        this.speaker,
-        null,
-        () => this.end(),
-        this.callbackDelay || (this.prompt ? 0 : 1500),
-        this.promptDelay ?? 0,
-      );
+    if (speaker) {
+      globalScene.ui.showDialogue(this.text, speaker, () => this.end(), {
+        callbackDelay: callbackDelay || (prompt ? 0 : 1500),
+        promptDelay,
+      });
     } else {
-      globalScene.ui.showText(
-        this.text,
-        null,
-        () => this.end(),
-        this.callbackDelay || (this.prompt ? 0 : 1500),
-        this.prompt,
-        this.promptDelay,
-      );
+      globalScene.ui.showText(this.text, {
+        callback: () => this.end(),
+        callbackDelay: callbackDelay || (prompt ? 0 : 1500),
+        prompt,
+        promptDelay,
+      });
     }
   }
 }

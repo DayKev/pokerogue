@@ -138,3 +138,42 @@ export interface OptionSelectIconConfig {
 }
 
 // #endregion Option Select
+
+export interface ShowTextOptions {
+  /**
+   * The delay in milliseconds before the text is displayed.
+   * @defaultValue `20`
+   */
+  readonly delay?: number | undefined;
+  /** A callback function to execute after the text is done displaying. */
+  readonly callback?: VoidFunction | undefined;
+  /**
+   * The delay in milliseconds before executing the callback.
+   * @defaultValue `0`
+   */
+  readonly callbackDelay?: number | undefined;
+  /**
+   * Whether to display the prompt icon at the end of the textbox.
+   * @defaultValue `false`
+   */
+  readonly prompt?: boolean | undefined;
+  /**
+   * The delay in milliseconds before showing the prompt.
+   * @defaultValue `0`
+   */
+  readonly promptDelay?: number | undefined;
+}
+
+export interface ShowDialogueOptions extends Omit<ShowTextOptions, "prompt" | "callback" | "delay"> {
+  /**
+   * The delay in milliseconds before the text is displayed.
+   * @defaultValue `0`
+   */
+  readonly delay?: number | undefined;
+  /** The name of the character speaking the dialogue. */
+  readonly name?: string;
+}
+
+export interface PokedexShowTextOptions extends ShowTextOptions {
+  moveToTop?: boolean;
+}
