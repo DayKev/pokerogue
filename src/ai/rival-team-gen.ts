@@ -1,6 +1,7 @@
 import { globalScene } from "#app/global-scene";
 import { speciesDataRegistry } from "#app/global-species-data-registry";
 import { isBeta, isDev } from "#constants/app-constants";
+import { REGULAR_POKEMON_TYPES } from "#constants/game-constants";
 import type { PokemonSpecies } from "#data/pokemon-species";
 import { getTypeDamageMultiplier } from "#data/type";
 import { AbilityId } from "#enums/ability-id";
@@ -11,7 +12,6 @@ import { TrainerSlot } from "#enums/trainer-slot";
 import type { EnemyPokemon } from "#field/pokemon";
 import { RIVAL_6_POOL, type RivalPoolConfig } from "#trainers/rival-party-config";
 import { randSeedItem } from "#utils/common";
-import { getEnumValues } from "#utils/enums";
 
 /**
  * The maximum number of shared weaknesses to tolerate when balancing weakness
@@ -86,12 +86,8 @@ function getWeakTypes(species: PokemonSpecies, exclude2ndType = false): Set<Poke
     && (species.ability2 == null || groundImmunityAbilities.includes(species.ability2))
     && (species.abilityHidden == null || groundImmunityAbilities.includes(species.ability2));
 
-  for (const ty of getEnumValues(PokemonType)) {
-    if (
-      ty === PokemonType.UNKNOWN
-      || ty === PokemonType.STELLAR
-      || (ty === PokemonType.GROUND && isAlwaysGroundImmune)
-    ) {
+  for (const ty of REGULAR_POKEMON_TYPES) {
+    if (ty === PokemonType.GROUND && isAlwaysGroundImmune) {
       continue;
     }
 

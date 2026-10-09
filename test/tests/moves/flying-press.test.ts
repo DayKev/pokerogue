@@ -43,10 +43,8 @@ describe("Move - Flying Press", () => {
     enemy.resetSummonData();
   });
 
-  const pokemonTypes = getEnumValues(PokemonType);
-
   function checkEffForAllTypes(primaryType: PokemonType) {
-    for (const type of pokemonTypes) {
+    for (const type of getEnumValues(PokemonType)) {
       enemy.summonData.types = [type];
       const primaryEff = enemy.getAttackTypeEffectiveness(primaryType, { source: hawlucha });
       const flyingEff = enemy.getAttackTypeEffectiveness(PokemonType.FLYING, { source: hawlucha });

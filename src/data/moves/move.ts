@@ -13,6 +13,7 @@ import { applyAbAttrs } from "#abilities/apply-ab-attrs";
 import { loggedInUser } from "#app/account";
 import { globalScene } from "#app/global-scene";
 import { getPokemonNameWithAffix } from "#app/messages";
+import { REGULAR_POKEMON_TYPES } from "#constants/game-constants";
 import type { EntryHazardTag, PendingHealTag } from "#data/arena-tag";
 import { WeakenMoveTypeTag } from "#data/arena-tag";
 import { MoveChargeAnim } from "#data/battle-anims";
@@ -9114,7 +9115,7 @@ export class ResistLastMoveTypeAttr extends MoveEffectAttr {
     const resistances: PokemonType[] = [];
     const userTypes = user.getTypes({ returnOriginalTypesIfStellar: true });
 
-    for (const type of getEnumValues(PokemonType)) {
+    for (const type of REGULAR_POKEMON_TYPES) {
       if (userTypes.includes(type)) {
         continue;
       }
