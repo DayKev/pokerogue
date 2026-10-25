@@ -24,7 +24,7 @@ import { ModifierTier } from "#enums/modifier-tier";
 import { MoveId } from "#enums/move-id";
 import { Nature } from "#enums/nature";
 import { PokeballType } from "#enums/pokeball";
-import { PokemonType } from "#enums/pokemon-type";
+import { MAX_REGULAR_POKEMON_TYPE, MIN_REGULAR_POKEMON_TYPE, PokemonType } from "#enums/pokemon-type";
 import { SpeciesFormKey } from "#enums/species-form-key";
 import { SpeciesId } from "#enums/species-id";
 import type { PermanentStat, TempBattleStat } from "#enums/stat";
@@ -1248,17 +1248,22 @@ export class FusePokemonModifierType extends PokemonModifierType {
 class AttackTypeBoosterModifierTypeGenerator extends ModifierTypeGenerator {
   constructor() {
     super((party: readonly Pokemon[], pregenArgs?: any[]) => {
-      if (pregenArgs && pregenArgs.length === 1 && pregenArgs[0] in PokemonType) {
+      if (pregenArgs?.length === 1 && pregenArgs[0] in PokemonType) {
         return new AttackTypeBoosterModifierType(pregenArgs[0] as PokemonType, TYPE_BOOST_ITEM_BOOST_PERCENT);
       }
 
       const attackMoveTypeWeights = new Map<PokemonType, number>();
-      let totalWeight = 0;
-      for (const p of party) {
-        if (!p.isAllowedInChallenge()) {
+      for (const type of getEnumValues(PokemonType).filter(
+        t => t >= MIN_REGULAR_POKEMON_TYPE && t <= MAX_REGULAR_POKEMON_TYPE,
+      )) {
+        attackMoveTypeWeights.set(type, 0);
+      }
+
+      for (const pkmn of party) {
+        if (!pkmn.isAllowedInChallenge()) {
           continue;
         }
-        for (const pokemonMove of p.getMoveset()) {
+        for (const pokemonMove of pkmn.getMoveset()) {
           const move = pokemonMove.getMove();
           if (!move.is("AttackMove")) {
             continue;
@@ -1268,21 +1273,19 @@ class AttackTypeBoosterModifierTypeGenerator extends ModifierTypeGenerator {
           const variableTypeAttr = move.getAttrs("VariableMoveTypeAttr")[0];
           let types: PokemonType[];
           if (variableTypeAttr) {
-            types = variableTypeAttr.getTypesForItemSpawn(p, move);
+            types = variableTypeAttr.getTypesForItemSpawn(pkmn, move);
           } else {
-            types = p.getMoveTypeForItemSpawn(move);
+            types = pkmn.getMoveTypeForItemSpawn(move);
           }
           for (const type of types) {
-            const currentWeight = attackMoveTypeWeights.get(type) ?? 0;
-            if (currentWeight < 3) {
-              attackMoveTypeWeights.set(type, currentWeight + 1);
-              totalWeight++;
-            }
+            attackMoveTypeWeights.set(type, Math.min(attackMoveTypeWeights.get(type)! + 1, 3));
           }
         }
       }
 
-      if (attackMoveTypeWeights.size === 0) {
+      const totalWeight = attackMoveTypeWeights.values().reduce((total, cur) => total + cur, 0);
+
+      if (totalWeight === 0) {
         return null;
       }
 
