@@ -229,13 +229,28 @@ const PHASES = Object.freeze({
 export type PhaseConstructorMap = typeof PHASES;
 
 /** Phases pushed at the end of each {@linkcode TurnStartPhase} */
-const turnEndPhases: readonly PhaseString[] = [
+const turnEndPhases = [
   "WeatherEffectPhase",
   "PositionalTagPhase",
   "BerryPhase",
   "CheckStatusEffectPhase",
   "TurnEndPhase",
 ] as const;
+
+type PhasesWithHelpers =
+  | "FaintPhase"
+  | "HideAbilityPhase"
+  | "LoginPhase"
+  | "MessagePhase"
+  | "ShowAbilityPhase"
+  | "TitlePhase"
+  | (typeof turnEndPhases)[number];
+
+type PushablePhaseString = Exclude<PhaseString, PhasesWithHelpers>;
+
+interface PushablePhase extends Phase {
+  phaseName: PushablePhaseString;
+}
 
 /**
  * The `PhaseManager` is responsible for managing the phases in the Battle Scene.
@@ -268,7 +283,11 @@ export class PhaseManager {
    * They will run once all phases already in the queue have ended.
    * @param phases - One or more {@linkcode Phase}s to add
    */
-  public pushPhase(...phases: NonEmptyTuple<Phase>): void {
+  public pushPhase(...phases: NonEmptyTuple<PushablePhase>) {
+    this._pushPhase(...phases);
+  }
+
+  private _pushPhase(...phases: NonEmptyTuple<Phase>): void {
     for (const phase of phases) {
       this.phaseQueue.pushPhase(this.checkDynamic(phase));
     }
@@ -283,7 +302,11 @@ export class PhaseManager {
    */
   // NB: I'd like to restrict this to only allow passing 1 `MovePhase` at a time, but this causes TS to
   // flip the hell out with `Parameters`...
-  public unshiftPhase(...phases: NonEmptyTuple<Phase>): void {
+  public unshiftPhase(...phases: NonEmptyTuple<PushablePhase>): void {
+    this._unshiftPhase(...phases);
+  }
+
+  private _unshiftPhase(...phases: NonEmptyTuple<Phase>): void {
     for (const phase of phases) {
       const toAdd = this.checkDynamic(phase);
       // TODO: Remove the dancer phase check once a move in flight allows `MoveEndPhase` to handle dancer interactions itself
@@ -430,7 +453,17 @@ export class PhaseManager {
    * @remarks
    * Used to avoid importing each phase individually, allowing for dynamic creation of phases.
    */
-  public create<T extends PhaseString>(phase: T, ...args: ConstructorParameters<PhaseConstructorMap[T]>): PhaseMap[T] {
+  public create<T extends PushablePhaseString>(
+    phase: T,
+    ...args: ConstructorParameters<PhaseConstructorMap[T]>
+  ): PhaseMap[T] {
+    return this._create(phase, ...args);
+  }
+
+  private _create<T extends PhaseString>(
+    phase: T,
+    ...args: ConstructorParameters<PhaseConstructorMap[T]>
+  ): PhaseMap[T] {
     const PhaseClass = PHASES[phase];
 
     if (!PhaseClass) {
@@ -447,8 +480,15 @@ export class PhaseManager {
    * @param phase - The name of the phase to create
    * @param args - The arguments to pass to the phase constructor
    */
-  public pushNew<T extends PhaseString>(phase: T, ...args: ConstructorParameters<PhaseConstructorMap[T]>): void {
-    this.pushPhase(this.create(phase, ...args));
+  public pushNew<T extends PushablePhaseString>(
+    phase: T,
+    ...args: ConstructorParameters<PhaseConstructorMap[T]>
+  ): void {
+    this._pushNew(phase, ...args);
+  }
+
+  private _pushNew<T extends PhaseString>(phase: T, ...args: ConstructorParameters<PhaseConstructorMap[T]>): void {
+    this._pushPhase(this._create(phase, ...args));
   }
 
   /**
@@ -457,8 +497,15 @@ export class PhaseManager {
    * @param phase - The name of the phase to create
    * @param args - The arguments to pass to the phase constructor
    */
-  public unshiftNew<T extends PhaseString>(phase: T, ...args: ConstructorParameters<PhaseConstructorMap[T]>): void {
-    this.unshiftPhase(this.create(phase, ...args));
+  public unshiftNew<T extends PushablePhaseString>(
+    phase: T,
+    ...args: ConstructorParameters<PhaseConstructorMap[T]>
+  ): void {
+    this._unshiftNew(phase, ...args);
+  }
+
+  private _unshiftNew<T extends PhaseString>(phase: T, ...args: ConstructorParameters<PhaseConstructorMap[T]>): void {
+    this._unshiftPhase(this._create(phase, ...args));
   }
 
   /**
@@ -550,9 +597,9 @@ export class PhaseManager {
     this.clearAllPhases();
 
     if (addLogin) {
-      this.unshiftNew("LoginPhase");
+      this._unshiftNew("LoginPhase");
     }
-    this.unshiftNew("TitlePhase");
+    this._unshiftNew("TitlePhase");
   }
 
   /**
@@ -574,9 +621,9 @@ export class PhaseManager {
   ) {
     const phase = new MessagePhase(message, callbackDelay, prompt, promptDelay);
     if (defer) {
-      this.pushPhase(phase);
+      this._pushPhase(phase);
     } else {
-      this.unshiftPhase(phase);
+      this._unshiftPhase(phase);
     }
   }
 
@@ -588,7 +635,7 @@ export class PhaseManager {
    */
   // TODO: remove `show` param, that's what `hideAbilityBar()` is for
   public queueAbilityDisplay(pokemon: Pokemon, passive: boolean, show: boolean): void {
-    this.unshiftPhase(show ? new ShowAbilityPhase(pokemon.getBattlerIndex(), passive) : new HideAbilityPhase());
+    this._unshiftPhase(show ? new ShowAbilityPhase(pokemon.getBattlerIndex(), passive) : new HideAbilityPhase());
   }
 
   /**
@@ -596,7 +643,7 @@ export class PhaseManager {
    */
   public hideAbilityBar(): void {
     if (globalScene.abilityBar.isVisible()) {
-      this.unshiftPhase(new HideAbilityPhase());
+      this._unshiftPhase(new HideAbilityPhase());
     }
   }
 
@@ -610,13 +657,13 @@ export class PhaseManager {
    * @see {@linkcode PhaseTree.addPhase}
    */
   public queueFaintPhase(...args: ConstructorParameters<PhaseConstructorMap["FaintPhase"]>): void {
-    this.phaseQueue.addPhase(this.create("FaintPhase", ...args), true);
+    this.phaseQueue.addPhase(this._create("FaintPhase", ...args), true);
   }
 
   /** Queue phases which run at the end of each turn. */
   public queueTurnEndPhases(): void {
     for (const phase of turnEndPhases) {
-      this.pushNew(phase);
+      this._pushNew(phase);
     }
   }
 
