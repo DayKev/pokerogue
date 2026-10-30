@@ -34,9 +34,9 @@ class OneSecTimerPhase extends MockPhase {
 class UnshifterPhase extends MockPhase {
   public readonly phaseName = "UnshifterPhase";
   override start() {
-    globalScene.phaseManager.unshiftPhase(new ApplePhase() as unknown as Phase);
-    globalScene.phaseManager.unshiftPhase(new BananaPhase() as unknown as Phase);
-    globalScene.phaseManager.unshiftPhase(new CoconutPhase() as unknown as Phase);
+    globalScene.phaseManager["_unshiftPhase"](new ApplePhase() as unknown as Phase);
+    globalScene.phaseManager["_unshiftPhase"](new BananaPhase() as unknown as Phase);
+    globalScene.phaseManager["_unshiftPhase"](new CoconutPhase() as unknown as Phase);
     this.end();
   }
 }

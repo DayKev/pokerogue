@@ -458,7 +458,7 @@ export class GameManager {
    */
   async killPokemon(pokemon: PlayerPokemon | EnemyPokemon) {
     pokemon.hp = 0;
-    this.scene.phaseManager.pushNew("FaintPhase", pokemon.getBattlerIndex(), true);
+    this.scene.phaseManager["_pushNew"]("FaintPhase", pokemon.getBattlerIndex(), true);
     await this.phaseInterceptor.to("FaintPhase");
   }
 

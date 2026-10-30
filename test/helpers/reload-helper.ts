@@ -38,7 +38,7 @@ export class ReloadHelper extends GameManagerHelper {
 
     // Set the last saved session to the desired session data
     vi.spyOn(scene.gameData, "getSession").mockReturnValue(Promise.resolve(this.sessionData));
-    scene.phaseManager.unshiftPhase(titlePhase);
+    scene.phaseManager["_unshiftPhase"](titlePhase);
     this.game.endPhase(); // End the currently ongoing battle
 
     // remove all persistent mods before loading

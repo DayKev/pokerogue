@@ -18,7 +18,6 @@ import { speciesDataRegistry } from "#app/global-species-data-registry";
 import { InputsController } from "#app/inputs-controller";
 import { LoadingScene } from "#app/loading-scene";
 import { activeOverrides } from "#app/overrides";
-import type { Phase } from "#app/phase";
 import { PhaseManager } from "#app/phase-manager";
 import { FieldSpriteBatchHandler, FieldSpriteSubmitter } from "#app/render-nodes/field-sprite";
 import { SpriteBatchHandler, SpriteSubmitter } from "#app/render-nodes/sprite";
@@ -101,6 +100,8 @@ import {
 import { MysteryEncounter } from "#mystery-encounters/mystery-encounter";
 import { allMysteryEncounters, mysteryEncountersByBiome } from "#mystery-encounters/mystery-encounter-biomes";
 import { MysteryEncounterSaveData } from "#mystery-encounters/mystery-encounter-save-data";
+import type { FormChangePhase } from "#phases/form-change-phase";
+import type { QuietFormChangePhase } from "#phases/quiet-form-change-phase";
 import { expSpriteKeys } from "#sprites/sprite-keys";
 import { hasExpSprite } from "#sprites/sprite-utils";
 import type { Variant } from "#sprites/variant";
@@ -2993,7 +2994,7 @@ export class BattleScene extends SceneBase {
         matchingFormChange = matchingFormChangeOpts[0];
       }
       if (matchingFormChange) {
-        let phase: Phase;
+        let phase: FormChangePhase | QuietFormChangePhase;
         if (pokemon.isPlayer() && !matchingFormChange.quiet) {
           phase = this.phaseManager.create("FormChangePhase", pokemon, matchingFormChange, modal);
         } else {
@@ -3020,7 +3021,7 @@ export class BattleScene extends SceneBase {
     delayed = false,
   ): boolean {
     const phaseManager = this.phaseManager;
-    const phase: Phase = phaseManager.create("PokemonAnimPhase", battleAnimType, pokemon, fieldAssets);
+    const phase = phaseManager.create("PokemonAnimPhase", battleAnimType, pokemon, fieldAssets);
     if (delayed) {
       phaseManager.pushPhase(phase);
     } else {

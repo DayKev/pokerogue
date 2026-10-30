@@ -1,12 +1,10 @@
 import type { BattleScene } from "#app/battle-scene";
 import { UiMode } from "#enums/ui-mode";
-import { LoginPhase } from "#phases/login-phase";
-import { TitlePhase } from "#phases/title-phase";
-import { UnavailablePhase } from "#phases/unavailable-phase";
 import { GameManager } from "#test/framework/game-manager";
 import Phaser from "phaser";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 
+// TODO: these tests seems silly
 describe("Phases", () => {
   let phaserGame: Phaser.Game;
   let game: GameManager;
@@ -25,8 +23,7 @@ describe("Phases", () => {
 
   describe("LoginPhase", () => {
     it("should start the login phase", async () => {
-      const loginPhase = new LoginPhase();
-      scene.phaseManager.unshiftPhase(loginPhase);
+      scene.phaseManager.unshiftNew("LoginPhase");
       await game.phaseInterceptor.to("LoginPhase");
       expect(scene.ui.mode).toBe(UiMode.MESSAGE);
     });
@@ -34,8 +31,7 @@ describe("Phases", () => {
 
   describe("TitlePhase", () => {
     it("should start the title phase", async () => {
-      const titlePhase = new TitlePhase();
-      scene.phaseManager.unshiftPhase(titlePhase);
+      scene.phaseManager["_unshiftNew"]("TitlePhase");
       await game.phaseInterceptor.to("TitlePhase");
       expect(scene.ui.mode).toBe(UiMode.TITLE);
     });
@@ -43,8 +39,7 @@ describe("Phases", () => {
 
   describe("UnavailablePhase", () => {
     it("should start the unavailable phase", async () => {
-      const unavailablePhase = new UnavailablePhase();
-      scene.phaseManager.unshiftPhase(unavailablePhase);
+      scene.phaseManager.unshiftNew("UnavailablePhase");
       await game.phaseInterceptor.to("UnavailablePhase");
       expect(scene.ui.mode).toBe(UiMode.UNAVAILABLE);
     });

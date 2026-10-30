@@ -12,6 +12,7 @@ import { globalScene } from "#app/global-scene";
 import type { Phase } from "#app/phase";
 import { PhaseTree } from "#app/phase-tree";
 import { PHASE_START_COLOR } from "#constants/colors";
+import type { BattlerIndex } from "#enums/battler-index";
 import { MovePhaseTimingModifier } from "#enums/move-phase-timing-modifier";
 import type { Pokemon } from "#field/pokemon";
 import { AddEnemyBuffModifierPhase } from "#phases/add-enemy-buff-modifier-phase";
@@ -240,8 +241,6 @@ const turnEndPhases = [
 type PhasesWithHelpers =
   | "FaintPhase"
   | "HideAbilityPhase"
-  | "LoginPhase"
-  | "MessagePhase"
   | "ShowAbilityPhase"
   | "TitlePhase"
   | (typeof turnEndPhases)[number];
@@ -611,6 +610,7 @@ export class PhaseManager {
    * @param defer - If `true`, push the phase instead of unshifting; default `false`
    *
    * @see {@linkcode MessagePhase} for more details on the parameters
+   * @deprecated This helper is unnecessary, just use `pushNew` or `unshiftNew`
    */
   public queueMessage(
     message: string,
@@ -629,13 +629,14 @@ export class PhaseManager {
 
   /**
    * Queue an ability bar flyout phase via {@linkcode unshiftPhase}
-   * @param pokemon - The {@linkcode Pokemon} whose ability is being activated
+   * @param pokemon - The {@linkcode Pokemon} (or the {@linkcode BattlerIndex} thereof) whose ability is being activated
    * @param passive - Whether the ability is a passive
    * @param show - If `true`, show the bar. Otherwise, hide it
    */
   // TODO: remove `show` param, that's what `hideAbilityBar()` is for
-  public queueAbilityDisplay(pokemon: Pokemon, passive: boolean, show: boolean): void {
-    this._unshiftPhase(show ? new ShowAbilityPhase(pokemon.getBattlerIndex(), passive) : new HideAbilityPhase());
+  public queueAbilityDisplay(pokemon: Pokemon | BattlerIndex, passive: boolean, show: boolean): void {
+    const battlerIndex = typeof pokemon === "number" ? pokemon : pokemon.getBattlerIndex();
+    this._unshiftPhase(show ? new ShowAbilityPhase(battlerIndex, passive) : new HideAbilityPhase());
   }
 
   /**
