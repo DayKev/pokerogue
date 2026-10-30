@@ -131,7 +131,7 @@ describe("Move - Wish", () => {
     const healPhases = game.scene.phaseManager["phaseQueue"].findAll("PokemonHealPhase");
     // account for the current phase about to be ran also being a PHP
     // TODO: Make this into a matcher or similar
-    healPhases.unshift(game.scene.phaseManager.getCurrentPhase() as PokemonHealPhase);
+    healPhases.unshift(game.scene.phaseManager.currentPhase as PokemonHealPhase);
 
     expect(healPhases).toHaveLength(4);
     expect(healPhases.map(php => php["battlerIndex"])).toEqual(oldOrder);

@@ -71,11 +71,11 @@ export class CommandUiHandler extends UiHandler {
     this.commandsContainer.setVisible(true);
 
     let commandPhase: CommandPhase;
-    const currentPhase = globalScene.phaseManager.getCurrentPhase();
+    const currentPhase = globalScene.phaseManager.currentPhase;
     if (currentPhase.is("CommandPhase")) {
       commandPhase = currentPhase;
     } else {
-      commandPhase = globalScene.phaseManager.getStandbyPhase() as CommandPhase;
+      commandPhase = globalScene.phaseManager.standbyPhase as CommandPhase;
     }
 
     if (this.canTera()) {
@@ -118,7 +118,7 @@ export class CommandUiHandler extends UiHandler {
         switch (cursor) {
           // Fight
           case Command.FIGHT:
-            ui.setMode(UiMode.FIGHT, (globalScene.phaseManager.getCurrentPhase() as CommandPhase).getFieldIndex());
+            ui.setMode(UiMode.FIGHT, (globalScene.phaseManager.currentPhase as CommandPhase).getFieldIndex());
             success = true;
             break;
           // Ball
@@ -131,7 +131,7 @@ export class CommandUiHandler extends UiHandler {
             ui.setMode(
               UiMode.PARTY,
               PartyUiMode.SWITCH,
-              (globalScene.phaseManager.getCurrentPhase() as CommandPhase).getPokemon().getFieldIndex(),
+              (globalScene.phaseManager.currentPhase as CommandPhase).getPokemon().getFieldIndex(),
               null,
               PartyUiHandler.FilterNonFainted,
             );
@@ -139,20 +139,20 @@ export class CommandUiHandler extends UiHandler {
             break;
           // Run
           case Command.RUN:
-            (globalScene.phaseManager.getCurrentPhase() as CommandPhase).handleCommand(Command.RUN, 0);
+            (globalScene.phaseManager.currentPhase as CommandPhase).handleCommand(Command.RUN, 0);
             success = true;
             break;
           case Command.TERA:
             ui.setMode(
               UiMode.FIGHT,
-              (globalScene.phaseManager.getCurrentPhase() as CommandPhase).getFieldIndex(),
+              (globalScene.phaseManager.currentPhase as CommandPhase).getFieldIndex(),
               Command.TERA,
             );
             success = true;
             break;
         }
       } else {
-        (globalScene.phaseManager.getCurrentPhase() as CommandPhase).cancel();
+        (globalScene.phaseManager.currentPhase as CommandPhase).cancel();
       }
     } else {
       switch (button) {

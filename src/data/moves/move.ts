@@ -1913,7 +1913,7 @@ export class PreUseInterruptAttr extends MoveAttr {
    * @param move - {@linkcode Move} with this attribute
    */
   override apply(user: Pokemon, target: Pokemon, move: Move): boolean {
-    const currentPhase = globalScene.phaseManager.getCurrentPhase();
+    const currentPhase = globalScene.phaseManager.currentPhase;
     if (!currentPhase.is("MovePhase") || !this.conditionFunc(user, target, move)) {
       return false;
     }
@@ -12528,7 +12528,7 @@ export function initMoves() {
     new SelfStatusMove(MoveId.CHILLY_RECEPTION, PokemonType.ICE, -1, 10, -1, 0, 9)
       .attr(PreMoveMessageAttr, (user, _target, _move) =>
         // Don't display text if current move phase is follow up (ie move called indirectly)
-        isVirtual((globalScene.phaseManager.getCurrentPhase() as MovePhase).useMode)
+        isVirtual((globalScene.phaseManager.currentPhase as MovePhase).useMode)
           ? ""
           : i18next.t("moveTriggers:chillyReception", { pokemonName: getPokemonNameWithAffix(user) }),
       )

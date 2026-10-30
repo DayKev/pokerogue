@@ -566,13 +566,13 @@ export class SummaryUiHandler extends UiHandler {
               },
             });
             // Option to delete move
-            if (globalScene.phaseManager.getCurrentPhase().is("SelectModifierPhase")) {
+            if (globalScene.phaseManager.currentPhase.is("SelectModifierPhase")) {
               moveSelectOptions.push({
                 label: i18next.t("pokemonSummary:deleteMove"),
                 handler: () => {
                   const moveDeleteConfirmOptions: ConfirmModeConfig = {
                     yesHandler: () => {
-                      if (!this.pokemon || !globalScene.phaseManager.getCurrentPhase().is("SelectModifierPhase")) {
+                      if (!this.pokemon || !globalScene.phaseManager.currentPhase.is("SelectModifierPhase")) {
                         ui.revertMode();
                         return;
                       }

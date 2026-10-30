@@ -36,11 +36,11 @@ describe("Escape chance calculations", () => {
     // set enemyPokemon's speed to 100
     vi.spyOn(enemyField[0], "stats", "get").mockReturnValue([20, 20, 20, 20, 20, enemySpeed]);
 
-    const commandPhase = game.scene.phaseManager.getCurrentPhase() as CommandPhase;
+    const commandPhase = game.scene.phaseManager.currentPhase as CommandPhase;
     commandPhase.handleCommand(Command.RUN, 0);
 
     await game.phaseInterceptor.to("AttemptRunPhase", false);
-    const phase = game.scene.phaseManager.getCurrentPhase() as AttemptRunPhase;
+    const phase = game.scene.phaseManager.currentPhase as AttemptRunPhase;
     // this sets up an object for multiple attempts. The pokemonSpeedRatio is your speed divided by the enemy speed, the escapeAttempts are the number of escape attempts and the expectedEscapeChance is the chance it should be escaping
     const escapeChances: {
       pokemonSpeedRatio: number;
@@ -107,11 +107,11 @@ describe("Escape chance calculations", () => {
     // set enemyBPokemon's speed to 30
     vi.spyOn(enemyField[1], "stats", "get").mockReturnValue([20, 20, 20, 20, 20, enemyBSpeed]);
 
-    const commandPhase = game.scene.phaseManager.getCurrentPhase() as CommandPhase;
+    const commandPhase = game.scene.phaseManager.currentPhase as CommandPhase;
     commandPhase.handleCommand(Command.RUN, 0);
 
     await game.phaseInterceptor.to("AttemptRunPhase", false);
-    const phase = game.scene.phaseManager.getCurrentPhase() as AttemptRunPhase;
+    const phase = game.scene.phaseManager.currentPhase as AttemptRunPhase;
     // this sets up an object for multiple attempts. The pokemonSpeedRatio is your speed divided by the enemy speed, the escapeAttempts are the number of escape attempts and the expectedEscapeChance is the chance it should be escaping
     const escapeChances: {
       pokemonSpeedRatio: number;
@@ -182,11 +182,11 @@ describe("Escape chance calculations", () => {
     // set enemyPokemon's speed to 100
     vi.spyOn(enemyField[0], "stats", "get").mockReturnValue([20, 20, 20, 20, 20, enemySpeed]);
 
-    const commandPhase = game.scene.phaseManager.getCurrentPhase() as CommandPhase;
+    const commandPhase = game.scene.phaseManager.currentPhase as CommandPhase;
     commandPhase.handleCommand(Command.RUN, 0);
 
     await game.phaseInterceptor.to("AttemptRunPhase", false);
-    const phase = game.scene.phaseManager.getCurrentPhase() as AttemptRunPhase;
+    const phase = game.scene.phaseManager.currentPhase as AttemptRunPhase;
 
     // this sets up an object for multiple attempts. The pokemonSpeedRatio is your speed divided by the enemy speed, the escapeAttempts are the number of escape attempts and the expectedEscapeChance is the chance it should be escaping
     const escapeChances: {
@@ -267,11 +267,11 @@ describe("Escape chance calculations", () => {
     // set enemyBPokemon's speed to 30
     vi.spyOn(enemyField[1], "stats", "get").mockReturnValue([20, 20, 20, 20, 20, enemyBSpeed]);
 
-    const commandPhase = game.scene.phaseManager.getCurrentPhase() as CommandPhase;
+    const commandPhase = game.scene.phaseManager.currentPhase as CommandPhase;
     commandPhase.handleCommand(Command.RUN, 0);
 
     await game.phaseInterceptor.to("AttemptRunPhase", false);
-    const phase = game.scene.phaseManager.getCurrentPhase() as AttemptRunPhase;
+    const phase = game.scene.phaseManager.currentPhase as AttemptRunPhase;
 
     // this sets up an object for multiple attempts. The pokemonSpeedRatio is your speed divided by the enemy speed, the escapeAttempts are the number of escape attempts and the expectedEscapeChance is the chance it should be escaping
     const escapeChances: {

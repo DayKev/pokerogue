@@ -557,7 +557,7 @@ export abstract class ConditionalProtectTag extends ArenaTag {
  */
 const QuickGuardConditionFunc: ProtectConditionFunc = moveId => {
   const move = allMoves[moveId];
-  const effectPhase = globalScene.phaseManager.getCurrentPhase();
+  const effectPhase = globalScene.phaseManager.currentPhase;
 
   if (effectPhase.is("MoveEffectPhase")) {
     const attacker = effectPhase.getUserPokemon();

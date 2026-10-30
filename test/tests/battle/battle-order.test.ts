@@ -98,7 +98,7 @@ describe("Battle order", () => {
     game.move.select(MoveId.TACKLE, 1);
     await game.phaseInterceptor.to("MovePhase", false);
 
-    const phase = game.scene.phaseManager.getCurrentPhase() as MovePhase;
+    const phase = game.scene.phaseManager.currentPhase as MovePhase;
     expect(phase.pokemon).toEqual(enemyPokemon[1]);
   });
 
@@ -118,7 +118,7 @@ describe("Battle order", () => {
 
     await game.phaseInterceptor.to("MovePhase", false);
 
-    const phase = game.scene.phaseManager.getCurrentPhase() as MovePhase;
+    const phase = game.scene.phaseManager.currentPhase as MovePhase;
     expect(phase.pokemon, "one of the slower mons moved first").toBeOneOf([enemyPokemon[1], playerPokemon[1]]);
   });
 });

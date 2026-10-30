@@ -29,7 +29,7 @@ export function toBeAtPhase(
     };
   }
 
-  const currPhase = received.scene.phaseManager.getCurrentPhase();
+  const currPhase = received.scene.phaseManager.currentPhase;
   const pass = currPhase.is(expectedPhase);
 
   const actual = currPhase.phaseName;

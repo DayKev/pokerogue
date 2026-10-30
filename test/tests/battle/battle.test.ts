@@ -88,7 +88,7 @@ describe("Phase - Battle Phase", () => {
     );
 
     expect(game.scene.ui?.mode).toBe(UiMode.COMMAND);
-    expect(game.scene.phaseManager.getCurrentPhase()).toBeInstanceOf(CommandPhase);
+    expect(game.scene.phaseManager.currentPhase).toBeInstanceOf(CommandPhase);
   });
 
   it("kill opponent pokemon", async () => {
@@ -190,7 +190,7 @@ describe("Phase - Battle Phase", () => {
       .runSuccess(true);
     await game.classicMode.startBattle(SpeciesId.FEEBAS);
 
-    const commandPhase = game.scene.phaseManager.getCurrentPhase() as CommandPhase;
+    const commandPhase = game.scene.phaseManager.currentPhase as CommandPhase;
     commandPhase.handleCommand(Command.RUN, 0);
 
     let rewardsShown = false;

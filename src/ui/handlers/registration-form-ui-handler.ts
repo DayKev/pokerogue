@@ -132,7 +132,7 @@ export class RegistrationFormUiHandler extends LoginRegisterInfoContainerUiHandl
                   const retryLogin = () => {
                     pokerogueApi.account.login({ username, password }).then(error => {
                       if (error) {
-                        (globalScene.phaseManager.getCurrentPhase() as LoginPhase).goToLogin();
+                        (globalScene.phaseManager.currentPhase as LoginPhase).goToLogin();
                       } else {
                         originalRegistrationAction?.();
                       }

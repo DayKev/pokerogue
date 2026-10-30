@@ -3273,7 +3273,7 @@ export class StarterSelectUiHandler extends MessageUiHandler {
         globalScene.phaseManager.toTitleScreen();
       }
       this.clearText();
-      globalScene.phaseManager.getCurrentPhase().end();
+      globalScene.phaseManager.currentPhase.end();
     };
     const options: ConfirmModeConfig = {
       yesHandler: doExit,

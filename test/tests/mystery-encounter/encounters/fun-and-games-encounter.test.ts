@@ -115,7 +115,7 @@ describe("Fun And Games! - Mystery Encounter", () => {
       await game.runToMysteryEncounter(MysteryEncounterType.FUN_AND_GAMES, defaultParty);
       await game.phaseInterceptor.to("MysteryEncounterPhase", false);
 
-      const encounterPhase = scene.phaseManager.getCurrentPhase();
+      const encounterPhase = scene.phaseManager.currentPhase;
       expect(encounterPhase?.constructor.name).toBe(MysteryEncounterPhase.name);
       const mysteryEncounterPhase = encounterPhase as MysteryEncounterPhase;
       vi.spyOn(mysteryEncounterPhase, "continueEncounter");
@@ -146,15 +146,15 @@ describe("Fun And Games! - Mystery Encounter", () => {
       });
 
       // Turn 1
-      (game.scene.phaseManager.getCurrentPhase() as CommandPhase).handleCommand(Command.FIGHT, 0, MoveUseMode.NORMAL);
+      (game.scene.phaseManager.currentPhase as CommandPhase).handleCommand(Command.FIGHT, 0, MoveUseMode.NORMAL);
       await game.toNextTurn();
 
       // Turn 2
-      (game.scene.phaseManager.getCurrentPhase() as CommandPhase).handleCommand(Command.FIGHT, 0, MoveUseMode.NORMAL);
+      (game.scene.phaseManager.currentPhase as CommandPhase).handleCommand(Command.FIGHT, 0, MoveUseMode.NORMAL);
       await game.toNextTurn();
 
       // Turn 3
-      (game.scene.phaseManager.getCurrentPhase() as CommandPhase).handleCommand(Command.FIGHT, 0, MoveUseMode.NORMAL);
+      (game.scene.phaseManager.currentPhase as CommandPhase).handleCommand(Command.FIGHT, 0, MoveUseMode.NORMAL);
       await game.phaseInterceptor.to("SelectModifierPhase", false);
 
       // Rewards
@@ -173,7 +173,7 @@ describe("Fun And Games! - Mystery Encounter", () => {
 
       // Skip minigame
       scene.currentBattle.mysteryEncounter!.misc.turnsRemaining = 0;
-      (game.scene.phaseManager.getCurrentPhase() as CommandPhase).handleCommand(Command.FIGHT, 0, MoveUseMode.NORMAL);
+      (game.scene.phaseManager.currentPhase as CommandPhase).handleCommand(Command.FIGHT, 0, MoveUseMode.NORMAL);
       await game.phaseInterceptor.to("SelectModifierPhase", false);
 
       // Rewards
@@ -202,7 +202,7 @@ describe("Fun And Games! - Mystery Encounter", () => {
       const wobbuffet = game.field.getEnemyPokemon();
       wobbuffet.hp = Math.floor(0.2 * wobbuffet.getMaxHp());
       scene.currentBattle.mysteryEncounter!.misc.turnsRemaining = 0;
-      (game.scene.phaseManager.getCurrentPhase() as CommandPhase).handleCommand(Command.FIGHT, 0, MoveUseMode.NORMAL);
+      (game.scene.phaseManager.currentPhase as CommandPhase).handleCommand(Command.FIGHT, 0, MoveUseMode.NORMAL);
       await game.phaseInterceptor.to("SelectModifierPhase", false);
 
       // Rewards
@@ -232,7 +232,7 @@ describe("Fun And Games! - Mystery Encounter", () => {
       const wobbuffet = game.field.getEnemyPokemon();
       wobbuffet.hp = Math.floor(0.1 * wobbuffet.getMaxHp());
       scene.currentBattle.mysteryEncounter!.misc.turnsRemaining = 0;
-      (game.scene.phaseManager.getCurrentPhase() as CommandPhase).handleCommand(Command.FIGHT, 0, MoveUseMode.NORMAL);
+      (game.scene.phaseManager.currentPhase as CommandPhase).handleCommand(Command.FIGHT, 0, MoveUseMode.NORMAL);
       await game.phaseInterceptor.to("SelectModifierPhase", false);
 
       // Rewards
@@ -262,7 +262,7 @@ describe("Fun And Games! - Mystery Encounter", () => {
       const wobbuffet = game.field.getEnemyPokemon();
       wobbuffet.hp = 1;
       scene.currentBattle.mysteryEncounter!.misc.turnsRemaining = 0;
-      (game.scene.phaseManager.getCurrentPhase() as CommandPhase).handleCommand(Command.FIGHT, 0, MoveUseMode.NORMAL);
+      (game.scene.phaseManager.currentPhase as CommandPhase).handleCommand(Command.FIGHT, 0, MoveUseMode.NORMAL);
       await game.phaseInterceptor.to("SelectModifierPhase", false);
 
       // Rewards

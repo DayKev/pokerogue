@@ -43,7 +43,7 @@ describe("Abilities - Shield Dust", () => {
     await game.phaseInterceptor.to("MoveEffectPhase", false);
 
     // Shield Dust negates secondary effect
-    const phase = game.scene.phaseManager.getCurrentPhase() as MoveEffectPhase;
+    const phase = game.scene.phaseManager.currentPhase as MoveEffectPhase;
     const move = phase.move;
     expect(move.id).toBe(MoveId.AIR_SLASH);
 

@@ -40,7 +40,7 @@ describe("Abilities - No Guard", () => {
 
     await game.phaseInterceptor.to("MoveEffectPhase", false);
 
-    const moveEffectPhase = game.scene.phaseManager.getCurrentPhase() as MoveEffectPhase;
+    const moveEffectPhase = game.scene.phaseManager.currentPhase as MoveEffectPhase;
     vi.spyOn(moveEffectPhase, "hitCheck");
 
     await game.phaseInterceptor.to("MoveEndPhase");

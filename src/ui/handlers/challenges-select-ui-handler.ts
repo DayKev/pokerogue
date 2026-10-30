@@ -546,7 +546,7 @@ export class GameChallengesUiHandler extends UiHandler {
         this.deactivateStartCursor();
       } else {
         phaseManager.toTitleScreen();
-        phaseManager.getCurrentPhase().end();
+        phaseManager.currentPhase.end();
       }
       success = true;
     } else if (button === Button.CYCLE_FORM || button === Button.CYCLE_SHINY) {
@@ -555,7 +555,7 @@ export class GameChallengesUiHandler extends UiHandler {
       if (this.hasSelectedChallenge) {
         if (this.startCursor.visible) {
           phaseManager.unshiftNew("SelectStarterPhase");
-          phaseManager.getCurrentPhase().end();
+          phaseManager.currentPhase.end();
         } else {
           this.activateStartCursor();
         }

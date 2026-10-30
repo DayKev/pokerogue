@@ -77,7 +77,7 @@ export class PhaseInterceptor {
 
     const pm = this.scene.phaseManager;
 
-    let currentPhase = pm.getCurrentPhase();
+    let currentPhase = pm.currentPhase;
     let didLog = false;
 
     // NB: This has to use an interval to wait for UI prompts to activate
@@ -95,7 +95,7 @@ export class PhaseInterceptor {
           return false;
         }
 
-        currentPhase = pm.getCurrentPhase();
+        currentPhase = pm.currentPhase;
         if (currentPhase.is(this.target)) {
           return true;
         }
@@ -144,7 +144,7 @@ export class PhaseInterceptor {
    * This should not be called by anything other than {@linkcode PromptHandler}.
    */
   public checkMode(): void {
-    const currentPhase = this.scene.phaseManager.getCurrentPhase();
+    const currentPhase = this.scene.phaseManager.currentPhase;
     if (!currentPhase.is(this.target) || this.state === "interrupted") {
       // Wrong phase / already interrupted = do nothing
       return;
@@ -165,7 +165,7 @@ export class PhaseInterceptor {
    * game.phaseInterceptor.shiftPhase(); // skips LoginPhase without starting it
    */
   public shiftPhase(): void {
-    const phaseName = this.scene.phaseManager.getCurrentPhase().phaseName;
+    const phaseName = this.scene.phaseManager.currentPhase.phaseName;
     if (this.state !== "idling") {
       throw new Error(`PhaseInterceptor.shiftPhase attempted to skip phase ${phaseName} mid-execution!`);
     }

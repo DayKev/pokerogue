@@ -1758,8 +1758,7 @@ export class BattleScene extends SceneBase {
     }
 
     const isEggPhase =
-      this.phaseManager.getCurrentPhase().is("EggLapsePhase")
-      || this.phaseManager.getCurrentPhase().is("EggHatchPhase");
+      this.phaseManager.currentPhase.is("EggLapsePhase") || this.phaseManager.currentPhase.is("EggHatchPhase");
 
     const isTrainerBattle = this.currentBattle?.battleType === BattleType.TRAINER;
 

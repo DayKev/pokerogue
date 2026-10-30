@@ -135,7 +135,7 @@ describe("Abilities - Desolate Land", () => {
     vi.spyOn(game.field.getPlayerPokemon(), "randBattleSeedInt").mockReturnValue(0);
     vi.spyOn(globalScene, "randBattleSeedInt").mockReturnValue(0);
 
-    const commandPhase = game.scene.phaseManager.getCurrentPhase() as CommandPhase;
+    const commandPhase = game.scene.phaseManager.currentPhase as CommandPhase;
     commandPhase.handleCommand(Command.RUN, 0);
     await game.phaseInterceptor.to("BerryPhase");
 

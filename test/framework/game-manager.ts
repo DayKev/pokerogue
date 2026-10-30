@@ -164,7 +164,7 @@ export class GameManager {
    * @see {@linkcode PhaseInterceptor.shiftPhase} Function to skip the next upcoming phase
    */
   endPhase() {
-    this.scene.phaseManager.getCurrentPhase().end();
+    this.scene.phaseManager.currentPhase.end();
   }
 
   /**
@@ -284,7 +284,7 @@ export class GameManager {
       UiMode.TARGET_SELECT,
       () => {
         const handler = this.scene.ui.getHandler() as TargetSelectUiHandler;
-        const move = (this.scene.phaseManager.getCurrentPhase() as SelectTargetPhase)
+        const move = (this.scene.phaseManager.currentPhase as SelectTargetPhase)
           .getPokemon()
           .getMoveset()
           [movePosition].getMove();
@@ -403,7 +403,7 @@ export class GameManager {
    * @todo Convert existing calls of `game.isCurrentPhase("A") || game.isCurrentPhase("B")` to pass them together in 1 call
    */
   public isCurrentPhase(...phaseTargets: NonEmptyTuple<PhaseString>): boolean {
-    const phase = this.scene.phaseManager.getCurrentPhase();
+    const phase = this.scene.phaseManager.currentPhase;
     return phaseTargets.some(p => phase.is(p));
   }
 

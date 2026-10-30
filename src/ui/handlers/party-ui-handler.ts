@@ -804,7 +804,7 @@ export class PartyUiHandler extends MessageUiHandler {
     // TODO: This risks hitting the other options (.MOVE_i and ALL) so does it? Do we need an extra check?
     if (
       option >= PartyOption.FORM_CHANGE_ITEM
-      && globalScene.phaseManager.getCurrentPhase().is("SelectModifierPhase")
+      && globalScene.phaseManager.currentPhase.is("SelectModifierPhase")
       && this.partyUiMode === PartyUiMode.CHECK
     ) {
       const formChangeItemModifiers = this.getFormChangeItemsModifiers(pokemon);
@@ -861,7 +861,7 @@ export class PartyUiHandler extends MessageUiHandler {
       && this.partyUiMode === PartyUiMode.SWITCH
     ) {
       this.clearOptions();
-      (globalScene.phaseManager.getCurrentPhase() as CommandPhase).handleCommand(
+      (globalScene.phaseManager.currentPhase as CommandPhase).handleCommand(
         Command.POKEMON,
         this.cursor,
         option === PartyOption.PASS_BATON,
@@ -1554,7 +1554,7 @@ export class PartyUiHandler extends MessageUiHandler {
         if (globalScene.getPlayerParty().length >= 2) {
           this.options.splice(1, 0, PartyOption.SWITCH);
         }
-        if (globalScene.phaseManager.getCurrentPhase().is("SelectModifierPhase")) {
+        if (globalScene.phaseManager.currentPhase.is("SelectModifierPhase")) {
           if (pokemon.isFusion()) {
             this.options.push(PartyOption.UNSPLICE);
           }
@@ -1613,7 +1613,7 @@ export class PartyUiHandler extends MessageUiHandler {
         this.options.push(PartyOption.RELEASE);
         break;
       case PartyUiMode.CHECK:
-        if (globalScene.phaseManager.getCurrentPhase().is("MysteryEncounterPhase")) {
+        if (globalScene.phaseManager.currentPhase.is("MysteryEncounterPhase")) {
           break;
         }
         this.options.push(PartyOption.RELEASE);

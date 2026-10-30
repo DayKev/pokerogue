@@ -61,7 +61,7 @@ describe("Abilities - Honey Gather", () => {
     // Expects next wave so run must succeed
     vi.spyOn(activeOverrides, "RUN_SUCCESS_OVERRIDE", "get").mockReturnValue(true);
 
-    const commandPhase = game.scene.phaseManager.getCurrentPhase() as CommandPhase;
+    const commandPhase = game.scene.phaseManager.currentPhase as CommandPhase;
     commandPhase.handleCommand(Command.RUN, 0);
     await game.toNextWave();
 

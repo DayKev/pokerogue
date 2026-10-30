@@ -221,7 +221,7 @@ export class EggSummaryUiHandler extends MessageUiHandler {
       if (this.blockExit) {
         error = true;
       } else {
-        const phase = globalScene.phaseManager.getCurrentPhase();
+        const phase = globalScene.phaseManager.currentPhase;
         if (phase.is("EggSummaryPhase")) {
           phase.end();
         }

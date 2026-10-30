@@ -98,7 +98,7 @@ describe("Abilities - Speed Boost", () => {
 
     vi.spyOn(activeOverrides, "RUN_SUCCESS_OVERRIDE", "get").mockReturnValue(false);
 
-    const commandPhase = game.scene.phaseManager.getCurrentPhase() as CommandPhase;
+    const commandPhase = game.scene.phaseManager.currentPhase as CommandPhase;
     commandPhase.handleCommand(Command.RUN, 0);
 
     await game.phaseInterceptor.to("AttemptRunPhase");

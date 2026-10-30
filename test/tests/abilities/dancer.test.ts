@@ -48,7 +48,7 @@ describe("Abilities - Dancer", () => {
     useMode: MoveUseMode = MoveUseMode.INDIRECT,
   ) {
     expect(game).toBeAtPhase("MovePhase");
-    const currentPhase = game.scene.phaseManager.getCurrentPhase() as MovePhase;
+    const currentPhase = game.scene.phaseManager.currentPhase as MovePhase;
     expect(currentPhase.pokemon).toBe(pokemon);
     expect(currentPhase.move.moveId).toBe(move);
     if (targets) {
@@ -59,7 +59,7 @@ describe("Abilities - Dancer", () => {
 
   /** Helper function to advance to and stop **right before** the next move is used in a turn. */
   async function toNextMove(): Promise<void> {
-    if (game.scene.phaseManager.getCurrentPhase().is("MovePhase")) {
+    if (game.scene.phaseManager.currentPhase.is("MovePhase")) {
       await game.phaseInterceptor.to("MoveEndPhase");
     }
     await game.phaseInterceptor.to("MovePhase", false);

@@ -40,7 +40,7 @@ describe.todo("UI - Starter select", () => {
     expect(caughtCount).toBe(speciesDataRegistry.getAllSpecies().length);
     await game.runToTitle();
     game.onNextPrompt("TitlePhase", UiMode.TITLE, () => {
-      const currentPhase = game.scene.phaseManager.getCurrentPhase() as TitlePhase;
+      const currentPhase = game.scene.phaseManager.currentPhase as TitlePhase;
       currentPhase.gameMode = GameModes.CLASSIC;
       currentPhase.end();
     });
@@ -99,7 +99,7 @@ describe.todo("UI - Starter select", () => {
     expect(caughtCount).toBe(speciesDataRegistry.getAllSpecies().length);
     await game.runToTitle();
     game.onNextPrompt("TitlePhase", UiMode.TITLE, () => {
-      const currentPhase = game.scene.phaseManager.getCurrentPhase() as TitlePhase;
+      const currentPhase = game.scene.phaseManager.currentPhase as TitlePhase;
       currentPhase.gameMode = GameModes.CLASSIC;
       currentPhase.end();
     });
@@ -160,7 +160,7 @@ describe.todo("UI - Starter select", () => {
     expect(caughtCount).toBe(speciesDataRegistry.getAllSpecies().length);
     await game.runToTitle();
     game.onNextPrompt("TitlePhase", UiMode.TITLE, () => {
-      const currentPhase = game.scene.phaseManager.getCurrentPhase() as TitlePhase;
+      const currentPhase = game.scene.phaseManager.currentPhase as TitlePhase;
       currentPhase.gameMode = GameModes.CLASSIC;
       currentPhase.end();
     });
@@ -224,7 +224,7 @@ describe.todo("UI - Starter select", () => {
     expect(caughtCount).toBe(speciesDataRegistry.getAllSpecies().length);
     await game.runToTitle();
     game.onNextPrompt("TitlePhase", UiMode.TITLE, () => {
-      const currentPhase = game.scene.phaseManager.getCurrentPhase() as TitlePhase;
+      const currentPhase = game.scene.phaseManager.currentPhase as TitlePhase;
       currentPhase.gameMode = GameModes.CLASSIC;
       currentPhase.end();
     });
@@ -284,7 +284,7 @@ describe.todo("UI - Starter select", () => {
     expect(caughtCount).toBe(speciesDataRegistry.getAllSpecies().length);
     await game.runToTitle();
     game.onNextPrompt("TitlePhase", UiMode.TITLE, () => {
-      const currentPhase = game.scene.phaseManager.getCurrentPhase() as TitlePhase;
+      const currentPhase = game.scene.phaseManager.currentPhase as TitlePhase;
       currentPhase.gameMode = GameModes.CLASSIC;
       currentPhase.end();
     });
@@ -343,7 +343,7 @@ describe.todo("UI - Starter select", () => {
     expect(caughtCount).toBe(speciesDataRegistry.getAllSpecies().length);
     await game.runToTitle();
     game.onNextPrompt("TitlePhase", UiMode.TITLE, () => {
-      const currentPhase = game.scene.phaseManager.getCurrentPhase() as TitlePhase;
+      const currentPhase = game.scene.phaseManager.currentPhase as TitlePhase;
       currentPhase.gameMode = GameModes.CLASSIC;
       currentPhase.end();
     });
@@ -404,7 +404,7 @@ describe.todo("UI - Starter select", () => {
     expect(caughtCount).toBe(speciesDataRegistry.getAllSpecies().length);
     await game.runToTitle();
     game.onNextPrompt("TitlePhase", UiMode.TITLE, () => {
-      const currentPhase = game.scene.phaseManager.getCurrentPhase() as TitlePhase;
+      const currentPhase = game.scene.phaseManager.currentPhase as TitlePhase;
       currentPhase.gameMode = GameModes.CLASSIC;
       currentPhase.end();
     });
@@ -464,7 +464,7 @@ describe.todo("UI - Starter select", () => {
     expect(caughtCount).toBe(speciesDataRegistry.getAllSpecies().length);
     await game.runToTitle();
     game.onNextPrompt("TitlePhase", UiMode.TITLE, () => {
-      const currentPhase = game.scene.phaseManager.getCurrentPhase() as TitlePhase;
+      const currentPhase = game.scene.phaseManager.currentPhase as TitlePhase;
       currentPhase.gameMode = GameModes.CLASSIC;
       currentPhase.end();
     });
@@ -527,7 +527,7 @@ describe.todo("UI - Starter select", () => {
     expect(caughtCount).toBe(speciesDataRegistry.getAllSpecies().length);
     await game.runToTitle();
     game.onNextPrompt("TitlePhase", UiMode.TITLE, () => {
-      const currentPhase = game.scene.phaseManager.getCurrentPhase() as TitlePhase;
+      const currentPhase = game.scene.phaseManager.currentPhase as TitlePhase;
       currentPhase.gameMode = GameModes.CLASSIC;
       currentPhase.end();
     });

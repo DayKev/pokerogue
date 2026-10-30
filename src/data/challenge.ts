@@ -1648,7 +1648,7 @@ export class AbilityRandomizerChallenge extends Challenge {
     const eggHatchUiModes = [UiMode.EGG_HATCH_SCENE, UiMode.EGG_HATCH_SUMMARY];
     if (
       [...pokedexUiModes, ...eggHatchUiModes].includes(globalScene.ui.mode)
-      || globalScene.phaseManager.getCurrentPhase().is("SelectStarterPhase")
+      || globalScene.phaseManager.currentPhase.is("SelectStarterPhase")
     ) {
       return false;
     }
@@ -1690,7 +1690,7 @@ export class AbilityRandomizerChallenge extends Challenge {
     const eggHatchUiModes = [UiMode.EGG_HATCH_SCENE, UiMode.EGG_HATCH_SUMMARY];
     if (
       [...pokedexUiModes, ...eggHatchUiModes].includes(globalScene.ui.mode)
-      || globalScene.phaseManager.getCurrentPhase().is("SelectStarterPhase")
+      || globalScene.phaseManager.currentPhase.is("SelectStarterPhase")
     ) {
       return false;
     }

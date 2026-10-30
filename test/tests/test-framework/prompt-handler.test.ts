@@ -40,10 +40,9 @@ describe("Test Utils - PromptHandler", () => {
           mode: UiMode.TEST_DIALOGUE,
         } as unknown as UI,
         phaseManager: {
-          getCurrentPhase: () =>
-            ({
-              phaseName: "testDialoguePhase" as unknown as PhaseString,
-            }) as Phase,
+          get currentPhase() {
+            return { phaseName: "testDialoguePhase" as unknown as PhaseString };
+          },
         } as PhaseManager,
       },
       phaseInterceptor: {

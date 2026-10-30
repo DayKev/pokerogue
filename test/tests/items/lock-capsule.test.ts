@@ -39,7 +39,7 @@ describe("Items - Lock Capsule", () => {
     );
 
     game.onNextPrompt("SelectModifierPhase", UiMode.MODIFIER_SELECT, () => {
-      const selectModifierPhase = game.scene.phaseManager.getCurrentPhase() as SelectModifierPhase;
+      const selectModifierPhase = game.scene.phaseManager.currentPhase as SelectModifierPhase;
       const rerollCost = selectModifierPhase.getRerollCost(true);
       expect(rerollCost).toBe(150);
     });

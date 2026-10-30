@@ -35,9 +35,9 @@ describe("Move - Teleport", () => {
 
   async function getModifierShopHandler(): Promise<ModifierSelectUiHandler> {
     await game.phaseInterceptor.to("BattleEndPhase");
-    await vi.waitUntil(() => !game.scene.phaseManager.getCurrentPhase()?.is("BattleEndPhase"));
+    await vi.waitUntil(() => !game.scene.phaseManager.currentPhase?.is("BattleEndPhase"));
 
-    const currentPhase = game.scene.phaseManager.getCurrentPhase()?.phaseName;
+    const currentPhase = game.scene.phaseManager.currentPhase?.phaseName;
     expect(currentPhase, "Expected battle to transition to SelectModifierPhase").toBe("SelectModifierPhase");
 
     await game.phaseInterceptor.to("SelectModifierPhase");

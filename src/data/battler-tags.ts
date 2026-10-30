@@ -304,7 +304,7 @@ export abstract class MoveRestrictionBattlerTag extends SerializableBattlerTag {
     }
 
     // Cancel the affected pokemon's selected move
-    const phase = globalScene.phaseManager.getCurrentPhase() as MovePhase;
+    const phase = globalScene.phaseManager.currentPhase as MovePhase;
     const move = phase.move;
 
     if (this.isMoveRestricted(move.moveId, pokemon)) {
@@ -568,7 +568,7 @@ export class RechargingTag extends SerializableBattlerTag {
           pokemonNameWithAffix: getPokemonNameWithAffix(pokemon),
         }),
       );
-      const currentPhase = globalScene.phaseManager.getCurrentPhase();
+      const currentPhase = globalScene.phaseManager.currentPhase;
       if (currentPhase.is("MovePhase")) {
         currentPhase.cancel();
       }
@@ -1139,7 +1139,7 @@ export class FlinchedTag extends BattlerTag {
    */
   lapse(pokemon: Pokemon, lapseType: BattlerTagLapseType): boolean {
     if (lapseType === BattlerTagLapseType.PRE_MOVE) {
-      const currentPhase = globalScene.phaseManager.getCurrentPhase();
+      const currentPhase = globalScene.phaseManager.currentPhase;
       if (currentPhase.is("MovePhase")) {
         currentPhase.cancel();
       }
@@ -1187,7 +1187,7 @@ export class InterruptedTag extends BattlerTag {
   }
 
   lapse(pokemon: Pokemon, lapseType: BattlerTagLapseType): boolean {
-    const currentPhase = globalScene.phaseManager.getCurrentPhase();
+    const currentPhase = globalScene.phaseManager.currentPhase;
     if (currentPhase.is("MovePhase")) {
       currentPhase.cancel();
     }
@@ -1287,7 +1287,7 @@ export class ConfusedTag extends SerializableBattlerTag {
       // Intentionally don't increment rage fist's hitCount
       phaseManager.queueMessage(i18next.t("battlerTags:confusedLapseHurtItself"));
       pokemon.damageAndUpdate(damage, { result: HitResult.CONFUSION });
-      const currentPhase = phaseManager.getCurrentPhase();
+      const currentPhase = phaseManager.currentPhase;
       if (currentPhase.is("MovePhase") && currentPhase.pokemon === pokemon) {
         currentPhase.cancel();
       }
@@ -1429,7 +1429,7 @@ export class InfatuatedTag extends SerializableBattlerTag {
           pokemonNameWithAffix: getPokemonNameWithAffix(pokemon),
         }),
       );
-      const currentPhase = phaseManager.getCurrentPhase();
+      const currentPhase = phaseManager.currentPhase;
       if (currentPhase.is("MovePhase")) {
         currentPhase.cancel();
       }
@@ -1580,7 +1580,7 @@ export class PowderTag extends BattlerTag {
     if (lapseType === BattlerTagLapseType.TURN_END) {
       return false;
     }
-    const currentPhase = globalScene.phaseManager.getCurrentPhase();
+    const currentPhase = globalScene.phaseManager.currentPhase;
 
     if (!currentPhase.is("MovePhase")) {
       return true;
@@ -1961,7 +1961,7 @@ export class ProtectedTag extends BattlerTag {
       );
 
       // Stop multi-hit moves early
-      const effectPhase = globalScene.phaseManager.getCurrentPhase();
+      const effectPhase = globalScene.phaseManager.currentPhase;
       if (effectPhase.is("MoveEffectPhase")) {
         effectPhase.stopMultiHit(pokemon);
       }
@@ -2276,7 +2276,7 @@ export class TruantTag extends AbilityBattlerTag {
 
     // Interrupt move usage in favor of slacking off
     const passive = pokemon.getAbility().id !== AbilityId.TRUANT;
-    (globalScene.phaseManager.getCurrentPhase() as MovePhase).cancel();
+    (globalScene.phaseManager.currentPhase as MovePhase).cancel();
     // TODO: Ability displays should be handled by the ability
     globalScene.phaseManager.queueAbilityDisplay(pokemon, passive, true);
     globalScene.phaseManager.queueMessage(
@@ -3000,7 +3000,7 @@ export class GulpMissileTag extends SerializableBattlerTag {
       return true;
     }
 
-    const moveEffectPhase = globalScene.phaseManager.getCurrentPhase();
+    const moveEffectPhase = globalScene.phaseManager.currentPhase;
     if (moveEffectPhase.is("MoveEffectPhase")) {
       const attacker = moveEffectPhase.getUserPokemon();
 
@@ -3376,7 +3376,7 @@ export class SubstituteTag extends SerializableBattlerTag {
 
   /** If the Substitute redirects damage, queue a message to indicate it. */
   onHit(pokemon: Pokemon): void {
-    const moveEffectPhase = globalScene.phaseManager.getCurrentPhase();
+    const moveEffectPhase = globalScene.phaseManager.currentPhase;
     if (moveEffectPhase.is("MoveEffectPhase")) {
       const attacker = moveEffectPhase.getUserPokemon();
       if (!attacker) {
@@ -4139,7 +4139,7 @@ export function loadBattlerTag(source: BattlerTag | BattlerTagData): BattlerTag 
  * corresponding {@linkcode Move} and user {@linkcode Pokemon}
  */
 function getMoveEffectPhaseData(_pokemon: Pokemon): { phase: MoveEffectPhase; attacker: Pokemon; move: Move } | null {
-  const phase = globalScene.phaseManager.getCurrentPhase();
+  const phase = globalScene.phaseManager.currentPhase;
   if (phase.is("MoveEffectPhase")) {
     return {
       phase,

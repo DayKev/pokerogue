@@ -128,7 +128,7 @@ export class FightUiHandler extends UiHandler implements InfoToggle {
     messageHandler.bg.setVisible(false);
     messageHandler.commandWindow.setVisible(false);
     messageHandler.movesWindowContainer.setVisible(true);
-    const pokemon = (globalScene.phaseManager.getCurrentPhase() as CommandPhase).getPokemon();
+    const pokemon = (globalScene.phaseManager.currentPhase as CommandPhase).getPokemon();
     if (pokemon.summonData.turnCount <= 1) {
       this.setCursor(0);
     } else {
@@ -153,7 +153,7 @@ export class FightUiHandler extends UiHandler implements InfoToggle {
     switch (button) {
       case Button.ACTION:
         if (
-          (globalScene.phaseManager.getCurrentPhase() as CommandPhase).handleCommand(
+          (globalScene.phaseManager.currentPhase as CommandPhase).handleCommand(
             this.fromCommand,
             cursor,
             MoveUseMode.NORMAL,
@@ -251,7 +251,7 @@ export class FightUiHandler extends UiHandler implements InfoToggle {
    * @param cursor - The cursor position to set the move info for
    */
   private setMoveInfo(cursor: number): void {
-    const pokemon = (globalScene.phaseManager.getCurrentPhase() as CommandPhase).getPokemon();
+    const pokemon = (globalScene.phaseManager.currentPhase as CommandPhase).getPokemon();
     const moveset = pokemon.getMoveset();
 
     const hasMove = cursor < moveset.length;
@@ -340,7 +340,7 @@ export class FightUiHandler extends UiHandler implements InfoToggle {
   }
 
   displayMoves() {
-    const pokemon = (globalScene.phaseManager.getCurrentPhase() as CommandPhase).getPokemon();
+    const pokemon = (globalScene.phaseManager.currentPhase as CommandPhase).getPokemon();
     const moveset = pokemon.getMoveset();
 
     for (let moveIndex = 0; moveIndex < 4; moveIndex++) {
@@ -419,7 +419,7 @@ export class FightUiHandler extends UiHandler implements InfoToggle {
   clearMoves() {
     this.movesContainer.removeAll(true);
 
-    const opponents = (globalScene.phaseManager.getCurrentPhase() as CommandPhase).getPokemon().getOpponents();
+    const opponents = (globalScene.phaseManager.currentPhase as CommandPhase).getPokemon().getOpponents();
     opponents.forEach(opponent => {
       (opponent as EnemyPokemon).updateEffectiveness();
     });

@@ -248,18 +248,19 @@ export class PhaseManager {
   /** Holds priority queues for dynamically ordered phases */
   public dynamicQueueManager = new DynamicQueueManager();
 
-  /** The currently-running {@linkcode Phase}. */
-  private currentPhase: Phase;
+  /** The currently running {@linkcode Phase}. */
+  private _currentPhase: Phase;
   /** The phase put on standby if {@linkcode overridePhase} is called */
-  private standbyPhase: Phase | null = null;
+  private _standbyPhase: Phase | null = null;
 
-  /** @returns The currently running {@linkcode Phase}. */
-  getCurrentPhase(): Phase {
-    return this.currentPhase;
+  /** Getter for the currently running {@linkcode Phase}. */
+  public get currentPhase(): Phase {
+    return this._currentPhase;
   }
 
-  getStandbyPhase(): Phase | null {
-    return this.standbyPhase;
+  /** Getter for the phase put on standby by {@linkcode overridePhase}, or `null` if no phase is on standby. */
+  public get standbyPhase(): Phase | null {
+    return this._standbyPhase;
   }
 
   /**
@@ -318,7 +319,7 @@ export class PhaseManager {
   public clearAllPhases(): void {
     this.clearPhaseQueue();
     this.dynamicQueueManager.clearQueues();
-    this.standbyPhase = null;
+    this._standbyPhase = null;
   }
 
   /**
@@ -327,9 +328,9 @@ export class PhaseManager {
    * This is called by {@linkcode Phase.end} by default, and should not be called by other methods.
    */
   public shiftPhase(): void {
-    if (this.standbyPhase) {
-      this.currentPhase = this.standbyPhase;
-      this.standbyPhase = null;
+    if (this._standbyPhase) {
+      this._currentPhase = this._standbyPhase;
+      this._standbyPhase = null;
       return;
     }
 
@@ -342,7 +343,7 @@ export class PhaseManager {
     if (nextPhase == null) {
       this.turnStart();
     } else {
-      this.currentPhase = nextPhase;
+      this._currentPhase = nextPhase;
     }
 
     this.startCurrentPhase();
@@ -356,8 +357,8 @@ export class PhaseManager {
    * As such, **do not remove or split this method** as it will break integration tests.
    */
   private startCurrentPhase(): void {
-    console.log(`%cStart Phase ${this.currentPhase.phaseName}`, `color:${PHASE_START_COLOR};`);
-    this.currentPhase.start();
+    console.log(`%cStart Phase ${this._currentPhase.phaseName}`, `color:${PHASE_START_COLOR};`);
+    this._currentPhase.start();
   }
 
   /**
@@ -368,12 +369,12 @@ export class PhaseManager {
    * @todo This is antithetical to the phase structure and used a single time. Remove it.
    */
   public overridePhase(phase: Phase): boolean {
-    if (this.standbyPhase) {
+    if (this._standbyPhase) {
       return false;
     }
 
-    this.standbyPhase = this.currentPhase;
-    this.currentPhase = phase;
+    this._standbyPhase = this._currentPhase;
+    this._currentPhase = phase;
     this.startCurrentPhase();
 
     return true;
@@ -417,7 +418,7 @@ export class PhaseManager {
    */
   private turnStart(): void {
     this.dynamicQueueManager.clearQueues();
-    this.currentPhase = new TurnInitPhase();
+    this._currentPhase = new TurnInitPhase();
   }
 
   /**
