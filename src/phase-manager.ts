@@ -253,23 +253,6 @@ export class PhaseManager {
   /** The phase put on standby if {@linkcode overridePhase} is called */
   private standbyPhase: Phase | null = null;
 
-  /**
-   * Clear all previously set phases, then add a new {@linkcode TitlePhase} to transition to the title screen.
-   * @param addLogin - Whether to add a new {@linkcode LoginPhase} before the {@linkcode TitlePhase}
-   * (but reset everything else).
-   * Default `false`
-   */
-  public toTitleScreen(addLogin = false): void {
-    this.clearAllPhases();
-
-    if (addLogin) {
-      this.unshiftNew("LoginPhase");
-    }
-    this.unshiftNew("TitlePhase");
-  }
-
-  // #region Phase Functions
-
   /** @returns The currently running {@linkcode Phase}. */
   getCurrentPhase(): Phase {
     return this.currentPhase;
@@ -429,50 +412,6 @@ export class PhaseManager {
   }
 
   /**
-   * Add a `MessagePhase` to the queue.
-   * @param message - string for MessagePhase
-   * @param callbackDelay - optional param for MessagePhase constructor
-   * @param prompt - optional param for MessagePhase constructor
-   * @param promptDelay - optional param for MessagePhase constructor
-   * @param defer - If `true`, push the phase instead of unshifting; default `false`
-   *
-   * @see {@linkcode MessagePhase} for more details on the parameters
-   */
-  queueMessage(
-    message: string,
-    callbackDelay?: number | null,
-    prompt?: boolean | null,
-    promptDelay?: number | null,
-    defer?: boolean | null,
-  ) {
-    const phase = new MessagePhase(message, callbackDelay, prompt, promptDelay);
-    if (defer) {
-      this.pushPhase(phase);
-    } else {
-      this.unshiftPhase(phase);
-    }
-  }
-
-  /**
-   * Queue an ability bar flyout phase via {@linkcode unshiftPhase}
-   * @param pokemon - The {@linkcode Pokemon} whose ability is being activated
-   * @param passive - Whether the ability is a passive
-   * @param show - If `true`, show the bar. Otherwise, hide it
-   */
-  public queueAbilityDisplay(pokemon: Pokemon, passive: boolean, show: boolean): void {
-    this.unshiftPhase(show ? new ShowAbilityPhase(pokemon.getBattlerIndex(), passive) : new HideAbilityPhase());
-  }
-
-  /**
-   * Hide the ability bar if it is currently visible.
-   */
-  public hideAbilityBar(): void {
-    if (globalScene.abilityBar.isVisible()) {
-      this.unshiftPhase(new HideAbilityPhase());
-    }
-  }
-
-  /**
    * Clear all dynamic queues and begin a new {@linkcode TurnInitPhase} for the current turn.
    * Called whenever the current phase queue is empty.
    */
@@ -522,19 +461,6 @@ export class PhaseManager {
   }
 
   /**
-   * Add a {@linkcode FaintPhase} to the queue.
-   * @param args - The arguments to pass to the phase constructor
-   *
-   * @remarks
-   *
-   * Faint phases are ordered in a special way to allow battle effects to settle before the Pokemon faints.
-   * @see {@linkcode PhaseTree.addPhase}
-   */
-  public queueFaintPhase(...args: ConstructorParameters<PhaseConstructorMap["FaintPhase"]>): void {
-    this.phaseQueue.addPhase(this.create("FaintPhase", ...args), true);
-  }
-
-  /**
    * Create a new phase and queue it to run after all others queued by the currently running phase.
    * @param phase - The name of the phase to create
    * @param args - The arguments to pass to the phase constructor
@@ -547,6 +473,25 @@ export class PhaseManager {
   ): void {
     this.phaseQueue.addPhase(this.create(phase, ...args), true);
   }
+
+  /** Prevent end of turn effects from triggering when transitioning to a new biome on a X0 wave. */
+  public onInterlude(): void {
+    const phasesToRemove: readonly PhaseString[] = [
+      "WeatherEffectPhase",
+      "BerryPhase",
+      "CheckStatusEffectPhase",
+    ] as const;
+    for (const phaseName of phasesToRemove) {
+      this.phaseQueue.removeAll(phaseName);
+    }
+
+    const turnEndPhase = this.phaseQueue.find("TurnEndPhase");
+    if (turnEndPhase) {
+      turnEndPhase.upcomingInterlude = true;
+    }
+  }
+
+  // #region Move phase mgmt
 
   /**
    * Find and return the first {@linkcode MovePhase} meeting the given condition.
@@ -590,29 +535,89 @@ export class PhaseManager {
     this.dynamicQueueManager.redirectMoves(removedPokemon, allyPokemon);
   }
 
+  // #endregion Move phase mgmt
+
+  // #region Phase queueing helpers
+
+  /**
+   * Clear all previously set phases, then add a new {@linkcode TitlePhase} to transition to the title screen.
+   * @param addLogin - Whether to add a new {@linkcode LoginPhase} before the {@linkcode TitlePhase}
+   * (but reset everything else).
+   * Default `false`
+   */
+  public toTitleScreen(addLogin = false): void {
+    this.clearAllPhases();
+
+    if (addLogin) {
+      this.unshiftNew("LoginPhase");
+    }
+    this.unshiftNew("TitlePhase");
+  }
+
+  /**
+   * Add a `MessagePhase` to the queue.
+   * @param message - string for MessagePhase
+   * @param callbackDelay - optional param for MessagePhase constructor
+   * @param prompt - optional param for MessagePhase constructor
+   * @param promptDelay - optional param for MessagePhase constructor
+   * @param defer - If `true`, push the phase instead of unshifting; default `false`
+   *
+   * @see {@linkcode MessagePhase} for more details on the parameters
+   */
+  public queueMessage(
+    message: string,
+    callbackDelay?: number | null,
+    prompt?: boolean | null,
+    promptDelay?: number | null,
+    defer?: boolean | null,
+  ) {
+    const phase = new MessagePhase(message, callbackDelay, prompt, promptDelay);
+    if (defer) {
+      this.pushPhase(phase);
+    } else {
+      this.unshiftPhase(phase);
+    }
+  }
+
+  /**
+   * Queue an ability bar flyout phase via {@linkcode unshiftPhase}
+   * @param pokemon - The {@linkcode Pokemon} whose ability is being activated
+   * @param passive - Whether the ability is a passive
+   * @param show - If `true`, show the bar. Otherwise, hide it
+   */
+  // TODO: remove `show` param, that's what `hideAbilityBar()` is for
+  public queueAbilityDisplay(pokemon: Pokemon, passive: boolean, show: boolean): void {
+    this.unshiftPhase(show ? new ShowAbilityPhase(pokemon.getBattlerIndex(), passive) : new HideAbilityPhase());
+  }
+
+  /**
+   * Hide the ability bar if it is currently visible.
+   */
+  public hideAbilityBar(): void {
+    if (globalScene.abilityBar.isVisible()) {
+      this.unshiftPhase(new HideAbilityPhase());
+    }
+  }
+
+  /**
+   * Add a {@linkcode FaintPhase} to the queue.
+   * @param args - The arguments to pass to the phase constructor
+   *
+   * @remarks
+   *
+   * Faint phases are ordered in a special way to allow battle effects to settle before the Pokemon faints.
+   * @see {@linkcode PhaseTree.addPhase}
+   */
+  public queueFaintPhase(...args: ConstructorParameters<PhaseConstructorMap["FaintPhase"]>): void {
+    this.phaseQueue.addPhase(this.create("FaintPhase", ...args), true);
+  }
+
   /** Queue phases which run at the end of each turn. */
   public queueTurnEndPhases(): void {
-    turnEndPhases.forEach(p => {
-      this.pushNew(p);
-    });
-  }
-
-  /** Prevent end of turn effects from triggering when transitioning to a new biome on a X0 wave. */
-  public onInterlude(): void {
-    const phasesToRemove: readonly PhaseString[] = [
-      "WeatherEffectPhase",
-      "BerryPhase",
-      "CheckStatusEffectPhase",
-    ] as const;
-    for (const phaseName of phasesToRemove) {
-      this.phaseQueue.removeAll(phaseName);
-    }
-
-    const turnEndPhase = this.phaseQueue.find("TurnEndPhase");
-    if (turnEndPhase) {
-      turnEndPhase.upcomingInterlude = true;
+    for (const phase of turnEndPhases) {
+      this.pushNew(phase);
     }
   }
 
-  // #endregion Phase Functions
+  // #endregion Phase queueing helpers
 }
